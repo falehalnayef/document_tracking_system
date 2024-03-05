@@ -1,0 +1,19 @@
+{
+  "name": "dts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "start": "concurrently \"tsc -w\" \"node --watch api/dist/index.js\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.24",
+    "concurrently": "^8.2.2",
+    "typescript": "^5.3.3"
+  }
+}
