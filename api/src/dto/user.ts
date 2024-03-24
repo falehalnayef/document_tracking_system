@@ -1,4 +1,4 @@
-import { IUser } from "../interfaces/user.interfaces";
+import { IUser } from "../interfaces/business_interfaces/user.interfaces";
 
 class User implements IUser {
     user_id: Number;

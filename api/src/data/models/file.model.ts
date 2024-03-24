@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
-import { IFileAttributes } from '../../interfaces/file.interfaces';
+import { IFileAttributes } from '../../interfaces/business_interfaces/file.interfaces';
 
 
 export default function defineFileModel(sequelize: Sequelize) {

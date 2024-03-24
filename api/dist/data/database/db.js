@@ -15,7 +15,7 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const sequelize_1 = require("sequelize");
 const config_1 = __importDefault(require("../../config/config"));
-const event_emitter_service_1 = __importDefault(require("../../services/event_emitter.service"));
+const event_emitter_service_1 = __importDefault(require("../../services/utility_services/event_emitter.service"));
 const models_path = path_1.default.join(__dirname.replace("database", ""), "/models");
 const db = {};
 let sequelize;

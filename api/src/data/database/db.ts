@@ -3,7 +3,7 @@ import path from 'path';
 import { Sequelize, DataTypes, Model } from 'sequelize';
 import config from "../../config/config";
 
-  import eventEmitter from '../../services/event_emitter.service';
+  import eventEmitter from '../../services/utility_services/event_emitter.service';
 
 const models_path = path.join(__dirname.replace("database",""), "/models");
 

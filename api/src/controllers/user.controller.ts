@@ -1,4 +1,4 @@
-import UserServices from "../services/user.services";
+import UserServices from "../services/business _services/user.services";
 import { Request, Response} from "express";
 
 class UserController {

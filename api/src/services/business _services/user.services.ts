@@ -1,7 +1,7 @@
-import { IUser, IUserService} from "../interfaces/user.interfaces";
+import { IUser, IUserService} from "../../interfaces/business_interfaces/user.interfaces";
 
-import UserRepository from "../data/repositories/user.repository";
-import User from "../dto/user";
+import UserRepository from "../../data/repositories/user.repository";
+import User from "../../dto/user";
 
 class UserServices implements IUserService{
 
@@ -11,6 +11,7 @@ class UserServices implements IUserService{
    constructor(){
     this.userRepository = new UserRepository();
    }
+
    async register(user_name: String, email: String, password: String): Promise<IUser> {
 
 
@@ -20,8 +21,8 @@ class UserServices implements IUserService{
     return new User(user);
     }
 
-
     
 }
+
 
 export default UserServices;
