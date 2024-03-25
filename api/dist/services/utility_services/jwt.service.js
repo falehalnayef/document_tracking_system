@@ -14,17 +14,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../../config/config"));
+const error_1 = __importDefault(require("../../utils/error"));
 class JWTServices {
     constructor() {
         this.secretKey = config_1.default.JWT_SECRET_KEY;
     }
     generateToken(payload, options) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (!this.secretKey || !payload) {
+                throw new error_1.default(404, "Bad Request");
+            }
             return jsonwebtoken_1.default.sign(payload, this.secretKey, options);
         });
     }
     verifyToken(token) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (!this.secretKey || !token) {
+                throw new error_1.default(404, "Bad Request");
+            }
             return jsonwebtoken_1.default.verify(token, this.secretKey);
         });
     }

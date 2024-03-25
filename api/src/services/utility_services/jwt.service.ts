@@ -2,6 +2,7 @@
 import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 import config from '../../config/config';
 import JwtPayload from '../../interfaces/utility_interfaces/jwt.interfaces';
+import StatusError from '../../utils/error';
 
 
 
@@ -17,6 +18,10 @@ class JWTServices{
     async generateToken(payload: Object, options?: SignOptions): Promise<String>{
 
 
+        if (!this.secretKey || !payload) {
+        
+            throw new StatusError(404, "Bad Request")
+        }
         return jwt.sign(payload, this.secretKey, options);
 
     }
@@ -24,6 +29,10 @@ class JWTServices{
     
     async verifyToken(token: string):Promise<JwtPayload>  {
 
+        if (!this.secretKey || !token) {
+        
+            throw new StatusError(404, "Bad Request")
+        }
 
          return jwt.verify(token, this.secretKey) as JwtPayload;
 
