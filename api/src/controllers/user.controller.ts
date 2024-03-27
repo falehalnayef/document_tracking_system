@@ -11,11 +11,21 @@ class UserController {
 
     async createUser(req: Request, res: Response){
 
-        const {user_name, email, password} = req.body;
+        try {
+
+            const {user_name, email, password} = req.body;
 
         const user = await this.userServices.register(user_name, email, password);
 
         res.send(user.display());
+            
+        } catch (error: any) {
+            
+            const statusCode = error.statusCode || 500;
+
+            res.status(statusCode).json(error.message);
+        }
+        
 
     }
 }

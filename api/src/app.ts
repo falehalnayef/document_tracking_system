@@ -14,7 +14,7 @@ process.on("uncaughtException", (error) => {
     console.log(error);
   })
   
-     db.sequelize.sync({force:true}).then(()=>{
+     db.sequelize.sync({force:false}).then(()=>{
         console.log("database sync");
      }).catch((error:Error)=>{
 

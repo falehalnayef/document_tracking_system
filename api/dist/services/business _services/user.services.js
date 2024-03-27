@@ -14,13 +14,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_repository_1 = __importDefault(require("../../data/repositories/user.repository"));
 const user_1 = __importDefault(require("../../dto/user"));
+const hash_services_1 = __importDefault(require("../utility_services/hash.services"));
+const error_1 = __importDefault(require("../../utils/error"));
 class UserServices {
     constructor() {
         this.userRepository = new user_repository_1.default();
+        this.hashServices = new hash_services_1.default();
     }
     register(user_name, email, password) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield this.userRepository.create(user_name, email, password);
+            if (!user_name || !email || !password) {
+                throw new error_1.default(404, "Bad Request");
+            }
+            const hashedPassword = yield this.hashServices.hash(password, 10);
+            const user = yield this.userRepository.create(user_name, email, hashedPassword);
             return new user_1.default(user);
         });
     }

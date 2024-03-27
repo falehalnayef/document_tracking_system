@@ -19,9 +19,15 @@ class UserController {
     }
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { user_name, email, password } = req.body;
-            const user = yield this.userServices.register(user_name, email, password);
-            res.send(user.display());
+            try {
+                const { user_name, email, password } = req.body;
+                const user = yield this.userServices.register(user_name, email, password);
+                res.send(user.display());
+            }
+            catch (error) {
+                const statusCode = error.statusCode || 500;
+                res.status(statusCode).json(error.message);
+            }
         });
     }
 }

@@ -12,15 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const error_1 = __importDefault(require("../../utils/error"));
 const db_1 = __importDefault(require("../database/db"));
 const User = db_1.default.UserModel;
 class UserRepository {
     create(user_name, email, password) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!user_name || !email || !password) {
-                throw new error_1.default(404, "Bad Request");
-            }
             const user = yield User.create({ user_name, email, password });
             return user;
         });

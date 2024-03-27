@@ -12,7 +12,7 @@ app.use(index_router_1.default);
 process.on("uncaughtException", (error) => {
     console.log(error);
 });
-db_1.default.sequelize.sync({ force: true }).then(() => {
+db_1.default.sequelize.sync({ force: false }).then(() => {
     console.log("database sync");
 }).catch((error) => {
     console.error(error);
