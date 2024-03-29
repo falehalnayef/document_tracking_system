@@ -15,19 +15,24 @@ export default function defineUserModel(sequelize: Sequelize) {
               primaryKey: true
           },
           user_name: {
-              type: DataTypes.STRING(128),
+              type: DataTypes.STRING,
               allowNull: false
           },
           email: {
-              type: DataTypes.STRING(128),
+              type: DataTypes.STRING,
               allowNull: false,
-              unique: true,
+              unique: {
+                name: 'email',
+                msg: 'Email Must Be Unique.'
+              },
               validate: {
-                  isEmail: true
+                isEmail: {
+                  msg: 'Invalid Email Format.'
+                }
               }
           },
           password: {
-              type: DataTypes.STRING(128),
+              type: DataTypes.STRING,
               allowNull: false
           }
       },

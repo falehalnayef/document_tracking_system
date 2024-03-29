@@ -11,7 +11,7 @@ function defineGroupModel(sequelize) {
                     primaryKey: true
                 },
                 group_name: {
-                    type: sequelize_1.DataTypes.STRING(128),
+                    type: sequelize_1.DataTypes.STRING,
                     allowNull: false
                 },
                 owner_id: {

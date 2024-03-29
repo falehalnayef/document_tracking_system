@@ -1,4 +1,6 @@
+import { ValidationError } from "sequelize";
 import UserServices from "../services/business _services/user.services";
+
 import { Request, Response} from "express";
 
 class UserController {
@@ -17,11 +19,15 @@ class UserController {
 
         const user = await this.userServices.register(user_name, email, password);
 
+
+
         res.send(user.display());
             
         } catch (error: any) {
             
-            const statusCode = error.statusCode || 500;
+            let statusCode = error.statusCode || 500;
+
+            if (error instanceof ValidationError || error.name==="SequelizeDatabaseError") statusCode = 400;
 
             res.status(statusCode).json(error.message);
         }

@@ -11,7 +11,7 @@ function defineFileModel(sequelize) {
                     primaryKey: true
                 },
                 file_name: {
-                    type: sequelize_1.DataTypes.STRING(128),
+                    type: sequelize_1.DataTypes.STRING,
                     allowNull: false
                 },
                 path: {

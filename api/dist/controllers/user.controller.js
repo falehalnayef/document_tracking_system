@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const sequelize_1 = require("sequelize");
 const user_services_1 = __importDefault(require("../services/business _services/user.services"));
 class UserController {
     constructor() {
@@ -25,7 +26,9 @@ class UserController {
                 res.send(user.display());
             }
             catch (error) {
-                const statusCode = error.statusCode || 500;
+                let statusCode = error.statusCode || 500;
+                if (error instanceof sequelize_1.ValidationError || error.name === "SequelizeDatabaseError")
+                    statusCode = 400;
                 res.status(statusCode).json(error.message);
             }
         });

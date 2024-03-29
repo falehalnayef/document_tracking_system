@@ -4,25 +4,26 @@ import UserRepository from "../../data/repositories/user.repository";
 import User from "../../dto/user";
 
 import HashServices from "../utility_services/hash.services";
-import StatusError from "../../utils/error";
+import Validator from "../../validation/validators";
 
 class UserServices implements IUserService{
 
    private userRepository: UserRepository;
+   private validator: Validator;
+
    private hashServices: HashServices;
 
     
-
-   constructor(){
-    this.userRepository = new UserRepository();
+constructor(){
     this.hashServices = new HashServices();
-   }
+    this.userRepository = new UserRepository();
+    this.validator = new Validator();
+}
 
    async register(user_name: string, email: string, password: string): Promise<IUser> {
-    if (!user_name || !email || !password) {
-        
-        throw new StatusError(404, "Bad Request");
-    }
+
+
+    this.validator.registerValidator(user_name, email, password);
 
     const hashedPassword = await this.hashServices.hash(password, 10);
 
