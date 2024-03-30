@@ -34,6 +34,28 @@ class UserController {
         
 
     }
+
+
+    async login(req: Request, res: Response){
+
+        try {
+
+            const {email, password} = req.body;
+
+        const user = await this.userServices.login(email, password);
+
+
+        res.send(user.display());
+            
+        } catch (error: any) {
+            
+            let statusCode = error.statusCode || 500;
+
+            res.status(statusCode).json(error.message);
+        }
+        
+
+    }
 }
 
 

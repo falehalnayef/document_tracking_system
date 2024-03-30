@@ -3,7 +3,7 @@ import StatusError from "../../utils/error";
 
 class HashServices {
 
-  async hash(data: string, saltRounds: number): Promise<String> {
+  async hash(data: string, saltRounds: number): Promise<string> {
     if (!data || !saltRounds) {
         
         throw new StatusError(404, "Bad Request")

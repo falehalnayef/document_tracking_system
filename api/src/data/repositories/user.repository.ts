@@ -6,6 +6,14 @@ const User = db.UserModel;
 
 class UserRepository implements IUserRepository{
 
+    findUserByEmail(email: String): Promise<IUser> {
+
+        const user = User.findOne({where:{email}});
+
+        return user;
+        
+    }
+
 
     async create(user_name: String, email: String, password: String): Promise<IUser> {
 

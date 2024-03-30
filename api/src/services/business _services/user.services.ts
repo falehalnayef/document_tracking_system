@@ -5,20 +5,52 @@ import User from "../../dto/user";
 
 import HashServices from "../utility_services/hash.services";
 import Validator from "../../validation/validators";
+import StatusError from "../../utils/error";
+import JWTServices from "../utility_services/jwt.service";
 
 class UserServices implements IUserService{
 
    private userRepository: UserRepository;
    private validator: Validator;
-
    private hashServices: HashServices;
+   private jwtServices: JWTServices;
 
     
 constructor(){
     this.hashServices = new HashServices();
     this.userRepository = new UserRepository();
     this.validator = new Validator();
+    this.jwtServices = new JWTServices();
 }
+    async login(email: string, password: string): Promise<IUser> {
+
+
+        if (!email || !password) {
+
+           throw new StatusError(400, "Enter Your Email And Password");
+        }
+
+        const user = await this.userRepository.findUserByEmail(email);
+
+        if (!user) {
+
+            throw new StatusError(400, "Wrong Credentials");
+        }
+        const check = await this.hashServices.compare(password, user.password as string);
+
+        if (!check) {
+
+            throw new StatusError(400, "Wrong Credentials");
+        }
+
+
+       const accessToken = await this.jwtServices.generateToken({user_id:user.user_id, user_name:user.user_name}, {expiresIn:"1d"});
+
+        user.accessToken = accessToken;
+
+
+       return new User(user);
+    }
 
    async register(user_name: string, email: string, password: string): Promise<IUser> {
 

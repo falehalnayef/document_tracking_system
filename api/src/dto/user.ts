@@ -5,12 +5,15 @@ class User implements IUser {
     user_name: String;
     email: String;
     password: String;
+    accessToken: String;
 
-    constructor(data: IUser) {
-        this.user_id =  data.user_id;
-        this.user_name = data.user_name;
-        this.email = data.email;
-        this.password = data.password;
+
+    constructor(user: IUser) {
+        this.user_id =  user.user_id;
+        this.user_name = user.user_name;
+        this.email = user.email;
+        this.password = user.password;
+        this.accessToken = user.accessToken;
     }
 
     display(): Object {
@@ -18,6 +21,7 @@ class User implements IUser {
             user_id: this.user_id,
             user_name: this.user_name,
             email: this.email,
+            accessToken: this.accessToken
         };
     }
 }
