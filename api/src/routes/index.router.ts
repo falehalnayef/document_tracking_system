@@ -1,8 +1,12 @@
 import { Router } from "express";
-import UserRouter from "./user.routers";
+import userRouter from "./user.routers";
+import groupRouter from "./group.routers";
+
 
 const indexRouter = Router();
 
-indexRouter.use("/users", UserRouter);
+indexRouter.use("/users", userRouter);
+indexRouter.use("/groups", groupRouter);
+
 
 export default indexRouter;

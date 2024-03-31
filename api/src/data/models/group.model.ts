@@ -22,7 +22,7 @@ export default function defineGroupModel(sequelize: Sequelize) {
               type: DataTypes.INTEGER,
               allowNull: false
           },
-          public: {
+          is_public: {
               type: DataTypes.BOOLEAN,
               defaultValue: false,
               allowNull: false

@@ -21,7 +21,8 @@ class UserController {
 
 
 
-        res.send(user.display());
+        res.status(201).json(user.display());
+
             
         } catch (error: any) {
             
@@ -45,7 +46,8 @@ class UserController {
         const user = await this.userServices.login(email, password);
 
 
-        res.send(user.display());
+        res.status(200).json(user.display());
+
             
         } catch (error: any) {
             

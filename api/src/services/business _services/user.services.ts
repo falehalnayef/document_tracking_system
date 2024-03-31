@@ -17,31 +17,26 @@ class UserServices implements IUserService{
 
     
 constructor(){
-    this.hashServices = new HashServices();
-    this.userRepository = new UserRepository();
     this.validator = new Validator();
+    this.userRepository = new UserRepository();
+    this.hashServices = new HashServices();
     this.jwtServices = new JWTServices();
 }
+   
     async login(email: string, password: string): Promise<IUser> {
 
 
-        if (!email || !password) {
+        if (!email || !password) throw new StatusError(400, "Enter Your Email And Password");
 
-           throw new StatusError(400, "Enter Your Email And Password");
-        }
 
         const user = await this.userRepository.findUserByEmail(email);
 
-        if (!user) {
+        if (!user) throw new StatusError(400, "Wrong Credentials");
 
-            throw new StatusError(400, "Wrong Credentials");
-        }
         const check = await this.hashServices.compare(password, user.password as string);
 
-        if (!check) {
+        if (!check) throw new StatusError(400, "Wrong Credentials");
 
-            throw new StatusError(400, "Wrong Credentials");
-        }
 
 
        const accessToken = await this.jwtServices.generateToken({user_id:user.user_id, user_name:user.user_name}, {expiresIn:"1d"});
@@ -65,6 +60,16 @@ constructor(){
     return new User(user);
     }
 
+
+   async getUser(user_id: Number, attributes: ConcatArray<string> = []): Promise<IUser> {
+
+    if (!user_id) throw new StatusError(400, "Enter User ID.");
+
+   const user = await this.userRepository.findUserByPK(user_id, attributes);
+
+   return new User(user);
+
+   }
     
 }
 
