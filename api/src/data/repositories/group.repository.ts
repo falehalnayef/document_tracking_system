@@ -9,6 +9,16 @@ class GroupRepository implements IGroupRepository{
 
 
 
+   async getGroupsByOwnerID(owner_id: Number): Promise<IGroup> {
+
+    const groups = await Group.findAll({where:{owner_id}});
+
+
+    return groups;
+   }
+
+
+
    async create(group_name: String, owner_id: Number, is_public: Boolean): Promise<IGroup> {
 
 
@@ -16,6 +26,13 @@ class GroupRepository implements IGroupRepository{
 
         return group;
     }
+    async remove(group_id: string): Promise<string> {
+
+        const group = await Group.destroy({where:{group_id}});
+
+        return group;
+    }
+  
 
 }
 

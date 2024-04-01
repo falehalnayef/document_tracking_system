@@ -18,6 +18,10 @@ class GroupRouter {
 
     private initializeRoutes(): void {
         this.router.post("/createGroup", this.createGroup);
+        this.router.get("/index", this.getMyGroups);
+        this.router.delete("/deleteGroup/:group_id", this.deleteGroup);
+
+
 
 
     }
@@ -30,6 +34,23 @@ class GroupRouter {
         }
     };
 
+    private getMyGroups = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            await this.groupController.getMyGroups(req, res);
+
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    private deleteGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            await this.groupController.deleteGroup(req, res);
+
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 
 
