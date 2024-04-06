@@ -1,6 +1,6 @@
 interface JwtPayload{
-    user_id:Number;
-    user_name:String;
+    user_id:number;
+    user_name:string;
 }
 
 

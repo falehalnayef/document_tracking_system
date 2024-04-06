@@ -15,7 +15,7 @@ class JWTServices{
         this.secretKey = config.JWT_SECRET_KEY!;
     }
 
-    async generateToken(payload: JwtPayload, options?: SignOptions): Promise<String>{
+    async generateToken(payload: JwtPayload, options?: SignOptions): Promise<string>{
 
 
         if (!this.secretKey || !payload) {

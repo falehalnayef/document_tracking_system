@@ -2,67 +2,100 @@ import GroupRepository from "../../data/repositories/group.repository";
 import Group from "../../dto/group";
 import { IGroup, IGroupService } from "../../interfaces/business_interfaces/group.interfaces";
 import StatusError from "../../utils/error";
+import Validator from "../../validation/validators";
 
-class GruopServices implements IGroupService{
+class GroupServices implements IGroupService {
+    private groupRepository: GroupRepository;
+    private validator: Validator;
 
-    private groupRepsoitory: GroupRepository;
-
-    constructor(){
-        this.groupRepsoitory = new GroupRepository();
-    }
-  
-
-
-   
-
-
-   async createGroup(group_name: String, owner_id: Number, is_public: Boolean): Promise<IGroup> {
-
-        if (!group_name || !owner_id) throw new StatusError(400, "All Fields Are Required.");
-        
-         const group = await this.groupRepsoitory.create(group_name, owner_id, is_public);
-
-         return new Group(group);
+    constructor() {
+        this.groupRepository = new GroupRepository();
+        this.validator = new Validator();
 
     }
 
-   async index(owner_id: Number): Promise<IGroup> {
+    async createGroup(groupName: string, ownerId: number, isPublic: boolean): Promise<IGroup> {
+        this.validator.validateRequiredFields({ groupName, ownerId });
 
+        const group = await this.groupRepository.create(groupName, ownerId, isPublic);
+        return new Group(group);
+    }
+
+    async index(owner_id: number): Promise<IGroup> {
         if (!owner_id) throw new StatusError(400, "Owner ID Is Required.");
          
+        const groups = await this.groupRepository.getGroupsByOwnerID(owner_id);
+    
+        return new Group(groups);   
+    }
 
-         const groups = await this.groupRepsoitory.getGroupsByOwnerID(owner_id);
+    async getGroup(groupId: number): Promise<IGroup> {
+        this.validator.validateRequiredFields({ groupId });
 
-         return new Group(groups);   
-        
+        const group = await this.groupRepository.getGroup(groupId);
+        if (!group) {
+            throw new StatusError(404, "Group not found.");
+        }
+        return new Group(group);
+    }
+
+    async deleteGroup(groupId: number, userId: number): Promise<number> {
+        this.validator.validateRequiredFields({ groupId, userId });
+
+        const group = await this.getGroup(groupId);
+        if (group.owner_id !== userId) {
+            throw new StatusError(403, "Not allowed.");
         }
 
+        const removedGroup = await this.groupRepository.remove(groupId);
+        if (removedGroup !== 1) {
+            throw new StatusError(404, "Group is not found.");
+        }
 
-        async deleteGroup(group_id: string): Promise<string> {
+        return removedGroup;
+    }
 
-            if (!group_id) throw new StatusError(400, "Group ID Is Required.");
-    
-             const group = await this.groupRepsoitory.remove(group_id);
+    async checkUserInGroup(groupId: number, userId: number): Promise<boolean> {
+        this.validator.validateRequiredFields({ groupId, userId });
 
-             if (group != "1") throw new StatusError(404, "Group Is Not Found.");
-    
-             return group;   
-            
-            }
+        const userInGroup = await this.groupRepository.checkUserGroupEntity(groupId, userId);
+        return !!userInGroup;
+    }
 
-            async addUserTOGroup(group_id: string): Promise<string> {
+    async addUserToGroup(groupId: number, ownerId: number, userId: number): Promise<boolean> {
+        this.validator.validateRequiredFields({ groupId, ownerId, userId });
 
-                if (!group_id) throw new StatusError(400, "Group ID Is Required.");
-        
-                 const group = await this.groupRepsoitory.remove(group_id);
-    
-                 if (group != "1") throw new StatusError(404, "Group Is Not Found.");
-        
-                 return group;   
-                
-                }
-        
+        const group = await this.getGroup(groupId);
+        if (group.owner_id !== ownerId) {
+            throw new StatusError(403, "Not allowed.");
+        }
 
+        const userAlreadyInGroup = await this.checkUserInGroup(groupId, userId);
+        if (userAlreadyInGroup) {
+            throw new StatusError(400, "User already in group.");
+        }
+
+        await this.groupRepository.createUserGroupEntity(groupId, userId);
+        return true;
+    }
+
+    async deleteUserFromGroup(groupId: number, ownerId: number, userId: number): Promise<number> {
+        this.validator.validateRequiredFields({ groupId, ownerId, userId });
+
+        const group = await this.getGroup(groupId);
+        if (group.owner_id !== ownerId) {
+            throw new StatusError(403, "Not allowed.");
+        }
+
+        const userInGroup = await this.checkUserInGroup(groupId, userId);
+        if (!userInGroup) {
+            throw new StatusError(400, "User is not in the group.");
+        }
+
+        return await this.groupRepository.removeUserGroupEntity(groupId, userId);
+    }
+
+   
 }
 
-export default GruopServices;
+export default GroupServices;

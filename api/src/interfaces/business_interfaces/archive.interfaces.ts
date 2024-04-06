@@ -1,8 +1,8 @@
 interface IArchiveAttributes{
-    archive_id: Number;
-    file_id: Number;
-    user_id: Number;
-    path: String;
+    archive_id: number;
+    file_id: number;
+    user_id: number;
+    path: string;
     date: Date;
     }
 

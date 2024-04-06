@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
-import { IFileGroupAttributes } from '../../interfaces/business_interfaces/file_group.interfaces';
+import { IFileGroupAttributes } from '../../interfaces/business_interfaces/group.interfaces';
 
 
 export default function defineFileGroupModel(sequelize: Sequelize) {

@@ -1,28 +1,29 @@
 
 interface IUserAttributes {
-  user_id: Number;
-  user_name: String;
-  email: String;
-  password: String;
+  user_id: number;
+  user_name: string;
+  email: string;
+  password: string;
 }
 
 interface IUser extends IUserAttributes{
-    display(): Object;
-    accessToken:String;
+    display(): object;
+    accessToken:string;
 }
 
 
 interface IUserRepository {
-  create(user_name: String, email: String, password: String): Promise<IUser>;
-  findUserByEmail(email: String): Promise<IUser>;
-  findUserByPK(user_id: Number, attributes:[]): Promise<IUser>
+  create(user_name: string, email: string, password: string): Promise<IUser>;
+  findUserByEmail(email: string): Promise<IUser>;
+  findUserByPK(user_id: number, attributes:[]): Promise<IUser>
 
 }
 
 interface IUserService {
-  register(user_name: String, email: String, password: String): Promise<IUser>;
-  login(email: String, password: String): Promise<IUser>;
-  getUser(user_id: Number, attributes:[]): Promise<IUser>
+  register(user_name: string, email: string, password: string): Promise<IUser>;
+  login(email: string, password: string): Promise<IUser>;
+  getUser(user_id: number, attributes:[]): Promise<IUser>
+
 
 
 }

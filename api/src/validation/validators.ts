@@ -47,6 +47,15 @@ class Validator {
 
         }
     }
+
+
+    public validateRequiredFields(fields: Record<string, any>): void {
+        for (const key in fields) {
+            if (!fields[key]) {
+                throw new StatusError(400, `${key.toUpperCase()} is required.`);
+            }
+        }
+    }
 }
 
 

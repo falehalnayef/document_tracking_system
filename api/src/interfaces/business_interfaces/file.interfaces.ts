@@ -1,10 +1,10 @@
 interface IFileAttributes{
-    file_id: Number;
-    file_name: String;
-    path: String;
-    public: Boolean;
-    checked: Boolean;
-    owner_id: Number
+    file_id: number;
+    file_name: string;
+    path: string;
+    public: boolean;
+    checked: boolean;
+    owner_id: number
     date: Date;
   }
 

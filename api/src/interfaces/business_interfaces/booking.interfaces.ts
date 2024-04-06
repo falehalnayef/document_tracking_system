@@ -1,7 +1,7 @@
 interface IBookingAttributes{
-    booking_id: Number;
-    file_id: Number;
-    user_id: Number;
+    booking_id: number;
+    file_id: number;
+    user_id: number;
     check_in_date: Date;
     check_out_date: Date;
     exp_date: Date;

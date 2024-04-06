@@ -1,11 +1,11 @@
 import { IGroup } from "../interfaces/business_interfaces/group.interfaces";
 
 class Group implements IGroup {
-    group_id!: Number;
-    group_name!: String;
-    owner_id!: Number;
-    is_public!: Boolean;
-    private data!: Object[];
+    group_id!: number;
+    group_name!: string;
+    owner_id!: number;
+    is_public!: boolean;
+    private data!: object[];
 
 
      constructor(groups: IGroup) {

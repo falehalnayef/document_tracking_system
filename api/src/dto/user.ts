@@ -1,11 +1,11 @@
 import { IUser } from "../interfaces/business_interfaces/user.interfaces";
 
 class User implements IUser {
-    user_id: Number;
-    user_name: String;
-    email: String;
-    password: String;
-    accessToken: String;
+    user_id: number;
+    user_name: string;
+    email: string;
+    password: string;
+    accessToken: string;
 
 
     constructor(user: IUser) {

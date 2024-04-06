@@ -1,35 +1,34 @@
 import { Request, Response } from "express";
 import GruopServices from "../services/business _services/group.services";
-import UserAuth from "../middlewares/authMiddleware/user.auth";
+import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface";
 
 class GroupController{
 
 private groupServices: GruopServices;
-private userAuth: UserAuth;
 
 
 constructor(){
     this.groupServices = new GruopServices();
-    this.userAuth = new UserAuth();
 
 }
 
-async createGroup(req: Request, res: Response){
+async createGroup(req: AuthenticatedRequest, res: Response){
 
     try {
         
         
     const {group_name, is_public} = req.body;
 
-    const token = req.headers.authorization;
 
-    const user = await this.userAuth.getUser(token as string);
+    const user_id = req.user_id!;
+    const user_name = req.user_name!;
 
-    const data = await this.groupServices.createGroup(group_name, user.user_id, is_public);
+
+    const data = await this.groupServices.createGroup(group_name, user_id, is_public);
 
     const group = data.display();
 
-    res.status(201).send(`group ${group.group_name} has been created By ${user.user_name}`);
+    res.status(201).send(`group ${group.group_name} has been created By ${user_name}`);
             
 } catch (error: any) {
     
@@ -40,17 +39,15 @@ async createGroup(req: Request, res: Response){
     
 }
 
-async getMyGroups(req: Request, res: Response){
+async getMyGroups(req: AuthenticatedRequest, res: Response){
 
     try {
         
-        
+    
 
-    const token = req.headers.authorization;
+    const user_id = req.user_id!;
 
-    const user = await this.userAuth.getUser(token as string);
-
-    const groups = await this.groupServices.index(user.user_id);
+    const groups = await this.groupServices.index(user_id);
 
     res.status(200).send(groups);
             
@@ -64,19 +61,16 @@ async getMyGroups(req: Request, res: Response){
 }
 
 
-async deleteGroup(req: Request, res: Response){
+async deleteGroup(req: AuthenticatedRequest, res: Response){
 
     try {
         
         
-        const group_id = req.params.group_id;
+        const group_id = req.params.group_id as unknown as number;
 
-    const token = req.headers.authorization;
+        const user_id = req.user_id!;
 
-    const user = await this.userAuth.getUser(token as string);
-
-
-     await this.groupServices.deleteGroup(group_id);
+     await this.groupServices.deleteGroup(group_id, user_id);
 
 
     res.status(200).send("Group Has Been Deleted.");
@@ -90,6 +84,72 @@ async deleteGroup(req: Request, res: Response){
     
 }
 
+
+async addUserToGroup(req: AuthenticatedRequest, res: Response){
+
+    try {
+        
+    const {group_id, user_id} = req.body;
+
+    const owner_id = req.user_id!;
+
+     await this.groupServices.addUserToGroup(group_id, owner_id, user_id);
+
+    res.status(200).send("User Has Been Added To The Group.");
+            
+} catch (error: any) {
+    
+    let statusCode = error.statusCode || 500;
+
+    res.status(statusCode).json(error.message);
 }
+}
+
+
+async deleteUserFromGroup(req: AuthenticatedRequest, res: Response){
+
+    try {
+        
+    const group_id = req.params.group_id as unknown as number;
+    const user_id = req.params.user_id as unknown as number;
+
+    const owner_id = req.user_id!;
+
+     await this.groupServices.deleteUserFromGroup(group_id, owner_id, user_id);
+
+    res.status(200).send("User Has Been Deleted From The Group.");
+            
+} catch (error: any) {
+    
+    let statusCode = error.statusCode || 500;
+
+    res.status(statusCode).json(error.message);
+}
+    
+}
+
+
+async getGroup(req: AuthenticatedRequest, res: Response){
+
+    try {
+        
+    const group_id = req.params.group_id as unknown as number;
+
+     const group = await this.groupServices.getGroup(group_id);
+
+    res.status(200).send(group);
+            
+} catch (error: any) {
+    
+    let statusCode = error.statusCode || 500;
+
+    res.status(statusCode).json(error.message);
+}
+    
+}
+
+}
+
+
 
 export default GroupController;
