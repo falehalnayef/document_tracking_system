@@ -16,8 +16,8 @@ class IndexRouter {
     }
 
     private initializeRoutes(): void {
-        this.router.use("/users", this.userAuth.checkUser, userRouter);
-        this.router.use("/groups", groupRouter);
+        this.router.use("/users", userRouter);
+        this.router.use("/groups", this.userAuth.checkUser, groupRouter);
     }
 
 }

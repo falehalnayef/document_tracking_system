@@ -7,18 +7,17 @@ const User = db.UserModel;
 class UserRepository implements IUserRepository{
 
 
-    findUserByPK(user_id: Number, attributes: ConcatArray<string>): Promise<IUser> {
+    async findUserByPK(user_id: Number, attributes: ConcatArray<string>): Promise<IUser> {
 
-        const user = User.findByPk(user_id, {attributes:["user_id"].concat(attributes)});
-        
+        const user = await User.findByPk(user_id, {attributes:["user_id"].concat(attributes)});
 
         return user;
         
     }
 
-    findUserByEmail(email: String): Promise<IUser> {
+    async findUserByEmail(email: String): Promise<IUser> {
 
-        const user = User.findOne({where:{email}});
+        const user = await User.findOne({where:{email}});
 
         return user;
         

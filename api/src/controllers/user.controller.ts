@@ -17,6 +17,8 @@ class UserController {
 
             const {user_name, email, password} = req.body;
 
+            console.log("FDsf")
+
         const user = await this.userServices.register(user_name, email, password);
 
 

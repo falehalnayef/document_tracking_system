@@ -24,9 +24,8 @@ async createGroup(req: AuthenticatedRequest, res: Response){
     const user_name = req.user_name!;
 
 
-    const data = await this.groupServices.createGroup(group_name, user_id, is_public);
+    const group = await this.groupServices.createGroup(group_name, user_id, is_public);
 
-    const group = data.display();
 
     res.status(201).send(`group ${group.group_name} has been created By ${user_name}`);
             
@@ -93,7 +92,7 @@ async addUserToGroup(req: AuthenticatedRequest, res: Response){
 
     const owner_id = req.user_id!;
 
-     await this.groupServices.addUserToGroup(group_id, owner_id, user_id);
+     await this.groupServices.addUserToGroup(group_id, user_id, owner_id);
 
     res.status(200).send("User Has Been Added To The Group.");
             
@@ -115,7 +114,7 @@ async deleteUserFromGroup(req: AuthenticatedRequest, res: Response){
 
     const owner_id = req.user_id!;
 
-     await this.groupServices.deleteUserFromGroup(group_id, owner_id, user_id);
+     await this.groupServices.deleteUserFromGroup(group_id, user_id, owner_id);
 
     res.status(200).send("User Has Been Deleted From The Group.");
             
@@ -128,7 +127,44 @@ async deleteUserFromGroup(req: AuthenticatedRequest, res: Response){
     
 }
 
+async joinGroup(req: AuthenticatedRequest, res: Response){
 
+    try {
+        
+    const {group_id, user_id} = req.body;
+
+     await this.groupServices.addUserToGroup(group_id, user_id);
+
+    res.status(200).send("User Has joined The Group.");
+            
+} catch (error: any) {
+    
+    let statusCode = error.statusCode || 500;
+
+    res.status(statusCode).json(error.message);
+}
+}
+
+
+async leaveGroup(req: AuthenticatedRequest, res: Response){
+
+    try {
+        
+    const group_id = req.params.group_id as unknown as number;
+    const user_id = req.params.user_id as unknown as number;
+
+     await this.groupServices.deleteUserFromGroup(group_id, user_id);
+
+    res.status(200).send("User Has left The Group.");
+            
+} catch (error: any) {
+    
+    let statusCode = error.statusCode || 500;
+
+    res.status(statusCode).json(error.message);
+}
+    
+}
 async getGroup(req: AuthenticatedRequest, res: Response){
 
     try {

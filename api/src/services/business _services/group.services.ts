@@ -3,14 +3,17 @@ import Group from "../../dto/group";
 import { IGroup, IGroupService } from "../../interfaces/business_interfaces/group.interfaces";
 import StatusError from "../../utils/error";
 import Validator from "../../validation/validators";
+import UserServices from "./user.services";
 
 class GroupServices implements IGroupService {
     private groupRepository: GroupRepository;
     private validator: Validator;
+    private userServices: UserServices
 
     constructor() {
         this.groupRepository = new GroupRepository();
         this.validator = new Validator();
+        this.userServices = new UserServices();
 
     }
 
@@ -62,29 +65,45 @@ class GroupServices implements IGroupService {
         return !!userInGroup;
     }
 
-    async addUserToGroup(groupId: number, ownerId: number, userId: number): Promise<boolean> {
-        this.validator.validateRequiredFields({ groupId, ownerId, userId });
-
+    async addUserToGroup(groupId: number, userId: number, ownerId?: number): Promise<boolean> {
+        this.validator.validateRequiredFields({ groupId, userId });
+    
         const group = await this.getGroup(groupId);
-        if (group.owner_id !== ownerId) {
+    
+        if (ownerId && group.owner_id !== ownerId) {
             throw new StatusError(403, "Not allowed.");
         }
-
+    
+        if (ownerId && userId === ownerId) {
+            throw new StatusError(400, "Are you kidding?.");
+        }
+        if (!ownerId && !group.is_public) {
+            throw new StatusError(400, "The group is private.");
+        }
+        
         const userAlreadyInGroup = await this.checkUserInGroup(groupId, userId);
         if (userAlreadyInGroup) {
             throw new StatusError(400, "User already in group.");
         }
-
+    
         await this.groupRepository.createUserGroupEntity(groupId, userId);
+    
         return true;
     }
+    
 
-    async deleteUserFromGroup(groupId: number, ownerId: number, userId: number): Promise<number> {
-        this.validator.validateRequiredFields({ groupId, ownerId, userId });
+    async deleteUserFromGroup(groupId: number, userId: number, ownerId?: number): Promise<number> {
+        this.validator.validateRequiredFields({ groupId, userId });
 
         const group = await this.getGroup(groupId);
-        if (group.owner_id !== ownerId) {
+        await this.userServices.getUser(userId);
+
+        if (ownerId && group.owner_id !== ownerId) {
             throw new StatusError(403, "Not allowed.");
+        }
+    
+        if (ownerId && userId === ownerId) {
+            throw new StatusError(400, "Are you kidding?.");
         }
 
         const userInGroup = await this.checkUserInGroup(groupId, userId);
@@ -97,5 +116,8 @@ class GroupServices implements IGroupService {
 
    
 }
+
+
+
 
 export default GroupServices;

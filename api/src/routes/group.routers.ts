@@ -21,8 +21,11 @@ class GroupRouter {
         this.router.get("/index", this.getMyGroups);
         this.router.delete("/deleteGroup/:group_id", this.deleteGroup);
         this.router.get("/getGroup/:group_id", this.getGroup);
-        this.router.post("/addUserToGroup", this.addUserToGroup);
-        this.router.delete("/group/:group_id/removeUser/:user_id", this.deleteUserFromGroup);
+        this.router.post("/addUser", this.addUserToGroup);
+        this.router.post("/joinGroup", this.joinGroup);
+        this.router.delete("/:group_id/removeUser/:user_id", this.deleteUserFromGroup);
+        this.router.delete("/:group_id/leaveGroupByUser/:user_id", this.leaveGroup);
+
     }
     private createGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
@@ -70,9 +73,27 @@ class GroupRouter {
         }
     };
 
+    private joinGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            await this.groupController.joinGroup(req, res);
+
+        } catch (error) {
+            next(error);
+        }
+    };
+
     private deleteUserFromGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             await this.groupController.deleteUserFromGroup(req, res);
+
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    private leaveGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            await this.groupController.leaveGroup(req, res);
 
         } catch (error) {
             next(error);

@@ -55,6 +55,12 @@ class UserServices implements IUserService {
         }
 
         const user = await this.userRepository.findUserByPK(user_id, attributes);
+
+
+        if (!user) {
+            throw new StatusError(404, "User not found.");
+
+        }
         return new User(user);
     }
 }

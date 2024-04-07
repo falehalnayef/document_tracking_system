@@ -24,7 +24,10 @@ class Group implements IGroup {
                 }
 
             } else{
-                 this.initializeData(groups);
+                 this.group_id = groups.group_id;
+                 this.group_name = groups.group_name;
+                 this.owner_id = groups.owner_id;
+                 this.is_public = groups.is_public;
             }
                
         }
