@@ -21,17 +21,39 @@ class GroupServices implements IGroupService {
         this.validator.validateRequiredFields({ groupName, ownerId });
 
         const group = await this.groupRepository.create(groupName, ownerId, isPublic);
+        
         return new Group(group);
     }
 
-    async index(owner_id: number): Promise<IGroup> {
-        if (!owner_id) throw new StatusError(400, "Owner ID Is Required.");
-         
-        const groups = await this.groupRepository.getGroupsByOwnerID(owner_id);
-    
-        return new Group(groups);   
+    async index(owner_id: number): Promise<IGroup[]> {
+        this.validator.validateRequiredFields({ owner_id });
+
+        const groupData = await this.groupRepository.getGroupsByAttribute({owner_id});
+
+        const groups: Group[] = [];
+        for (const group of groupData) {
+          groups.push(new Group(group as IGroup));
+        }
+
+        return groups;   
     }
 
+    async indexAsAmember(user_id: number): Promise<IGroup[]> {
+        this.validator.validateRequiredFields({ user_id });
+
+        const groupIDSData: Group[] = await this.groupRepository.getUserGroupEntity(user_id, ["group_id"]) as Group[];
+
+        const group_id: number[] = groupIDSData.map(v => v.group_id);
+
+        const groupData = await this.groupRepository.getGroupsByAttribute({group_id});
+
+        const groups: Group[] = [];
+        for (const group of groupData) {
+          groups.push(new Group(group as IGroup));
+        }
+
+        return groups;   
+    }
     async getGroup(groupId: number): Promise<IGroup> {
         this.validator.validateRequiredFields({ groupId });
 

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import GruopServices from "../services/business _services/group.services";
 import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface";
+import { failedResponse, successfulResponse } from "../utils/responseMessage";
 
 class GroupController{
 
@@ -26,19 +27,18 @@ async createGroup(req: AuthenticatedRequest, res: Response){
 
     const group = await this.groupServices.createGroup(group_name, user_id, is_public);
 
-
-    res.status(201).send(`group ${group.group_name} has been created By ${user_name}`);
+    res.status(201).send(successfulResponse(`Group ${group.group_name} has been created By ${user_name}`));
             
 } catch (error: any) {
     
     let statusCode = error.statusCode || 500;
 
-    res.status(statusCode).json(error.message);
+    res.status(statusCode).send(failedResponse(error.message));
 }
     
 }
 
-async getMyGroups(req: AuthenticatedRequest, res: Response){
+async getMyGroupsAsOwner(req: AuthenticatedRequest, res: Response){
 
     try {
         
@@ -48,17 +48,38 @@ async getMyGroups(req: AuthenticatedRequest, res: Response){
 
     const groups = await this.groupServices.index(user_id);
 
-    res.status(200).send(groups);
+    res.status(200).send(successfulResponse("Groups", groups));
             
 } catch (error: any) {
     
     let statusCode = error.statusCode || 500;
 
-    res.status(statusCode).json(error.message);
+    res.status(statusCode).send(failedResponse(error.message));
 }
     
 }
 
+
+async getMyGroupsAsMember(req: AuthenticatedRequest, res: Response){
+
+    try {
+        
+    
+
+    const user_id = req.user_id!;
+
+    const groups = await this.groupServices.indexAsAmember(user_id);
+
+    res.status(200).send(successfulResponse("Groups", groups));
+            
+} catch (error: any) {
+    
+    let statusCode = error.statusCode || 500;
+
+    res.status(statusCode).send(failedResponse(error.message));
+}
+    
+}
 
 async deleteGroup(req: AuthenticatedRequest, res: Response){
 
@@ -72,13 +93,13 @@ async deleteGroup(req: AuthenticatedRequest, res: Response){
      await this.groupServices.deleteGroup(group_id, user_id);
 
 
-    res.status(200).send("Group Has Been Deleted.");
+    res.status(200).send(successfulResponse("Group has been deleted."));
             
 } catch (error: any) {
     
     let statusCode = error.statusCode || 500;
 
-    res.status(statusCode).json(error.message);
+    res.status(statusCode).send(failedResponse(error.message));
 }
     
 }
@@ -94,13 +115,13 @@ async addUserToGroup(req: AuthenticatedRequest, res: Response){
 
      await this.groupServices.addUserToGroup(group_id, user_id, owner_id);
 
-    res.status(200).send("User Has Been Added To The Group.");
+    res.status(200).send(successfulResponse("User has been added to the group."));
             
 } catch (error: any) {
     
     let statusCode = error.statusCode || 500;
 
-    res.status(statusCode).json(error.message);
+    res.status(statusCode).send(failedResponse(error.message));
 }
 }
 
@@ -116,13 +137,13 @@ async deleteUserFromGroup(req: AuthenticatedRequest, res: Response){
 
      await this.groupServices.deleteUserFromGroup(group_id, user_id, owner_id);
 
-    res.status(200).send("User Has Been Deleted From The Group.");
+    res.status(200).send(successfulResponse("User has been deleted from the group."));
             
 } catch (error: any) {
     
     let statusCode = error.statusCode || 500;
 
-    res.status(statusCode).json(error.message);
+    res.status(statusCode).send(failedResponse(error.message));
 }
     
 }
@@ -131,17 +152,20 @@ async joinGroup(req: AuthenticatedRequest, res: Response){
 
     try {
         
-    const {group_id, user_id} = req.body;
+    const {group_id} = req.body;
+
+    const user_id = req.user_id!;
+
 
      await this.groupServices.addUserToGroup(group_id, user_id);
 
-    res.status(200).send("User Has joined The Group.");
+    res.status(200).send(successfulResponse("Joined the group."));
             
 } catch (error: any) {
     
     let statusCode = error.statusCode || 500;
 
-    res.status(statusCode).json(error.message);
+    res.status(statusCode).send(failedResponse(error.message));
 }
 }
 
@@ -151,17 +175,18 @@ async leaveGroup(req: AuthenticatedRequest, res: Response){
     try {
         
     const group_id = req.params.group_id as unknown as number;
-    const user_id = req.params.user_id as unknown as number;
+
+    const user_id = req.user_id!;
 
      await this.groupServices.deleteUserFromGroup(group_id, user_id);
 
-    res.status(200).send("User Has left The Group.");
+    res.status(200).send(successfulResponse("Left the group."));
             
 } catch (error: any) {
     
     let statusCode = error.statusCode || 500;
 
-    res.status(statusCode).json(error.message);
+    res.status(statusCode).send(failedResponse(error.message));
 }
     
 }
@@ -173,13 +198,13 @@ async getGroup(req: AuthenticatedRequest, res: Response){
 
      const group = await this.groupServices.getGroup(group_id);
 
-    res.status(200).send(group);
+    res.status(200).send(successfulResponse("Group", group));
             
 } catch (error: any) {
     
     let statusCode = error.statusCode || 500;
 
-    res.status(statusCode).json(error.message);
+    res.status(statusCode).send(failedResponse(error.message));
 }
     
 }

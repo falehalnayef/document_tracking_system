@@ -3,6 +3,7 @@ import AuthenticatedRequest from "../../interfaces/utility_interfaces/request.in
 import UserServices from "../../services/business _services/user.services";
 import JWTServices from "../../services/utility_services/jwt.service";
 import StatusError from "../../utils/error";
+import { failedResponse } from "../../utils/responseMessage";
 
 class UserAuth {
     private jwtServices: JWTServices;
@@ -34,7 +35,7 @@ class UserAuth {
             next();
         } catch (error: any) {
             let statusCode = error.statusCode || 500;
-            res.status(statusCode).json(error.message);
+            res.status(statusCode).json(failedResponse(error.message));
         }
     }
 }

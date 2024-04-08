@@ -17,12 +17,8 @@ class User implements IUser {
     }
 
     display(): Object {
-        return {
-            user_id: this.user_id,
-            user_name: this.user_name,
-            email: this.email,
-            accessToken: this.accessToken
-        };
+        const { password, ...userWithoutPassword } = this;
+        return userWithoutPassword;
     }
 }
 

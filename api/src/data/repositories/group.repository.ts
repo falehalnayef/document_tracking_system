@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { IGroup, IGroupRepository } from "../../interfaces/business_interfaces/group.interfaces";
 
 
@@ -8,17 +9,29 @@ const UserGroupModel = db.UserGroupModel;
 
 
 class GroupRepository implements IGroupRepository{
+   
 
+   async getGroupsByAttribute(attributes: {[key: string]: any}): Promise<object[]> {
 
+    const whereClause: { [key: string]: any } = {};
 
-   async getGroupsByOwnerID(owner_id: number): Promise<IGroup> {
+    // Iterate over each attribute
+    for (const key in attributes) {
+        if (Array.isArray(attributes[key])) {
+            // If the attribute value is an array, use the 'Op.in' operator
+            whereClause[key] = { [Op.in]: attributes[key] };
+        } else {
+            // Otherwise, use the attribute value directly
+            whereClause[key] = attributes[key];
+        }
+    }
 
-    const groups = await Group.findAll({where:{owner_id}});
-
+    // Find groups using the constructed where clause
+    const groups = await Group.findAll({ where: whereClause });
+    return groups;
 
     return groups;
-   }
-
+}
 
 
    async create(group_name: string, owner_id: number, is_public: boolean): Promise<IGroup> {
@@ -70,6 +83,13 @@ class GroupRepository implements IGroupRepository{
 
         return userGroup;
     }
+
+   async getUserGroupEntity(user_id: number, attributes: string[] = []): Promise<object[]> {
+        const userGroups = await UserGroupModel.findAll({where:{user_id}, attributes});
+
+        return userGroups;  
+      }
+
 
 
 }
