@@ -1,17 +1,17 @@
 import { NextFunction, Response } from "express";
 import AuthenticatedRequest from "../../interfaces/utility_interfaces/request.interface";
-import UserServices from "../../services/business _services/user.services";
-import JWTServices from "../../services/utility_services/jwt.service";
 import StatusError from "../../utils/error";
 import { failedResponse } from "../../utils/responseMessage";
+import IAuthenticationTokenService from "../../interfaces/utility_interfaces/authenticationToken.interfaces";
+import { IUserService } from "../../interfaces/business_interfaces/user.interfaces";
 
 class UserAuth {
-    private jwtServices: JWTServices;
-    private userServices: UserServices;
+    private userServices: IUserService;
+    private authTokenServices: IAuthenticationTokenService;
 
-    constructor() {
-        this.jwtServices = new JWTServices();
-        this.userServices = new UserServices();
+    constructor(userServices: IUserService, authTokenServices: IAuthenticationTokenService) {
+        this.userServices = userServices;
+        this.authTokenServices = authTokenServices;
 
         // Bind the methods to the current instance
         this.getUser = this.getUser.bind(this);
@@ -20,7 +20,7 @@ class UserAuth {
 
     async getUser(token: string) {
         if (!token) throw new StatusError(400, "No Token Provided.");
-        const payload = await this.jwtServices.verifyToken(token);
+        const payload = await this.authTokenServices.verifyToken(token);
         const user = await this.userServices.getUser(payload.user_id, ["user_name"]);
         if (!user) throw new StatusError(404, "User Not Found.");
         return user;

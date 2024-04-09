@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt";
 import StatusError from "../../utils/error";
+import IHashService from "../../interfaces/utility_interfaces/hashService.interface";
 
-class HashServices {
+class HashServices implements IHashService{
 
   async hash(data: string, saltRounds: number): Promise<string> {
     if (!data || !saltRounds) {

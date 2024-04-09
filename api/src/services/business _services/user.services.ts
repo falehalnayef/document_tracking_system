@@ -1,22 +1,21 @@
-import { IUser, IUserService } from "../../interfaces/business_interfaces/user.interfaces";
-import UserRepository from "../../data/repositories/user.repository";
+import { IUser, IUserRepository, IUserService } from "../../interfaces/business_interfaces/user.interfaces";
 import User from "../../dto/user";
-import HashServices from "../utility_services/hash.services";
-import Validator from "../../validation/validators";
 import StatusError from "../../utils/error";
-import JWTServices from "../utility_services/jwt.service";
+import IValidator from "../../interfaces/utility_interfaces/validator.interface";
+import IHashService from "../../interfaces/utility_interfaces/hashService.interface";
+import IAuthenticationTokenService from "../../interfaces/utility_interfaces/authenticationToken.interfaces";
 
 class UserServices implements IUserService {
-    private userRepository: UserRepository;
-    private validator: Validator;
-    private hashServices: HashServices;
-    private jwtServices: JWTServices;
+    private userRepository: IUserRepository;
+    private validator: IValidator;
+    private hashServices: IHashService;
+    private authTokenServices: IAuthenticationTokenService;
 
-    constructor() {
-        this.validator = new Validator();
-        this.userRepository = new UserRepository();
-        this.hashServices = new HashServices();
-        this.jwtServices = new JWTServices();
+    constructor(userRepository: IUserRepository, validator: IValidator, hashServices: IHashService, authTokenServices: IAuthenticationTokenService) {
+        this.userRepository = userRepository;
+        this.validator = validator;
+        this.hashServices = hashServices;
+        this.authTokenServices = authTokenServices;
     }
 
     async login(email: string, password: string): Promise<IUser> {
@@ -34,7 +33,7 @@ class UserServices implements IUserService {
             throw new StatusError(400, "Invalid email or password.");
         }
 
-        const accessToken = await this.jwtServices.generateToken({ user_id: user.user_id, user_name: user.user_name }, { expiresIn: "1d" });
+        const accessToken = await this.authTokenServices.generateToken({ user_id: user.user_id, user_name: user.user_name }, { expiresIn: "1d" });
         user.accessToken = accessToken;
 
         return new User(user);

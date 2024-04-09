@@ -1,6 +1,7 @@
+import IValidator from "../interfaces/utility_interfaces/validator.interface";
 import StatusError from "../utils/error";
 
-class Validator {
+class Validator implements IValidator{
 
     public isValidUserName(user_name: string): boolean {
 

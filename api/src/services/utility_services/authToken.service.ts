@@ -1,12 +1,12 @@
 
 import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 import config from '../../config/config';
-import JwtPayload from '../../interfaces/utility_interfaces/jwt.interfaces';
+import IAuthenticationTokenService, {IPayload} from '../../interfaces/utility_interfaces/authenticationToken.interfaces';
 import StatusError from '../../utils/error';
 
 
 
-class JWTServices{
+class JWTServices implements IAuthenticationTokenService{
 
 
     private readonly secretKey: Secret;
@@ -15,7 +15,7 @@ class JWTServices{
         this.secretKey = config.JWT_SECRET_KEY!;
     }
 
-    async generateToken(payload: JwtPayload, options?: SignOptions): Promise<string>{
+    async generateToken(payload: IPayload, options?: SignOptions): Promise<string>{
 
 
         if (!this.secretKey || !payload) {
@@ -27,14 +27,14 @@ class JWTServices{
     }
 
     
-    async verifyToken(token: string):Promise<JwtPayload>  {
+    async verifyToken(token: string):Promise<IPayload>  {
 
         if (!this.secretKey || !token) {
         
             throw new StatusError(404, "Bad Request")
         }
 
-         return jwt.verify(token, this.secretKey) as JwtPayload;
+         return jwt.verify(token, this.secretKey) as IPayload;
 
     }
 

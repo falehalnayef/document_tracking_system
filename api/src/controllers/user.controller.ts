@@ -1,14 +1,13 @@
 import { ValidationError } from "sequelize";
-import UserServices from "../services/business _services/user.services";
-
 import { Request, Response} from "express";
 import {successfulResponse, failedResponse} from "../utils/responseMessage";
+import { IUserService } from "../interfaces/business_interfaces/user.interfaces";
 class UserController {
 
-    private userServices: UserServices;
+    private userServices: IUserService;
 
-    constructor(){
-        this.userServices = new UserServices();
+    constructor(userServices: IUserService){
+        this.userServices = userServices;
     }
 
     async createUser(req: Request, res: Response){

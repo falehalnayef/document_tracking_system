@@ -9,10 +9,10 @@ class GroupRouter {
     private groupController: GroupController;
 
 
-    constructor(){
+    constructor(router: Router, groupController: GroupController){
 
-        this.router = Router();
-        this.groupController = new GroupController();
+        this.router = router;
+        this.groupController = groupController;
         this.initializeRoutes();
     }
 
@@ -112,4 +112,4 @@ class GroupRouter {
 }
 
 
-export default new GroupRouter().router;
+export default GroupRouter;

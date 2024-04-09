@@ -22,7 +22,7 @@ interface IUserRepository {
 interface IUserService {
   register(user_name: string, email: string, password: string): Promise<IUser>;
   login(email: string, password: string): Promise<IUser>;
-  getUser(user_id: number, attributes: string[]): Promise<IUser>
+  getUser(user_id: number, attributes?: string[]): Promise<IUser>
 
 
 

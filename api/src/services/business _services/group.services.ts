@@ -1,19 +1,19 @@
-import GroupRepository from "../../data/repositories/group.repository";
 import Group from "../../dto/group";
-import { IGroup, IGroupService } from "../../interfaces/business_interfaces/group.interfaces";
+import { IGroup, IGroupRepository, IGroupService } from "../../interfaces/business_interfaces/group.interfaces";
+import { IUserService } from "../../interfaces/business_interfaces/user.interfaces";
+import IValidator from "../../interfaces/utility_interfaces/validator.interface";
 import StatusError from "../../utils/error";
-import Validator from "../../validation/validators";
-import UserServices from "./user.services";
 
 class GroupServices implements IGroupService {
-    private groupRepository: GroupRepository;
-    private validator: Validator;
-    private userServices: UserServices
+    private groupRepository: IGroupRepository;
+    private validator: IValidator;
+    private userServices: IUserService;
 
-    constructor() {
-        this.groupRepository = new GroupRepository();
-        this.validator = new Validator();
-        this.userServices = new UserServices();
+    constructor(groupRepository: IGroupRepository, userServices: IUserService, validator: IValidator) {
+        this.groupRepository = groupRepository;
+        this.userServices = userServices;
+        this.validator = validator;
+
 
     }
 

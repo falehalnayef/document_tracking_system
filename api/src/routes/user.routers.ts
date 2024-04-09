@@ -5,9 +5,9 @@ class UserRouter {
     public router: Router;
     private userController: UserController;
 
-    constructor() {
-        this.router = Router();
-        this.userController = new UserController();
+    constructor(router: Router, userController: UserController) {
+        this.router = router;
+        this.userController = userController;
         this.initializeRoutes();
     }
 
@@ -37,4 +37,4 @@ class UserRouter {
     };
 }
 
-export default new UserRouter().router;
+export default UserRouter;

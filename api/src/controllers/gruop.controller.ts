@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
-import GruopServices from "../services/business _services/group.services";
+import { Response } from "express";
 import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface";
 import { failedResponse, successfulResponse } from "../utils/responseMessage";
+import { IGroupService } from "../interfaces/business_interfaces/group.interfaces";
 
 class GroupController{
 
-private groupServices: GruopServices;
+private groupServices: IGroupService;
 
 
-constructor(){
-    this.groupServices = new GruopServices();
+constructor(groupServices: IGroupService){
+    this.groupServices = groupServices;
 
 }
 

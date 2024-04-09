@@ -29,7 +29,7 @@ interface IGroup extends IGroupAttributes{
     
     interface IGroupRepository {
       create(group_name: string, owner_id: number, is_public: boolean): Promise<IGroup>;
-      getGroupsByAttribute(attribute:{[key: string]: any}): Promise<object>;
+      getGroupsByAttribute(attribute:{[key: string]: any}): Promise<object[]>;
       getGroup(group_id: number): Promise<IGroup>;    
       remove(group_id: number): Promise<number>;
       checkUserGroupEntity(group_id: number, user_id: number): Promise<object>
@@ -49,8 +49,8 @@ interface IGroup extends IGroupAttributes{
         getGroup(group_id: number): Promise<IGroup>;    
         deleteGroup(group_id: number, user_id: number): Promise<number>;    
         checkUserInGroup(group_id: number, user_id: number): Promise<boolean>
-        addUserToGroup(group_id: number, owner_id: number, user_id: number): Promise<boolean>
-        deleteUserFromGroup(group_id: number, owner_id: number, user_id: number): Promise<number>
+        addUserToGroup(group_id: number, user_id: number, owner_id?: number): Promise<boolean>
+        deleteUserFromGroup(group_id: number, user_id: number, owner_id?: number): Promise<number>
 
 
 
