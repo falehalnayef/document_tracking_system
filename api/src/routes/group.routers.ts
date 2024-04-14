@@ -1,5 +1,6 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Router, Response, NextFunction } from "express";
 import GroupController from "../controllers/gruop.controller";
+import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface";
 
 
 class GroupRouter {
@@ -14,22 +15,23 @@ class GroupRouter {
         this.router = router;
         this.groupController = groupController;
         this.initializeRoutes();
+        this
     }
 
     private initializeRoutes(): void {
-        this.router.post("/createGroup", this.createGroup);
-        this.router.get("/index", this.getMyGroupsAsOwner);
-        this.router.get("/indexAsAmember", this.getMyGroupsAsMember);
-        this.router.delete("/deleteGroup/:group_id", this.deleteGroup);
-        this.router.get("/getGroup/:group_id", this.getGroup);
-        this.router.post("/addUser", this.addUserToGroup);
-        this.router.post("/joinGroup", this.joinGroup);
-        this.router.delete("/:group_id/removeUser/:user_id", this.deleteUserFromGroup);
-        this.router.delete("/:group_id/leaveGroup", this.leaveGroup);
-
+        this.router.post("/membership", this.joinGroup)
+        this.router.post("/", this.createGroup);
+        this.router.get("/ownership", this.getMyGroupsAsOwner);
+        this.router.get("/membership", this.getMyGroupsAsMember);
+        this.router.post("/users", this.addUserToGroup);
+        this.router.delete("/:group_id", this.deleteGroup);
+        this.router.get("/:group_id", this.getGroup);
+        this.router.delete("/:group_id/users/:user_id", this.deleteUserFromGroup);
+        this.router.delete("/:group_id/membership", this.leaveGroup);
     }
-    private createGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private createGroup = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
+        
             await this.groupController.createGroup(req, res);
 
         } catch (error) {
@@ -37,7 +39,7 @@ class GroupRouter {
         }
     };
 
-    private getMyGroupsAsOwner = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private getMyGroupsAsOwner = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             await this.groupController.getMyGroupsAsOwner(req, res);
 
@@ -47,7 +49,7 @@ class GroupRouter {
     };
 
 
-    private getMyGroupsAsMember = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private getMyGroupsAsMember = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             await this.groupController.getMyGroupsAsMember(req, res);
 
@@ -55,7 +57,7 @@ class GroupRouter {
             next(error);
         }
     };
-    private deleteGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private deleteGroup = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             await this.groupController.deleteGroup(req, res);
 
@@ -63,9 +65,7 @@ class GroupRouter {
             next(error);
         }
     };
-
-
-    private getGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private getGroup = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             await this.groupController.getGroup(req, res);
 
@@ -74,7 +74,7 @@ class GroupRouter {
         }
     };
 
-    private addUserToGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private addUserToGroup = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             await this.groupController.addUserToGroup(req, res);
 
@@ -83,8 +83,10 @@ class GroupRouter {
         }
     };
 
-    private joinGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private joinGroup = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
+            console.log("join", req.user_id)
+
             await this.groupController.joinGroup(req, res);
 
         } catch (error) {
@@ -92,7 +94,7 @@ class GroupRouter {
         }
     };
 
-    private deleteUserFromGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private deleteUserFromGroup = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             await this.groupController.deleteUserFromGroup(req, res);
 
@@ -101,8 +103,9 @@ class GroupRouter {
         }
     };
 
-    private leaveGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private leaveGroup = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
+            console.log("leave", req.user_id)
             await this.groupController.leaveGroup(req, res);
 
         } catch (error) {

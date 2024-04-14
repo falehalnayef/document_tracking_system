@@ -12,8 +12,8 @@ class Group implements IGroup {
         this.owner_id = group.owner_id;
         this.is_public = group.is_public;   
      }
+     
      display(): Object {
-     //   const {...userWithoutPassword } = this;
         return this;
     }
 }

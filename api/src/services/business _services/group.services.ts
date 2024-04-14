@@ -41,9 +41,9 @@ class GroupServices implements IGroupService {
     async indexAsAmember(user_id: number): Promise<IGroup[]> {
         this.validator.validateRequiredFields({ user_id });
 
-        const groupIDSData: Group[] = await this.groupRepository.getUserGroupEntity(user_id, ["group_id"]) as Group[];
+        const groupIDsData: Group[] = await this.groupRepository.getUserGroupEntity(user_id, ["group_id"]) as Group[];
 
-        const group_id: number[] = groupIDSData.map(v => v.group_id);
+        const group_id: number[] = groupIDsData.map(v => v.group_id);
 
         const groupData = await this.groupRepository.getGroupsByAttribute({group_id});
 

@@ -14,29 +14,34 @@ import GroupRepository from "../data/repositories/group.repository";
 
 
 class IndexRouter {
-    public router: Router;
-    private userRouter: Router;
-    private groupRouter: Router;
-    private auth: UserAuth;
-
+    router: Router;
+    userRouter: Router;
+    groupRouter: Router;
+    auth: UserAuth;
     constructor() {
         this.router = Router();
 
         const validator = new Validator();
         const authTokenServices = new JWTServices();
+
         const userServices = new UserServices(new UserRepository(), validator, new HashServices(), authTokenServices);
         const groupServices = new GroupServices(new GroupRepository(), userServices, validator);
+
         this.userRouter = new UserRouter(this.router, new UserController(userServices)).router;
         this.groupRouter = new GroupRouter(this.router, new GroupController(groupServices)).router;
+        
         this.auth = new UserAuth(userServices, authTokenServices);
+        
+
+        
         this.initializeRoutes();
     }
 
     private initializeRoutes(): void {
-        this.router.use("/users", this.userRouter);
         this.router.use("/groups", this.auth.checkUser, this.groupRouter);
+        this.router.use("/users", this.userRouter);
     }
-
 }
+
 
 export default new IndexRouter().router;

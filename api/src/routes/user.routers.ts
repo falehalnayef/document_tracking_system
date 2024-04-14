@@ -1,5 +1,6 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Router, Response, NextFunction } from "express";
 import UserController from "../controllers/user.controller";
+import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface";
 
 class UserRouter {
     public router: Router;
@@ -12,13 +13,13 @@ class UserRouter {
     }
 
     private initializeRoutes(): void {
-        this.router.post("/createUser", this.createUser);
+        this.router.post("/registration", this.createUser);
         this.router.post("/login", this.login);
 
 
     }
 
-    private createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private createUser = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             await this.userController.createUser(req, res);
 
@@ -27,7 +28,7 @@ class UserRouter {
         }
     };
 
-    private login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private login = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             await this.userController.login(req, res);
 

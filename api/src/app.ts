@@ -7,11 +7,11 @@ const app: Application= express();
 
 
 app.use(express.json()); // So express can handle Requests that include JSON in the body.
-app.use(indexRouter);
+app.use("/api", indexRouter);
 
 
 process.on("uncaughtException", (error) => {
-    console.log(error);
+    console.error(error);
   })
   
      db.sequelize.sync({alter:true}).then(()=>{

@@ -1,7 +1,8 @@
 import { ValidationError } from "sequelize";
-import { Request, Response} from "express";
+import {Response} from "express";
 import {successfulResponse, failedResponse} from "../utils/responseMessage";
 import { IUserService } from "../interfaces/business_interfaces/user.interfaces";
+import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface";
 class UserController {
 
     private userServices: IUserService;
@@ -10,10 +11,11 @@ class UserController {
         this.userServices = userServices;
     }
 
-    async createUser(req: Request, res: Response){
+    async createUser(req: AuthenticatedRequest, res: Response){
 
         try {
 
+            console.log("SFsfs")
             const {user_name, email, password} = req.body;
 
 
@@ -37,7 +39,7 @@ class UserController {
     }
 
 
-    async login(req: Request, res: Response){
+    async login(req: AuthenticatedRequest, res: Response){
 
         try {
 
