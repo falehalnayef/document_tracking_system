@@ -1,6 +1,6 @@
 import { Router, Response, NextFunction } from "express";
-import GroupController from "../controllers/gruop.controller";
-import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface";
+import GroupController from "../controllers/gruop.controller.js";
+import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface.js";
 
 
 class GroupRouter {

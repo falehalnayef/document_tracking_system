@@ -1,9 +1,9 @@
 import { NextFunction, Response } from "express";
-import AuthenticatedRequest from "../../interfaces/utility_interfaces/request.interface";
-import StatusError from "../../utils/error";
-import { failedResponse } from "../../utils/responseMessage";
-import IAuthenticationTokenService from "../../interfaces/utility_interfaces/authenticationToken.interfaces";
-import { IUserService } from "../../interfaces/business_interfaces/user.interfaces";
+import AuthenticatedRequest from "../../interfaces/utility_interfaces/request.interface.js";
+import StatusError from "../../utils/error.js";
+import { failedResponse } from "../../utils/responseMessage.js";
+import IAuthenticationTokenService from "../../interfaces/utility_interfaces/authenticationToken.interfaces.js";
+import { IUserService } from "../../interfaces/business_interfaces/user.interfaces.js";
 
 class UserAuth {
     private userServices: IUserService;
