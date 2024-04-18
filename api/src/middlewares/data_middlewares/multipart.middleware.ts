@@ -1,19 +1,12 @@
 import * as fs from "fs";
 import busboy from "busboy";
 import { fileTypeFromBuffer } from "file-type"; // Use the correct import
-import AuthenticatedRequest from "../../interfaces/utility_interfaces/request.interface.js";
+import AuthenticatedRequest, { FileData } from "../../interfaces/utility_interfaces/request.interface.js";
 import { Response, NextFunction } from "express";
 import StatusError from "../../utils/error.js";
 import { failedResponse } from "../../utils/responseMessage.js";
 
-type FileData = {
-  fieldname: string;
-  filename: any;
-  encoding: string;
-  mimetype: string;
-  ext?: string;
-  data?: Buffer;
-};
+
 
 class MultipartMiddleware {
 

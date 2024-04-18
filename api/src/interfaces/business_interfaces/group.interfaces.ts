@@ -20,7 +20,7 @@ interface IGroupAttributes{
       }
 
 interface IGroup extends IGroupAttributes{
-    display(): any;
+    display(): object;
 
         
     }

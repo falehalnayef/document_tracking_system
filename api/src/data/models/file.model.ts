@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
-import { IFileAttributes } from '../../interfaces/business_interfaces/file.interfaces';
+import { IFileAttributes } from '../../interfaces/business_interfaces/file.interfaces.js';
 
 
 export default function defineFileModel(sequelize: Sequelize) {
@@ -22,7 +22,7 @@ export default function defineFileModel(sequelize: Sequelize) {
               type: DataTypes.STRING,
               allowNull: false
           },
-          public: {
+          is_public: {
               type: DataTypes.BOOLEAN,
               defaultValue: false,
               allowNull: false

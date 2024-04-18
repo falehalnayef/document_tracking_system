@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
 
-import {IUserAttributes} from '../../interfaces/business_interfaces/user.interfaces';
+import {IUserAttributes} from '../../interfaces/business_interfaces/user.interfaces.js';
 
 export default function defineUserModel(sequelize: Sequelize) {
   class UserModel extends Model<IUserAttributes> {

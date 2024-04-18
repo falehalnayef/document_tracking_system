@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
-import StatusError from "../../utils/error";
-import IHashService from "../../interfaces/utility_interfaces/hashService.interface";
+import StatusError from "../../utils/error.js";
+import IHashService from "../../interfaces/utility_interfaces/hashService.interface.js";
 
 class HashServices implements IHashService{
 

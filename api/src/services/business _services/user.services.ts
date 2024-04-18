@@ -1,9 +1,9 @@
-import { IUser, IUserRepository, IUserService } from "../../interfaces/business_interfaces/user.interfaces";
-import User from "../../dto/user";
-import StatusError from "../../utils/error";
-import IValidator from "../../interfaces/utility_interfaces/validator.interface";
-import IHashService from "../../interfaces/utility_interfaces/hashService.interface";
-import IAuthenticationTokenService from "../../interfaces/utility_interfaces/authenticationToken.interfaces";
+import { IUser, IUserRepository, IUserService } from "../../interfaces/business_interfaces/user.interfaces.js";
+import User from "../../dto/user.js";
+import StatusError from "../../utils/error.js";
+import IValidator from "../../interfaces/utility_interfaces/validator.interface.js";
+import IHashService from "../../interfaces/utility_interfaces/hashService.interface.js";
+import IAuthenticationTokenService from "../../interfaces/utility_interfaces/authenticationToken.interfaces.js";
 
 class UserServices implements IUserService {
     private userRepository: IUserRepository;

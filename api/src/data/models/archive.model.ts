@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
-import { IArchiveAttributes } from '../../interfaces/business_interfaces/archive.interfaces';
+import { IArchiveAttributes } from '../../interfaces/business_interfaces/archive.interfaces.js';
 
 
 export default function defineArchiveModell(sequelize: Sequelize) {

@@ -1,8 +1,8 @@
 import { Op } from "sequelize";
-import { IGroup, IGroupRepository } from "../../interfaces/business_interfaces/group.interfaces";
+import { IGroup, IGroupRepository } from "../../interfaces/business_interfaces/group.interfaces.js";
 
 
-import db from "../database/db";
+import db from "../database/db.js";
 
 const Group = db.GroupModel;
 const UserGroupModel = db.UserGroupModel;

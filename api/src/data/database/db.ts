@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import { Sequelize, DataTypes, Model } from 'sequelize';
-import config from "../../config/config";
+import config from "../../config/config.js";
 
-  import eventEmitter from '../../services/utility_services/event_emitter.service';
+  import eventEmitter from '../../services/utility_services/event_emitter.service.js';
 
 const models_path = path.join(__dirname.replace("database",""), "/models");
 
@@ -55,4 +55,4 @@ Object.keys(db).forEach((modelName: string) => {
 db.sequelize = sequelize!;
 db.Sequelize = Sequelize;
 
-export = db;
+export default db;

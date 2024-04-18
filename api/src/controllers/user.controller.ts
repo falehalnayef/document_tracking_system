@@ -1,8 +1,8 @@
 import { ValidationError } from "sequelize";
 import {Response} from "express";
-import {successfulResponse, failedResponse} from "../utils/responseMessage";
-import { IUserService } from "../interfaces/business_interfaces/user.interfaces";
-import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface";
+import {successfulResponse, failedResponse} from "../utils/responseMessage.js";
+import { IUserService } from "../interfaces/business_interfaces/user.interfaces.js";
+import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface.js";
 class UserController {
 
     private userServices: IUserService;
@@ -15,7 +15,6 @@ class UserController {
 
         try {
 
-            console.log("SFsfs")
             const {user_name, email, password} = req.body;
 
 

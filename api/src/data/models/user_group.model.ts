@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
-import { IUserGroupAttributes } from '../../interfaces/business_interfaces/group.interfaces';
+import { IUserGroupAttributes } from '../../interfaces/business_interfaces/group.interfaces.js';
 
 
 export default function defineUserGroupModel(sequelize: Sequelize) {

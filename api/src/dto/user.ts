@@ -1,4 +1,4 @@
-import { IUser } from "../interfaces/business_interfaces/user.interfaces";
+import { IUser } from "../interfaces/business_interfaces/user.interfaces.js";
 
 class User implements IUser {
     user_id: number;
@@ -16,7 +16,7 @@ class User implements IUser {
         this.accessToken = user.accessToken;
     }
 
-    display(): Object {
+    display(): object {
         const { password, ...userWithoutPassword } = this;
         return userWithoutPassword;
     }

@@ -1,7 +1,7 @@
 import express, { Application } from 'express';
-import indexRouter from './routes/index.router';
+import indexRouter from './routes/index.router.js';
 
-import db from './data/database/db';
+import db from './data/database/db.js';
 
 const app: Application= express();
 

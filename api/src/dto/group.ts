@@ -1,4 +1,4 @@
-import { IGroup } from "../interfaces/business_interfaces/group.interfaces";
+import { IGroup } from "../interfaces/business_interfaces/group.interfaces.js";
 
 class Group implements IGroup {
     group_id!: number;
@@ -13,7 +13,7 @@ class Group implements IGroup {
         this.is_public = group.is_public;   
      }
      
-     display(): Object {
+     display(): object {
         return this;
     }
 }

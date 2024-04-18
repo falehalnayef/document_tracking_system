@@ -1,8 +1,8 @@
-import Group from "../../dto/group";
-import { IGroup, IGroupRepository, IGroupService } from "../../interfaces/business_interfaces/group.interfaces";
-import { IUserService } from "../../interfaces/business_interfaces/user.interfaces";
-import IValidator from "../../interfaces/utility_interfaces/validator.interface";
-import StatusError from "../../utils/error";
+import Group from "../../dto/group.js";
+import { IGroup, IGroupRepository, IGroupService } from "../../interfaces/business_interfaces/group.interfaces.js";
+import { IUserService } from "../../interfaces/business_interfaces/user.interfaces.js";
+import IValidator from "../../interfaces/utility_interfaces/validator.interface.js";
+import StatusError from "../../utils/error.js";
 
 class GroupServices implements IGroupService {
     private groupRepository: IGroupRepository;

@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
 
-import {IGroupAttributes} from '../../interfaces/business_interfaces/group.interfaces';
+import {IGroupAttributes} from '../../interfaces/business_interfaces/group.interfaces.js';
 
 export default function defineGroupModel(sequelize: Sequelize) {
   class GroupModel extends Model<IGroupAttributes> {

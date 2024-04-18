@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
-import { IBookingAttributes } from '../../interfaces/business_interfaces/booking.interfaces';
+import { IBookingAttributes } from '../../interfaces/business_interfaces/booking.interfaces.js';
 
 
 export default function defineBookingModel(sequelize: Sequelize) {

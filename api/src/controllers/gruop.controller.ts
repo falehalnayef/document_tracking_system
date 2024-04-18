@@ -1,7 +1,7 @@
 import { Response } from "express";
-import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface";
-import { failedResponse, successfulResponse } from "../utils/responseMessage";
-import { IGroupService } from "../interfaces/business_interfaces/group.interfaces";
+import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface.js";
+import { failedResponse, successfulResponse } from "../utils/responseMessage.js";
+import { IGroupService } from "../interfaces/business_interfaces/group.interfaces.js";
 
 class GroupController{
 

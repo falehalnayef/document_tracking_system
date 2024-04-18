@@ -1,5 +1,5 @@
-import IValidator from "../interfaces/utility_interfaces/validator.interface";
-import StatusError from "../utils/error";
+import IValidator from "../interfaces/utility_interfaces/validator.interface.js";
+import StatusError from "../utils/error.js";
 
 class Validator implements IValidator{
 

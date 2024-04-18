@@ -1,8 +1,8 @@
 
 import jwt, { Secret, SignOptions } from 'jsonwebtoken';
-import config from '../../config/config';
-import IAuthenticationTokenService, {IPayload} from '../../interfaces/utility_interfaces/authenticationToken.interfaces';
-import StatusError from '../../utils/error';
+import config from '../../config/config.js';
+import IAuthenticationTokenService, {IPayload} from '../../interfaces/utility_interfaces/authenticationToken.interfaces.js';
+import StatusError from '../../utils/error.js';
 
 
 

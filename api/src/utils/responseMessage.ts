@@ -1,4 +1,4 @@
-import ResponseMessage from "../interfaces/utility_interfaces/responseMessage";
+import ResponseMessage from "../interfaces/utility_interfaces/responseMessage.js";
 
 
 const successfulResponse =(message: string, data?: object):ResponseMessage =>{

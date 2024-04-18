@@ -1,6 +1,6 @@
-import { IUser, IUserRepository } from "../../interfaces/business_interfaces/user.interfaces";
+import { IUser, IUserRepository } from "../../interfaces/business_interfaces/user.interfaces.js";
 
-import db from "../database/db";
+import db from "../database/db.js";
 
 const User = db.UserModel;
 

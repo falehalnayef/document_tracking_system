@@ -1,16 +1,16 @@
 import { Router } from "express";
-import UserRouter from "./user.routers";
-import GroupRouter from "./group.routers";
-import UserAuth from "../middlewares/auth_mddleware/user.auth";
-import UserController from "../controllers/user.controller";
-import UserServices from "../services/business _services/user.services";
-import UserRepository from "../data/repositories/user.repository";
-import Validator from "../validation/validators";
-import HashServices from "../services/utility_services/hash.services";
-import JWTServices from "../services/utility_services/authToken.service";
-import GroupController from "../controllers/gruop.controller";
-import GroupServices from "../services/business _services/group.services";
-import GroupRepository from "../data/repositories/group.repository";
+import UserRouter from "./user.routers.js";
+import GroupRouter from "./group.routers.js";
+import UserAuth from "../middlewares/auth_mddleware/user.auth.js";
+import UserController from "../controllers/user.controller.js";
+import UserServices from "../services/business _services/user.services.js";
+import UserRepository from "../data/repositories/user.repository.js";
+import Validator from "../validation/validators.js";
+import HashServices from "../services/utility_services/hash.services.js";
+import JWTServices from "../services/utility_services/authToken.service.js";
+import GroupController from "../controllers/gruop.controller.js";
+import GroupServices from "../services/business _services/group.services.js";
+import GroupRepository from "../data/repositories/group.repository.js";
 
 
 class IndexRouter {
