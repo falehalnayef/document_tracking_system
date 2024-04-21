@@ -5,8 +5,8 @@ class UserRouter {
     public router: Router;
     private userController: UserController;
 
-    constructor(router: Router, userController: UserController) {
-        this.router = router;
+    constructor(userController: UserController) {
+        this.router = Router();
         this.userController = userController;
         this.initializeRoutes();
     }

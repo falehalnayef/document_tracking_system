@@ -11,12 +11,18 @@ import JWTServices from "../services/utility_services/authToken.service.js";
 import GroupController from "../controllers/gruop.controller.js";
 import GroupServices from "../services/business _services/group.services.js";
 import GroupRepository from "../data/repositories/group.repository.js";
+import FileRouter from "./file.routers.js";
+import FileController from "../controllers/file.controller.js";
+import FileServices from "../services/business _services/file.services.js";
+import FileRepository from "../data/repositories/file.repository.js";
 
 
 class IndexRouter {
     router: Router;
     userRouter: Router;
     groupRouter: Router;
+    fileRouter: Router;
+
     auth: UserAuth;
     constructor() {
         this.router = Router();
@@ -26,11 +32,15 @@ class IndexRouter {
 
         const userServices = new UserServices(new UserRepository(), validator, new HashServices(), authTokenServices);
         const groupServices = new GroupServices(new GroupRepository(), userServices, validator);
+        const fileServices = new FileServices(new FileRepository(), validator);
 
-        this.userRouter = new UserRouter(this.router, new UserController(userServices)).router;
-        this.groupRouter = new GroupRouter(this.router, new GroupController(groupServices)).router;
+        this.userRouter = new UserRouter(new UserController(userServices)).router;
+        this.groupRouter = new GroupRouter(new GroupController(groupServices)).router;
+        this.fileRouter = new FileRouter(new FileController(fileServices)).router;
         
         this.auth = new UserAuth(userServices, authTokenServices);
+
+
         
 
         
@@ -38,8 +48,9 @@ class IndexRouter {
     }
 
     private initializeRoutes(): void {
-        this.router.use("/groups", this.auth.checkUser, this.groupRouter);
-        this.router.use("/users", this.userRouter);
+        this.router.use("/groups", this.auth.checkUser.bind(this.auth), this.groupRouter.bind(this.groupRouter));
+        this.router.use("/users", this.userRouter.bind(this.userRouter));
+        this.router.use("/files", this.auth.checkUser.bind(this.auth), this.fileRouter.bind(this.fileRouter));
     }
 }
 

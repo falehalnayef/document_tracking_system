@@ -9,9 +9,9 @@ class GroupRouter {
     private groupController: GroupController;
 
 
-    constructor(router: Router, groupController: GroupController){
+    constructor(groupController: GroupController){
 
-        this.router = router;
+        this.router = Router();
         this.groupController = groupController;
         this.initializeRoutes();
         this

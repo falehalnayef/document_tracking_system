@@ -1,6 +1,4 @@
-import * as fs from "fs";
 import busboy from "busboy";
-import { fileTypeFromBuffer } from "file-type"; // Use the correct import
 import AuthenticatedRequest, { FileData } from "../../interfaces/utility_interfaces/request.interface.js";
 import { Response, NextFunction } from "express";
 import StatusError from "../../utils/error.js";
@@ -23,16 +21,21 @@ class MultipartMiddleware {
     try {
         const bb = busboy({ headers: req.headers });
 
-        let file_data: FileData;
+        let fileData: FileData;
+
+        bb.on('field', (fieldname, value) => {
+          req.body[fieldname] = value;
+      })
 
         bb.on("file", async (fieldname: string, file: any, info: any) => {
-          file_data = {
+          fileData = {
             fieldname,
             filename: info.filename,
             encoding: info.encoding,
             mimetype: info.mimeType,
           };
-    
+
+          
           const chunks: Buffer[] = [];
           file
             .on("data", (chunk: Buffer) => {
@@ -40,17 +43,14 @@ class MultipartMiddleware {
             })
             .on("end", async () => {
               const buffer = Buffer.concat(chunks);
-              const type = await fileTypeFromBuffer(buffer);
-              if (type) {
-                file_data.ext = type.ext;
-              }
-              file_data.data = buffer;
+          
+              fileData.data = buffer;
     
-              if (file_data && !MultipartMiddleware.allowedMimeTypes.includes(file_data.mimetype)) {
+              if (fileData && !MultipartMiddleware.allowedMimeTypes.includes(fileData.mimetype)) {
                 throw new StatusError(400, "File type not allowed");
               }
     
-              const fileSize = file_data ? file_data.data?.length : 0;
+              const fileSize = fileData ? fileData.data?.length : 0;
               if (fileSize && fileSize > MultipartMiddleware.allowedSizeInBytes) {
                 throw new StatusError(400, "File size exceeds limit");
 
@@ -59,8 +59,8 @@ class MultipartMiddleware {
         });
     
         bb.on("finish", () => {
-          if (file_data) {
-            req.file = file_data;
+          if (fileData) {
+            req.file = fileData;
           }
           next();
         });

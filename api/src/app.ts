@@ -7,6 +7,7 @@ const app: Application= express();
 
 
 app.use(express.json()); // So express can handle Requests that include JSON in the body.
+//app.use(express.urlencoded());
 app.use("/api", indexRouter);
 
 
