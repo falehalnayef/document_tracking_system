@@ -1,6 +1,6 @@
 interface IPayload{
-    user_id:number;
-    user_name:string;
+    userId:number;
+    userName:string;
 }
 
 interface IAuthenticationTokenService{

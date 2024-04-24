@@ -41,14 +41,14 @@ interface IGroup extends IGroupAttributes{
     }
     
     interface IGroupService {
-        createGroup(group_name: string, owner_id: number, is_public: boolean): Promise<IGroup>;
-        index(owner_id: number): Promise<IGroup[]>;
-        indexAsAmember(user_id: number): Promise<IGroup[]>;
-        getGroup(group_id: number): Promise<IGroup>;    
-        deleteGroup(group_id: number, user_id: number): Promise<number>;    
-        checkUserInGroup(group_id: number, user_id: number): Promise<boolean>
-        addUserToGroup(group_id: number, user_id: number, owner_id?: number): Promise<boolean>
-        deleteUserFromGroup(group_id: number, user_id: number, owner_id?: number): Promise<number>
+        createGroup(groupName: string, ownerId: number, isPublic: boolean): Promise<IGroup>;
+        index(ownerId: number): Promise<IGroup[]>;
+        indexAsAmember(userId: number): Promise<IGroup[]>;
+        getGroup(groupId: number): Promise<IGroup>;    
+        deleteGroup(groupId: number, userId: number): Promise<number>;    
+        checkUserInGroup(groupId: number, userId: number): Promise<boolean>
+        addUserToGroup(groupId: number, userId: number, ownerId?: number): Promise<boolean>
+        deleteUserFromGroup(groupId: number, userId: number, ownerId?: number): Promise<number>
 
 
 

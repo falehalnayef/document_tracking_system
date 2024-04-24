@@ -36,11 +36,11 @@ interface IFileAttributes{
     
     interface IFileService {   
         fileOperations: FileUtility;
-        createFile(ownerId: number, isPublic: boolean, fileDate: any, group_id: number): Promise<IFile>;
-         index(group_id: number, user_id: number): Promise<IFile[]>;
-         getFile(file_id: number): Promise<IFile>;    
-         deleteFile(file_id: number, group_id: number, owner_id: number): Promise<number>;    
-             checkFileInGroup(group_id: number, file_id: number): Promise<boolean>
+        createFile(ownerId: number, isPublic: boolean, fileDate: any, groupId: number): Promise<IFile>;
+         index(groupId: number, userId: number): Promise<IFile[]>;
+         getFile(fileId: number): Promise<IFile>;    
+         deleteFile(fileId: number, groupId: number, ownerId: number): Promise<number>;    
+             checkFileInGroup(groupId: number, fileId: number): Promise<boolean>
 
     }
 

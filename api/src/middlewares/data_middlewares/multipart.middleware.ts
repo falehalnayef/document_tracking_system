@@ -21,10 +21,10 @@ class MultipartMiddleware {
           req.body[fieldname] = value;
       })
 
-        bb.on("file", (fieldname: string, file: any, info: any) => {
+        bb.on("file", (fieldName: string, file: any, info: any) => {
           fileData = {
-            fieldname,
-            filename: info.filename,
+            fieldName,
+            fileName: info.filename,
             encoding: info.encoding,
             mimetype: info.mimeType,
           };

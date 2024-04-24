@@ -18,16 +18,16 @@ async createGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
     try {
         
         
-    const {group_name, is_public} = req.body;
+    const {groupName, isPublic} = req.body;
 
 
-    const user_id = req.user_id!;
-    const user_name = req.user_name!;
+    const userId = req.userId!;
+    const userName = req.userName!;
 
 
-    const group = await this.groupServices.createGroup(group_name, user_id, is_public);
+    const group = await this.groupServices.createGroup(groupName, userId, isPublic);
 
-    res.status(201).send(successfulResponse(`Group ${group.group_name} has been created By ${user_name}`));
+    res.status(201).send(successfulResponse(`Group ${group.group_name} has been created By ${userName}`));
             
 } catch (error: any) {
             
@@ -41,9 +41,9 @@ async getMyGroupsAsOwner(req: AuthenticatedRequest, res: Response, next: NextFun
         
     
 
-    const user_id = req.user_id!;
+    const userId = req.userId!;
 
-    const groups = await this.groupServices.index(user_id);
+    const groups = await this.groupServices.index(userId);
 
     res.status(200).send(successfulResponse("Groups", groups));
             
@@ -62,9 +62,9 @@ async getMyGroupsAsMember(req: AuthenticatedRequest, res: Response, next: NextFu
         
     
 
-    const user_id = req.user_id!;
+    const userId = req.userId!;
 
-    const groups = await this.groupServices.indexAsAmember(user_id);
+    const groups = await this.groupServices.indexAsAmember(userId);
 
     res.status(200).send(successfulResponse("Groups", groups));
             
@@ -81,11 +81,11 @@ async deleteGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
     try {
         
         
-        const group_id = req.params.group_id as unknown as number;
+        const groupId = req.params.groupId as unknown as number;
 
-        const user_id = req.user_id!;
+        const userId = req.userId!;
 
-     await this.groupServices.deleteGroup(group_id, user_id);
+     await this.groupServices.deleteGroup(groupId, userId);
 
 
     res.status(200).send(successfulResponse("Group has been deleted."));
@@ -102,11 +102,11 @@ async addUserToGroup(req: AuthenticatedRequest, res: Response, next: NextFunctio
 
     try {
         
-    const {group_id, user_id} = req.body;
+    const {groupId, userId} = req.body;
 
-    const owner_id = req.user_id!;
+    const ownerId = req.userId!;
 
-     await this.groupServices.addUserToGroup(group_id, user_id, owner_id);
+     await this.groupServices.addUserToGroup(groupId, userId, ownerId);
 
     res.status(200).send(successfulResponse("User has been added to the group."));
             
@@ -120,12 +120,12 @@ async deleteUserFromGroup(req: AuthenticatedRequest, res: Response, next: NextFu
 
     try {
         
-    const group_id = req.params.group_id as unknown as number;
-    const user_id = req.params.user_id as unknown as number;
+    const groupId = req.params.groupId as unknown as number;
+    const userId = req.params.userId as unknown as number;
 
-    const owner_id = req.user_id!;
+    const ownerId = req.userId!;
 
-     await this.groupServices.deleteUserFromGroup(group_id, user_id, owner_id);
+     await this.groupServices.deleteUserFromGroup(groupId, userId, ownerId);
 
     res.status(200).send(successfulResponse("User has been deleted from the group."));
             
@@ -139,12 +139,12 @@ async joinGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
-    const {group_id} = req.body;
+    const {groupId} = req.body;
 
-    const user_id = req.user_id!;
+    const userId = req.userId!;
 
 
-     await this.groupServices.addUserToGroup(group_id, user_id);
+     await this.groupServices.addUserToGroup(groupId, userId);
 
     res.status(200).send(successfulResponse("Joined the group."));
             
@@ -158,11 +158,11 @@ async leaveGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
-    const group_id = req.params.group_id as unknown as number;
+    const groupId = req.params.groupId as unknown as number;
 
-    const user_id = req.user_id!;
+    const userId = req.userId!;
 
-     await this.groupServices.deleteUserFromGroup(group_id, user_id);
+     await this.groupServices.deleteUserFromGroup(groupId, userId);
 
     res.status(200).send(successfulResponse("Left the group."));
             
@@ -176,9 +176,9 @@ async getGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
-    const group_id = req.params.group_id as unknown as number;
+    const groupId = req.params.groupId as unknown as number;
 
-     const group = await this.groupServices.getGroup(group_id);
+     const group = await this.groupServices.getGroup(groupId);
 
     res.status(200).send(successfulResponse("Group", group));
             

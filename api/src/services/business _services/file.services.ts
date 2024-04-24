@@ -21,19 +21,19 @@ class FileServices implements IFileService {
 
 
     }
-    async index(group_id: number, user_id: number): Promise<IFile[]> {
-        this.validator.validateRequiredFields({ group_id, user_id });
+    async index(groupId: number, userId: number): Promise<IFile[]> {
+        this.validator.validateRequiredFields({ groupId, userId });
 
-        const check = this.groupServices.checkUserInGroup(group_id, user_id);
+        const check = this.groupServices.checkUserInGroup(groupId, userId);
         if (!check) {
             throw new StatusError(403, "Not allowed");
         }
 
-        const fileIDsData: IFile[] = await this.fileRepository.getFileGroupEntity(group_id, ["file_id"]) as IFile[];
+        const fileIDsData: IFile[] = await this.fileRepository.getFileGroupEntity(groupId, ["fileId"]) as IFile[];
 
-        const file_id: number[] = fileIDsData.map(v => v.file_id);
+        const fileId: number[] = fileIDsData.map(v => v.file_id);
 
-        const fileData = await this.fileRepository.getFilesByAttribute({file_id});
+        const fileData = await this.fileRepository.getFilesByAttribute({fileId});
 
 
         const files: IFile[] = [];
@@ -44,38 +44,43 @@ class FileServices implements IFileService {
         return files;       
     }
 
-    async checkFileInGroup(group_id: number, file_id: number): Promise<boolean> {
+    async checkFileInGroup(groupId: number, fileId: number): Promise<boolean> {
 
-        const userInGroup = await this.fileRepository.checkFileGroupEntity(group_id, file_id);
+        const userInGroup = await this.fileRepository.checkFileGroupEntity(groupId, fileId);
         return !!userInGroup;
     }
 
 
-    async deleteFile(file_id: number, group_id: number, owner_id: number): Promise<number> {
+    async deleteFile(fileId: number, groupId: number, ownerId: number): Promise<number> {
 
-        this.validator.validateRequiredFields({ file_id, group_id, owner_id });
+        this.validator.validateRequiredFields({ fileId, groupId, ownerId });
 
-        const check = await this.checkFileInGroup(group_id, file_id);
+        const check = await this.checkFileInGroup(groupId, fileId);
         if (!check) {
             throw new StatusError(400, "File is not in the group.");
         }
-        const group = await this.groupServices.getGroup(group_id);
-        if (group.owner_id !== owner_id) {
+        const group = await this.groupServices.getGroup(groupId);
+        if (group.owner_id !== ownerId) {
             throw new StatusError(403, "Not allowed.");
         }
-        const removedFile = await this.fileRepository.remove(file_id);
+        const file = await this.getFile(fileId);
+
+        this.fileOperations.deleteFile(file.path);
+        const removedFile = await this.fileRepository.remove(fileId);
         if (removedFile !== 1) {
             throw new StatusError(500, "File is not deleted.");
         }
+
+
 
         return removedFile;  
       }
 
 
-      async getFile(file_id: number): Promise<IFile> {
-        this.validator.validateRequiredFields({ file_id });
+      async getFile(fileId: number): Promise<IFile> {
+        this.validator.validateRequiredFields({ fileId });
 
-        const file = await this.fileRepository.getFile(file_id);
+        const file = await this.fileRepository.getFile(fileId);
         if (!file) {
             throw new StatusError(404, "File not found.");
         }
@@ -85,11 +90,11 @@ class FileServices implements IFileService {
     
 
 
-    async createFile(ownerId: number, isPublic: boolean, fileData: FileData, group_id: number): Promise<IFile> {
+    async createFile(ownerId: number, isPublic: boolean, fileData: FileData, groupId: number): Promise<IFile> {
         this.validator.validateRequiredFields({ fileData, ownerId, isPublic });
 
 
-       const group = await this.groupServices.getGroup(group_id);
+       const group = await this.groupServices.getGroup(groupId);
 
        if (group.owner_id != ownerId) {
 
@@ -97,14 +102,14 @@ class FileServices implements IFileService {
        }
 
 
-        const newFileName = fileData.filename;
+        const newFileName = fileData.fileName;
         const filePath = path.join(__dirname.split("api")[0], "uploads/", newFileName);
 
         this.fileOperations.save(fileData.data!, filePath);
 
         const file = await this.fileRepository.create(newFileName, ownerId, isPublic, filePath, new Date());
 
-        await this.fileRepository.createFileGroupEntity(group_id, file.file_id);
+        await this.fileRepository.createFileGroupEntity(groupId, file.file_id);
         
         return file;
     }

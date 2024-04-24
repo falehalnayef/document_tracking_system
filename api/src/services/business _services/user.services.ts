@@ -19,9 +19,8 @@ class UserServices implements IUserService {
     }
 
     async login(email: string, password: string): Promise<IUser> {
-        if (!email || !password) {
-            throw new StatusError(400, "Please provide both email and password.");
-        }
+
+        this.validator.validateRequiredFields({email, password})
 
         const user = await this.userRepository.findUserByEmail(email);
         if (!user) {
@@ -33,27 +32,27 @@ class UserServices implements IUserService {
             throw new StatusError(400, "Invalid email or password.");
         }
 
-        const accessToken = await this.authTokenServices.generateToken({ user_id: user.user_id, user_name: user.user_name }, { expiresIn: "1d" });
+        const accessToken = await this.authTokenServices.generateToken({ userId: user.user_id, userName: user.user_name }, { expiresIn: "1d" });
         user.accessToken = accessToken;
 
         return new User(user);
     }
 
-    async register(user_name: string, email: string, password: string): Promise<IUser> {
-        this.validator.registerValidator(user_name, email, password);
+    async register(userName: string, email: string, password: string): Promise<IUser> {
+        this.validator.registerValidator(userName, email, password);
 
         const hashedPassword = await this.hashServices.hash(password, 10);
-        const user = await this.userRepository.create(user_name, email, hashedPassword);
+        const user = await this.userRepository.create(userName, email, hashedPassword);
 
         return new User(user);
     }
 
-    async getUser(user_id: number, attributes: string[] = []): Promise<IUser> {
-        if (!user_id) {
+    async getUser(userId: number, attributes: string[] = []): Promise<IUser> {
+        if (!userId) {
             throw new StatusError(400, "Please provide a user ID.");
         }
 
-        const user = await this.userRepository.findUserByPK(user_id, attributes);
+        const user = await this.userRepository.findUserByPK(userId, attributes);
 
 
         if (!user) {

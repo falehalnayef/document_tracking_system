@@ -18,13 +18,13 @@ class FileController {
         let file;
         try {
 
-            const {isPublic, group_id} = req.body;
+            const {isPublic, groupId} = req.body;
 
-            const ownerId = req.user_id!;
+            const ownerId = req.userId!;
             const fileData = req.file;
 
 
-       file = await this.fileServices.createFile(ownerId, isPublic, fileData, group_id);
+       file = await this.fileServices.createFile(ownerId, isPublic, fileData, groupId);
 
 
 
@@ -49,11 +49,11 @@ class FileController {
     async index(req: AuthenticatedRequest, res: Response, next: NextFunction){
         try {
 
-            const {group_id} = req.body;
+            const {groupId} = req.body;
 
-            const user_id = req.user_id!;
+            const userId = req.userId!;
 
-      const files = await this.fileServices.index(group_id, user_id);
+      const files = await this.fileServices.index(groupId, userId);
 
 
 
@@ -74,13 +74,13 @@ class FileController {
         try {
             
             
-            const {group_id} = req.body;
-            const file_id = req.params.file_id as unknown as number;
+            const {groupId} = req.body;
+            const fileId = req.params.fileId as unknown as number;
 
     
-            const owner_id = req.user_id!;
+            const ownerId = req.userId!;
     
-         await this.fileServices.deleteFile(file_id, group_id, owner_id);
+         await this.fileServices.deleteFile(fileId, groupId, ownerId);
     
     
         res.status(200).send(successfulResponse("File has been deleted."));

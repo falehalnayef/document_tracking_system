@@ -15,10 +15,10 @@ class UserController {
 
         try {
 
-            const {user_name, email, password} = req.body;
+            const {userName, email, password} = req.body;
 
 
-        const user = await this.userServices.register(user_name, email, password);
+        const user = await this.userServices.register(userName, email, password);
 
 
 

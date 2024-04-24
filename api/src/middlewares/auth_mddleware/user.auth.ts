@@ -21,7 +21,7 @@ class UserAuth {
     async getUser(token: string) {
         if (!token) throw new StatusError(400, "No Token Provided.");
         const payload = await this.authTokenServices.verifyToken(token);
-        const user = await this.userServices.getUser(payload.user_id, ["user_name"]);
+        const user = await this.userServices.getUser(payload.userId, ["user_name"]);
         if (!user) throw new StatusError(404, "User Not Found.");
         return user;
     }
@@ -30,8 +30,8 @@ class UserAuth {
         try {
             const token = req.headers.authorization!;
             const user = await this.getUser(token);
-            req.user_id = user.user_id;
-            req.user_name = user.user_name;
+            req.userId = user.user_id;
+            req.userName = user.user_name;
             next();
         } catch (error: any) {
             next(error);       

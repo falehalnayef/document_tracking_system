@@ -1,8 +1,8 @@
 import { Request } from "express";
 
 export type FileData = {
-    fieldname: string;
-    filename: any;
+    fieldName: string;
+    fileName: any;
     encoding: string;
     mimetype: string;
     ext?: string;
@@ -10,8 +10,8 @@ export type FileData = {
   };
 
 interface AuthenticatedRequest extends Request {
-    user_id?: number;
-    user_name?: string;
+    userId?: number;
+    userName?: string;
     file?: FileData;
 }
 
