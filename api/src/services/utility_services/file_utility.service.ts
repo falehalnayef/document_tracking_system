@@ -6,12 +6,9 @@ class FileUtility {
 
    createDir(dirPath: string) {
     if (!fs.existsSync(dirPath)) {
-      console.log('Creating directory...');
       try {
         fs.mkdirSync(dirPath, { recursive: true });
-        console.log('Directory created successfully.');
       } catch (error) {
-        console.error('Error creating directory:', error);
         throw error;
       }
     }

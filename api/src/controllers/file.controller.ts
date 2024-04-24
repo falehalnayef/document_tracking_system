@@ -1,5 +1,5 @@
 import { ValidationError } from "sequelize";
-import {Response} from "express";
+import {NextFunction, Response} from "express";
 import {successfulResponse, failedResponse} from "../utils/responseMessage.js";
 import { IFileService } from "../interfaces/business_interfaces/file.interfaces.js";
 import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface.js";
@@ -13,7 +13,7 @@ class FileController {
         this.fileServices = FileServices;
     }
 
-    async createFile(req: AuthenticatedRequest, res: Response){
+    async createFile(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
         let file;
         try {
@@ -21,24 +21,25 @@ class FileController {
             const {isPublic} = req.body;
 
             const ownerId = req.user_id!;
-            const fileDate = req.file;
-
-       file = await this.fileServices.createFile(ownerId, isPublic, fileDate);
+            const fileData = req.file;
 
 
+       file = await this.fileServices.createFile(ownerId, isPublic, fileData);
 
-        res.status(201).send(successfulResponse("File is created.", file.display));
+
+
+        res.status(201).send(successfulResponse("File is uploaded.", file.display));
 
             
         } catch (error: any) {
             
-            let statusCode = error.statusCode || 500;
-
-            if (error instanceof ValidationError || error.name === "SequelizeDatabaseError") statusCode = 400;
+            if (error instanceof ValidationError || error.name === "SequelizeDatabaseError") error.statusCode = 400;
 
             if(file) this.fileServices.fileOperations.deleteFile(file.path);
+
+
+            next(error);
             
-            res.status(statusCode).send(failedResponse(error.message));
         }
         
 

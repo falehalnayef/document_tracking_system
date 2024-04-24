@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { NextFunction, Response } from "express";
 import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface.js";
 import { failedResponse, successfulResponse } from "../utils/responseMessage.js";
 import { IGroupService } from "../interfaces/business_interfaces/group.interfaces.js";
@@ -13,7 +13,7 @@ constructor(groupServices: IGroupService){
 
 }
 
-async createGroup(req: AuthenticatedRequest, res: Response){
+async createGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
@@ -30,15 +30,12 @@ async createGroup(req: AuthenticatedRequest, res: Response){
     res.status(201).send(successfulResponse(`Group ${group.group_name} has been created By ${user_name}`));
             
 } catch (error: any) {
-    
-    let statusCode = error.statusCode || 500;
-
-    res.status(statusCode).send(failedResponse(error.message));
-}
+            
+    next(error);}
     
 }
 
-async getMyGroupsAsOwner(req: AuthenticatedRequest, res: Response){
+async getMyGroupsAsOwner(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
@@ -52,15 +49,14 @@ async getMyGroupsAsOwner(req: AuthenticatedRequest, res: Response){
             
 } catch (error: any) {
     
-    let statusCode = error.statusCode || 500;
 
-    res.status(statusCode).send(failedResponse(error.message));
+    next(error);
 }
     
 }
 
 
-async getMyGroupsAsMember(req: AuthenticatedRequest, res: Response){
+async getMyGroupsAsMember(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
@@ -73,15 +69,14 @@ async getMyGroupsAsMember(req: AuthenticatedRequest, res: Response){
     res.status(200).send(successfulResponse("Groups", groups));
             
 } catch (error: any) {
-    
-    let statusCode = error.statusCode || 500;
+            
+    next(error);
 
-    res.status(statusCode).send(failedResponse(error.message));
 }
     
 }
 
-async deleteGroup(req: AuthenticatedRequest, res: Response){
+async deleteGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
@@ -97,15 +92,13 @@ async deleteGroup(req: AuthenticatedRequest, res: Response){
             
 } catch (error: any) {
     
-    let statusCode = error.statusCode || 500;
-
-    res.status(statusCode).send(failedResponse(error.message));
-}
+            
+    next(error);}
     
 }
 
 
-async addUserToGroup(req: AuthenticatedRequest, res: Response){
+async addUserToGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
@@ -118,15 +111,12 @@ async addUserToGroup(req: AuthenticatedRequest, res: Response){
     res.status(200).send(successfulResponse("User has been added to the group."));
             
 } catch (error: any) {
-    
-    let statusCode = error.statusCode || 500;
-
-    res.status(statusCode).send(failedResponse(error.message));
-}
+            
+    next(error);}
 }
 
 
-async deleteUserFromGroup(req: AuthenticatedRequest, res: Response){
+async deleteUserFromGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
@@ -140,15 +130,12 @@ async deleteUserFromGroup(req: AuthenticatedRequest, res: Response){
     res.status(200).send(successfulResponse("User has been deleted from the group."));
             
 } catch (error: any) {
-    
-    let statusCode = error.statusCode || 500;
-
-    res.status(statusCode).send(failedResponse(error.message));
-}
+            
+    next(error);}
     
 }
 
-async joinGroup(req: AuthenticatedRequest, res: Response){
+async joinGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
@@ -162,15 +149,12 @@ async joinGroup(req: AuthenticatedRequest, res: Response){
     res.status(200).send(successfulResponse("Joined the group."));
             
 } catch (error: any) {
-    
-    let statusCode = error.statusCode || 500;
-
-    res.status(statusCode).send(failedResponse(error.message));
-}
+            
+    next(error);}
 }
 
 
-async leaveGroup(req: AuthenticatedRequest, res: Response){
+async leaveGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
@@ -183,14 +167,12 @@ async leaveGroup(req: AuthenticatedRequest, res: Response){
     res.status(200).send(successfulResponse("Left the group."));
             
 } catch (error: any) {
-    
-    let statusCode = error.statusCode || 500;
 
-    res.status(statusCode).send(failedResponse(error.message));
-}
+            
+    next(error);}
     
 }
-async getGroup(req: AuthenticatedRequest, res: Response){
+async getGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
@@ -201,11 +183,9 @@ async getGroup(req: AuthenticatedRequest, res: Response){
     res.status(200).send(successfulResponse("Group", group));
             
 } catch (error: any) {
-    
-    let statusCode = error.statusCode || 500;
 
-    res.status(statusCode).send(failedResponse(error.message));
-}
+            
+    next(error);}
     
 }
 

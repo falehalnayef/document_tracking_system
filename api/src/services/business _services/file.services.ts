@@ -19,13 +19,13 @@ class FileServices implements IFileService {
     
 
 
-    async createFile(ownerId: number, isPublic: boolean, fileDate: FileData): Promise<IFile> {
-        this.validator.validateRequiredFields({ fileDate, ownerId, isPublic });
+    async createFile(ownerId: number, isPublic: boolean, fileData: FileData): Promise<IFile> {
+        this.validator.validateRequiredFields({ fileData, ownerId, isPublic });
 
-        const newFileName = fileDate.filename
+        const newFileName = fileData.filename
         const filePath = path.join(__dirname.split("api")[0], "uploads/", newFileName);
 
-       await this.fileOperations.save(fileDate.data!, filePath);
+        this.fileOperations.save(fileData.data!, filePath);
 
         const file = await this.FileRepository.create(newFileName, ownerId, isPublic, filePath, new Date());
         

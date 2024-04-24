@@ -34,8 +34,7 @@ class UserAuth {
             req.user_name = user.user_name;
             next();
         } catch (error: any) {
-            let statusCode = error.statusCode || 500;
-            res.status(statusCode).json(failedResponse(error.message));
+            next(error);       
         }
     }
 }

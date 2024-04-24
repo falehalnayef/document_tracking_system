@@ -12,13 +12,7 @@ class MultipartMiddleware {
  static allowedSizeInBytes = 10 * 1024 * 1024; 
 
 
-  async handleFileUpload(
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-  ) {
-
-    try {
+   handleFileUpload(req: AuthenticatedRequest, res: Response, next: NextFunction) {
         const bb = busboy({ headers: req.headers });
 
         let fileData: FileData;
@@ -27,7 +21,7 @@ class MultipartMiddleware {
           req.body[fieldname] = value;
       })
 
-        bb.on("file", async (fieldname: string, file: any, info: any) => {
+        bb.on("file", (fieldname: string, file: any, info: any) => {
           fileData = {
             fieldname,
             filename: info.filename,
@@ -41,19 +35,22 @@ class MultipartMiddleware {
             .on("data", (chunk: Buffer) => {
               chunks.push(chunk);
             })
-            .on("end", async () => {
+            .on("end", () => {
               const buffer = Buffer.concat(chunks);
           
               fileData.data = buffer;
-    
               if (fileData && !MultipartMiddleware.allowedMimeTypes.includes(fileData.mimetype)) {
-                throw new StatusError(400, "File type not allowed");
+
+                next(new StatusError(400, "File type not allowed"));
+              
+                return;
               }
     
               const fileSize = fileData ? fileData.data?.length : 0;
               if (fileSize && fileSize > MultipartMiddleware.allowedSizeInBytes) {
-                throw new StatusError(400, "File size exceeds limit");
+                next(new StatusError(400, "File size exceeds limit"));
 
+                return;
               }
             });
         });
@@ -66,19 +63,12 @@ class MultipartMiddleware {
         });
     
         bb.on("error", (error: any) => {
-          console.error();
-          throw new StatusError(500, error.message);
+          next(new StatusError(500, error.message));
+          return;
 
-          
-    
         });
         req.pipe(bb);
-    } catch (error: any) {
-
-        const status = error.status || 500;
-        res.status(status).send(failedResponse(error.message));
-
-    }
+    
    
   }
 }

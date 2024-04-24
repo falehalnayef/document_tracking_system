@@ -1,5 +1,5 @@
 import { ValidationError } from "sequelize";
-import {Response} from "express";
+import {NextFunction, Response} from "express";
 import {successfulResponse, failedResponse} from "../utils/responseMessage.js";
 import { IUserService } from "../interfaces/business_interfaces/user.interfaces.js";
 import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface.js";
@@ -11,7 +11,7 @@ class UserController {
         this.userServices = userServices;
     }
 
-    async createUser(req: AuthenticatedRequest, res: Response){
+    async createUser(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
         try {
 
@@ -27,18 +27,16 @@ class UserController {
             
         } catch (error: any) {
             
-            let statusCode = error.statusCode || 500;
-
-            if (error instanceof ValidationError || error.name === "SequelizeDatabaseError") statusCode = 400;
-
-            res.status(statusCode).send(failedResponse(error.message));
-        }
+            if (error instanceof ValidationError || error.name === "SequelizeDatabaseError") error.statusCode = 400;
+            
+            next(error);       
+         }
         
 
     }
 
 
-    async login(req: AuthenticatedRequest, res: Response){
+    async login(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
         try {
 
@@ -52,9 +50,8 @@ class UserController {
             
         } catch (error: any) {
             
-            let statusCode = error.statusCode || 500;
-
-            res.status(statusCode).send(failedResponse(error.message));
+            next(error);       
+        
         }
         
 
