@@ -16,7 +16,6 @@ interface IGroupAttributes{
         fg_id: number;
         group_id: number;
         file_id: number;
-       
       }
 
 interface IGroup extends IGroupAttributes{
@@ -36,8 +35,7 @@ interface IGroup extends IGroupAttributes{
       createUserGroupEntity(group_id: number, user_id: number): Promise<object>
       removeUserGroupEntity(group_id: number, user_id: number): Promise<number>   
       getUserGroupEntity(user_id: number, attributes: string[]): Promise<object>
-
-
+     
 
     
     }

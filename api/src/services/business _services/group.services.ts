@@ -81,7 +81,6 @@ class GroupServices implements IGroupService {
     }
 
     async checkUserInGroup(groupId: number, userId: number): Promise<boolean> {
-        this.validator.validateRequiredFields({ groupId, userId });
 
         const userInGroup = await this.groupRepository.checkUserGroupEntity(groupId, userId);
         return !!userInGroup;

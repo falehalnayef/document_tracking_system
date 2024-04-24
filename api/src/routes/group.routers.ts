@@ -14,7 +14,7 @@ class GroupRouter {
         this.router = Router();
         this.groupController = groupController;
         this.initializeRoutes();
-        this
+        
     }
 
     private initializeRoutes(): void {
@@ -27,6 +27,8 @@ class GroupRouter {
         this.router.get("/:group_id", this.groupController.getGroup.bind(this.groupController));
         this.router.delete("/:group_id/users/:user_id", this.groupController.deleteUserFromGroup.bind(this.groupController));
         this.router.delete("/:group_id/membership", this.groupController.leaveGroup.bind(this.groupController));
+
+        
     }
 }
 

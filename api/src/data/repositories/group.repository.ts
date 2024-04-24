@@ -8,7 +8,10 @@ const Group = db.GroupModel;
 const UserGroupModel = db.UserGroupModel;
 
 
+
 class GroupRepository implements IGroupRepository{
+
+
    
 
    async getGroupsByAttribute(attributes: {[key: string]: any}): Promise<object[]> {
@@ -57,32 +60,32 @@ class GroupRepository implements IGroupRepository{
 
    async checkUserGroupEntity(group_id: number, user_id: number): Promise<Object> {
 
-        const userGroup = await UserGroupModel.findOne({where:{group_id, user_id}});
+        const userGroupEntity = await UserGroupModel.findOne({where:{group_id, user_id}});
 
-        return userGroup;
+        return userGroupEntity;
 
     }
 
     async createUserGroupEntity(group_id: number, user_id: number): Promise<Object> {
 
 
-        const userGroup = await UserGroupModel.create({group_id, user_id});
+        const userGroupEntity = await UserGroupModel.create({group_id, user_id});
 
-        return userGroup;
+        return userGroupEntity;
 
     }
     
    async removeUserGroupEntity(group_id: number, user_id: number): Promise<number> {
 
-        const userGroup = await UserGroupModel.destroy({where:{group_id, user_id}});
+        const userGroupEntity = await UserGroupModel.destroy({where:{group_id, user_id}});
 
-        return userGroup;
+        return userGroupEntity;
     }
 
    async getUserGroupEntity(user_id: number, attributes: string[] = []): Promise<object[]> {
-        const userGroups = await UserGroupModel.findAll({where:{user_id}, attributes});
+        const userGroupEntity = await UserGroupModel.findAll({where:{user_id}, attributes});
 
-        return userGroups;  
+        return userGroupEntity;  
       }
 
 
