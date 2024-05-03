@@ -76,6 +76,24 @@ async getMyGroupsAsMember(req: AuthenticatedRequest, res: Response, next: NextFu
     
 }
 
+async getPublicGroups(req: AuthenticatedRequest, res: Response, next: NextFunction){
+
+    try {
+        
+    
+
+    const groups = await this.groupServices.indexAsPublic();
+
+    res.status(200).send(successfulResponse("Groups", groups));
+            
+} catch (error: any) {
+            
+    next(error);
+
+}
+    
+}
+
 async deleteGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {

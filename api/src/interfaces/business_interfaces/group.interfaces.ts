@@ -44,6 +44,7 @@ interface IGroup extends IGroupAttributes{
         createGroup(groupName: string, ownerId: number, isPublic: boolean): Promise<IGroup>;
         index(ownerId: number): Promise<IGroup[]>;
         indexAsAmember(userId: number): Promise<IGroup[]>;
+        indexAsPublic(): Promise<IGroup[]>;
         getGroup(groupId: number): Promise<IGroup>;    
         deleteGroup(groupId: number, userId: number): Promise<number>;    
         checkUserInGroup(groupId: number, userId: number): Promise<boolean>

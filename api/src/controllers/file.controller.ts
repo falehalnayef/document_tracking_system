@@ -49,7 +49,7 @@ class FileController {
     async index(req: AuthenticatedRequest, res: Response, next: NextFunction){
         try {
 
-            const {groupId} = req.body;
+            const groupId = req.params.group_id as unknown as number;
 
             const userId = req.userId!;
 
@@ -57,7 +57,7 @@ class FileController {
 
 
 
-        res.status(201).send(successfulResponse("Files.", files));
+        res.status(200).send(successfulResponse("Files.", files));
 
             
         } catch (error: any) {
@@ -74,8 +74,9 @@ class FileController {
         try {
             
             
-            const {groupId} = req.body;
-            const fileId = req.params.fileId as unknown as number;
+            const groupId = req.params.group_id as unknown as number;
+
+            const fileId = req.params.file_id as unknown as number;
 
     
             const ownerId = req.userId!;

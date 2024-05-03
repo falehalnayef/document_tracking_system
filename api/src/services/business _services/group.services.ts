@@ -25,6 +25,17 @@ class GroupServices implements IGroupService {
         return new Group(group);
     }
 
+    async indexAsPublic(): Promise<IGroup[]> {
+
+        const groupData = await this.groupRepository.getGroupsByAttribute({is_public:true});
+
+        const groups: Group[] = [];
+        for (const group of groupData) {
+          groups.push(new Group(group as IGroup));
+        }
+
+        return groups;   
+    }
     async index(owner_id: number): Promise<IGroup[]> {
         this.validator.validateRequiredFields({ owner_id });
 
