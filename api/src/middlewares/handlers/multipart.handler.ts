@@ -12,7 +12,7 @@ class MultipartMiddleware {
  static allowedSizeInBytes = 10 * 1024 * 1024; 
 
 
-   handleFileUpload(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+   handleFileUpload(req: AuthenticatedRequest, _res: Response, next: NextFunction) {
         const bb = busboy({ headers: req.headers });
 
         let fileData: FileData;

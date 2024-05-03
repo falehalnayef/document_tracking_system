@@ -5,7 +5,7 @@ import db from './data/database/db.js';
 import AuthenticatedRequest from './interfaces/utility_interfaces/request.interface.js';
 import { failedResponse } from './utils/responseMessage.js';
 
-import errorHandlerMiddlware from './middlewares/errors_middlewares/error.handler.middlware.js';
+import errorHandlerMiddlware from './middlewares/handlers/error.handler.handler.js';
 const app: Application= express();
 
 

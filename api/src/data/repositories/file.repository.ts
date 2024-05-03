@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Op, Transaction } from "sequelize";
 import { IFile, IFileRepository } from "../../interfaces/business_interfaces/file.interfaces.js";
 
 
@@ -34,19 +34,19 @@ class FileRepository implements IFileRepository{
         return files;
     
     }
-   async create(file_name: string, owner_id: number, is_public: boolean, path: string, date: Date): Promise<IFile> {
+   async create(file_name: string, owner_id: number, is_public: boolean, path: string, date: Date, transaction?:Transaction): Promise<IFile> {
 
 
 
-    const file = await File.create({file_name, owner_id, is_public, path, date});
+    const file = await File.create({file_name, owner_id, is_public, path, date}, {transaction});
 
         return file;
     }
 
 
-    async remove(file_id: number): Promise<number> {
+    async remove(file_id: number, transaction?:Transaction): Promise<number> {
 
-        const file = await File.destroy({where:{file_id}});
+        const file = await File.destroy({where:{file_id}}, {transaction});
 
         return file;
     }
@@ -67,14 +67,14 @@ class FileRepository implements IFileRepository{
         return fileGroupEntity;
 
     }
-async removeFileGroupEntity(group_id: number, file_id: number): Promise<object> {
-    const fileGroupEntity = await FileGroupModel.destroy({where:{group_id, file_id}});
+async removeFileGroupEntity(group_id: number, file_id: number, transaction?:Transaction): Promise<object> {
+    const fileGroupEntity = await FileGroupModel.destroy({where:{group_id, file_id}}, {transaction});
 
     return fileGroupEntity;    
 }
 
-async createFileGroupEntity(group_id: number, file_id: number): Promise<object> {
-    const fileGroupEntity = await FileGroupModel.create({group_id, file_id});
+async createFileGroupEntity(group_id: number, file_id: number, transaction?:Transaction): Promise<object> {
+    const fileGroupEntity = await FileGroupModel.create({group_id, file_id}, {transaction});
 
     return fileGroupEntity;
 }

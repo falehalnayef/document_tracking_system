@@ -1,6 +1,6 @@
 import { Router } from "express";
 import FileController from "../controllers/file.controller.js";
-import MultipartMiddleware from "../middlewares/data_middlewares/multipart.middleware.js";
+import MultipartMiddleware from "../middlewares/handlers/multipart.handler.js";
 
 class FileRouter {
 

@@ -8,6 +8,8 @@ import {IGroupService } from "../../interfaces/business_interfaces/group.interfa
 
 import File from "../../dto/file";
 import StatusError from "../../utils/error.js";
+import db from "../../data/database/db.js";
+import { Transaction } from "sequelize";
 class FileServices implements IFileService {
     private fileRepository: IFileRepository;
     private validator: IValidator;
@@ -65,7 +67,8 @@ class FileServices implements IFileService {
         }
         const file = await this.getFile(fileId);
 
-        this.fileOperations.deleteFile(file.path);
+       await this.fileOperations.deleteFile(file.path);
+        
         const removedFile = await this.fileRepository.remove(fileId);
         if (removedFile !== 1) {
             throw new StatusError(500, "File is not deleted.");
@@ -100,18 +103,19 @@ class FileServices implements IFileService {
 
         throw new StatusError(403, "Not allowed");
        }
+    
 
+       const filePath = await this.fileOperations.save(fileData.data!, fileData.fileName);
+        let file;
+        await db.sequelize.transaction(async (t: Transaction) => {
+         file = await this.fileRepository.create(fileData.fileName, ownerId, isPublic, filePath, new Date(), t);
 
-        const newFileName = fileData.fileName;
-        const filePath = path.join(__dirname.split("api")[0], "uploads/", newFileName);
+        await this.fileRepository.createFileGroupEntity(groupId, file.file_id, t);
 
-        this.fileOperations.save(fileData.data!, filePath);
-
-        const file = await this.fileRepository.create(newFileName, ownerId, isPublic, filePath, new Date());
-
-        await this.fileRepository.createFileGroupEntity(groupId, file.file_id);
+       });
         
-        return file;
+        
+        return file!;
     }
 
   

@@ -15,7 +15,7 @@ import FileRouter from "./file.routers.js";
 import FileController from "../controllers/file.controller.js";
 import FileServices from "../services/business _services/file.services.js";
 import FileRepository from "../data/repositories/file.repository.js";
-import errorHandler from "../middlewares/errors_middlewares/error.handler.middlware.js"
+import errorHandler from "../middlewares/handlers/error.handler.handler.js"
 
 
 class IndexRouter {

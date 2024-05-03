@@ -35,7 +35,7 @@ class FileController {
             
             if (error instanceof ValidationError || error.name === "SequelizeDatabaseError") error.statusCode = 400;
 
-            if(file) this.fileServices.fileOperations.deleteFile(file.path);
+            if(file) await this.fileServices.fileOperations.deleteFile(file.path);
 
 
             next(error);
