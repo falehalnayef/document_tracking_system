@@ -60,7 +60,7 @@ class FileRepository implements IFileRepository{
     }
 
 
- async checkFileGroupEntity(group_id: number, file_id: number): Promise<Object> {
+async checkFileGroupEntity(group_id: number, file_id: number): Promise<Object> {
 
         const fileGroupEntity = await FileGroupModel.findOne({where:{group_id, file_id}});
 
@@ -77,6 +77,24 @@ async createFileGroupEntity(group_id: number, file_id: number, transaction?:Tran
     const fileGroupEntity = await FileGroupModel.create({group_id, file_id}, {transaction});
 
     return fileGroupEntity;
+}
+async getFilesByLike(likeAttribute: { [key: string]: any }, filters: { [key: string]: any }): Promise<object[]> {
+    const whereClause: { [key: string]: any } = {};
+
+    for (const key in likeAttribute) {
+        whereClause[key] = { [Op.like]: `%${likeAttribute[key]}%` };
+    }
+
+    for (const key in filters) {
+        if (Array.isArray(filters[key])) {
+            whereClause[key] = { [Op.in]: filters[key] };
+        } else {
+            whereClause[key] = filters[key];
+        }
+    }
+
+    const files = await File.findAll({ where: whereClause });
+    return files;
 }
 }
 

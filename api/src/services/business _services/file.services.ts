@@ -52,6 +52,29 @@ class FileServices implements IFileService {
         return !!userInGroup;
     }
 
+    async searchForFile(fileName: string, groupId: number, userId: number): Promise<object[]>{
+        this.validator.validateRequiredFields({ fileName, groupId, userId });
+
+        const check = this.groupServices.checkUserInGroup(groupId, userId);
+        if (!check) {
+            throw new StatusError(403, "Not allowed");
+        }
+
+
+
+        const fileIDsData: IFile[] = await this.fileRepository.getFileGroupEntity(groupId, ["fileId"]) as IFile[];
+
+        const fileId: number[] = fileIDsData.map(v => v.file_id);
+
+        const fileData = await this.fileRepository.getFilesByLike({file_name:fileName}, {fileId});
+
+        const files: IFile[] = [];
+        for (const file of fileData) {
+          files.push(new File(file as IFile));
+        }
+
+        return files;   
+    }
 
     async deleteFile(fileId: number, groupId: number, ownerId: number): Promise<number> {
 

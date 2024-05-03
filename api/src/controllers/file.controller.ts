@@ -95,6 +95,30 @@ class FileController {
 
 
 
+    async searchForFiles(req: AuthenticatedRequest, res: Response, next: NextFunction){
+
+        try {
+            
+            
+            const groupId = req.params.group_id as unknown as number;
+
+            const fileName = req.params.file_name;
+
+            const userId = req.userId!;
+    
+    const files = await this.fileServices.searchForFile(fileName, groupId, userId);
+    
+        res.status(200).send(successfulResponse("Files", files));
+                
+    } catch (error: any) {
+        
+                
+        next(error);}
+        
+    }
+
+
+
 }
 
 
