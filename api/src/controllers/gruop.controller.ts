@@ -76,7 +76,7 @@ async getMyGroupsAsMember(req: AuthenticatedRequest, res: Response, next: NextFu
     
 }
 
-async getPublicGroups(req: AuthenticatedRequest, res: Response, next: NextFunction){
+async getPublicGroups(_req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
@@ -115,6 +115,25 @@ async deleteGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
     
 }
 
+async searchForGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
+
+    try {
+        
+        
+        const groupName = req.params.group_name;
+
+
+     const groups = await this.groupServices.searchForGroup(groupName);
+
+
+    res.status(200).send(successfulResponse("Groups.", groups));
+            
+} catch (error: any) {
+    
+            
+    next(error);}
+    
+}
 
 async addUserToGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 

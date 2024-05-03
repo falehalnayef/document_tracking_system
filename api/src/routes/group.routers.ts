@@ -22,7 +22,8 @@ class GroupRouter {
         this.router.post("/membership", this.groupController.joinGroup.bind(this.groupController))
         this.router.get("/ownership", this.groupController.getMyGroupsAsOwner.bind(this.groupController));
         this.router.get("/membership", this.groupController.getMyGroupsAsMember.bind(this.groupController));
-        this.router.get("/public", this.groupController.getPublicGroups.bind(this.groupController));
+        this.router.get("/public", this.groupController.getPublicGroups.bind(this.groupController));  
+        this.router.get("/search/:group_name", this.groupController.searchForGroup.bind(this.groupController));
         this.router.post("/users", this.groupController.addUserToGroup.bind(this.groupController));
         this.router.delete("/:group_id", this.groupController.deleteGroup.bind(this.groupController));
         this.router.get("/:group_id", this.groupController.getGroup.bind(this.groupController));

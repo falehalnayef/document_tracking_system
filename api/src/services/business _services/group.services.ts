@@ -75,6 +75,19 @@ class GroupServices implements IGroupService {
         return new Group(group);
     }
 
+
+    async searchForGroup(groupName: string): Promise<IGroup[]> {
+        this.validator.validateRequiredFields({ groupName });
+
+        const groupData = await this.groupRepository.getGroupsByLike({group_name:groupName}, {is_public:true});
+
+        const groups: Group[] = [];
+        for (const group of groupData) {
+          groups.push(new Group(group as IGroup));
+        }
+
+        return groups;   
+    }
     async deleteGroup(groupId: number, userId: number): Promise<number> {
         this.validator.validateRequiredFields({ groupId, userId });
 

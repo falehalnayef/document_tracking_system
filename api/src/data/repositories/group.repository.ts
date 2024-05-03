@@ -12,7 +12,6 @@ const UserGroupModel = db.UserGroupModel;
 class GroupRepository implements IGroupRepository{
 
 
-   
 
    async getGroupsByAttribute(attributes: {[key: string]: any}): Promise<object[]> {
 
@@ -31,6 +30,23 @@ class GroupRepository implements IGroupRepository{
 
 }
 
+
+ 
+
+async getGroupsByLike(likeAttribute: { [key: string]: any }, filters: { [key: string]: any }): Promise<object[]> {
+    const whereClause: { [key: string]: any } = {};
+
+    for (const key in likeAttribute) {
+        whereClause[key] = { [Op.like]: `%${likeAttribute[key]}%` };
+    }
+
+    for (const key in filters) {
+        whereClause[key] = filters[key];
+    }
+
+    const groups = await Group.findAll({ where: whereClause });
+    return groups;
+}
 
    async create(group_name: string, owner_id: number, is_public: boolean): Promise<IGroup> {
 
