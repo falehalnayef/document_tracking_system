@@ -23,12 +23,12 @@ class GroupRouter {
         this.router.get("/ownership", this.groupController.getMyGroupsAsOwner.bind(this.groupController));
         this.router.get("/membership", this.groupController.getMyGroupsAsMember.bind(this.groupController));
         this.router.get("/public", this.groupController.getPublicGroups.bind(this.groupController));  
-        this.router.get("/search/:group_name", this.groupController.searchForGroup.bind(this.groupController));
+        this.router.get("/search/:groupName", this.groupController.searchForGroup.bind(this.groupController));
         this.router.post("/users", this.groupController.addUserToGroup.bind(this.groupController));
-        this.router.delete("/:group_id", this.groupController.deleteGroup.bind(this.groupController));
-        this.router.get("/:group_id", this.groupController.getGroup.bind(this.groupController));
-        this.router.delete("/:group_id/users/:user_id", this.groupController.deleteUserFromGroup.bind(this.groupController));
-        this.router.delete("/:group_id/membership", this.groupController.leaveGroup.bind(this.groupController));
+        this.router.delete("/:groupId", this.groupController.deleteGroup.bind(this.groupController));
+        this.router.get("/:groupId", this.groupController.getGroup.bind(this.groupController));
+        this.router.delete("/:groupId/users/:userId", this.groupController.deleteUserFromGroup.bind(this.groupController));
+        this.router.delete("/:groupId/membership", this.groupController.leaveGroup.bind(this.groupController));
 
         
     }

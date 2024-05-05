@@ -99,7 +99,7 @@ async deleteGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
     try {
         
         
-        const groupId = req.params.groupId as unknown as number;
+        const groupId = Number(req.params.groupId);
 
         const userId = req.userId!;
 
@@ -120,7 +120,7 @@ async searchForGroup(req: AuthenticatedRequest, res: Response, next: NextFunctio
     try {
         
         
-        const groupName = req.params.group_name;
+        const groupName = req.params.groupName;
 
 
      const groups = await this.groupServices.searchForGroup(groupName);
@@ -157,8 +157,8 @@ async deleteUserFromGroup(req: AuthenticatedRequest, res: Response, next: NextFu
 
     try {
         
-    const groupId = req.params.groupId as unknown as number;
-    const userId = req.params.userId as unknown as number;
+    const groupId = Number(req.params.groupId);
+    const userId = Number(req.params.userId);
 
     const ownerId = req.userId!;
 
@@ -195,7 +195,7 @@ async leaveGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
-    const groupId = req.params.groupId as unknown as number;
+    const groupId = Number(req.params.groupId);
 
     const userId = req.userId!;
 
@@ -213,7 +213,7 @@ async getGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
-    const groupId = req.params.groupId as unknown as number;
+    const groupId = Number(req.params.groupId);
 
      const group = await this.groupServices.getGroup(groupId);
 

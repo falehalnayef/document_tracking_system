@@ -38,7 +38,7 @@ class FileUtility {
     }
 
  async deleteFile(filePath: string) {
-  if (!(await this.fExists(filePath))) {
+  if ((await this.fExists(filePath))) {
    await fs.unlink(filePath);
   }
 

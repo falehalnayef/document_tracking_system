@@ -34,11 +34,11 @@ class FileRepository implements IFileRepository{
         return files;
     
     }
-   async create(file_name: string, owner_id: number, is_public: boolean, path: string, date: Date, transaction?:Transaction): Promise<IFile> {
+   async create(file_name: string, owner_id: number, path: string, date: Date, transaction?:Transaction): Promise<IFile> {
 
 
 
-    const file = await File.create({file_name, owner_id, is_public, path, date}, {transaction});
+    const file = await File.create({file_name, owner_id, path, date}, {transaction});
 
         return file;
     }

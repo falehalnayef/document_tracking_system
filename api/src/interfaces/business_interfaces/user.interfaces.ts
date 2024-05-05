@@ -15,14 +15,14 @@ interface IUser extends IUserAttributes{
 interface IUserRepository {
   create(user_name: string, email: string, password: string): Promise<IUser>;
   findUserByEmail(email: string): Promise<IUser>;
-  findUserByPK(user_id: number, attributes: string[]): Promise<IUser>
+  findUserByPK(user_id: number, attributes: string[]): Promise<IUser>;
 
 }
 
 interface IUserService {
   register(userName: string, email: string, password: string): Promise<IUser>;
   login(email: string, password: string): Promise<IUser>;
-  getUser(user_id: number, attributes?: string[]): Promise<IUser>
+  getUser(user_id: number, attributes?: string[]): Promise<IUser>;
 
 
 

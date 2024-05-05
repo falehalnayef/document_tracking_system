@@ -18,10 +18,10 @@ class FileRouter {
     }
 
     private initializeRoutes(): void {
-        this.router.post("/", this.multiPartMiddleWare.handleFileUpload, this.fileController.createFile.bind(this.fileController))
-        this.router.get("/search/:group_id/:file_name", this.fileController.deleteFile.bind(this.fileController))
-        this.router.get("/:group_id", this.fileController.index.bind(this.fileController))
-        this.router.delete("/:group_id/:file_id", this.fileController.deleteFile.bind(this.fileController))
+        this.router.post("/", this.multiPartMiddleWare.handleFileUpload, this.fileController.createFile.bind(this.fileController));
+        this.router.get("/search/:groupId/:fileName", this.fileController.searchForFiles.bind(this.fileController));
+        this.router.get("/:groupId", this.fileController.index.bind(this.fileController));
+        this.router.delete("/:groupId/:fileId", this.fileController.deleteFile.bind(this.fileController));
 
     }
 }

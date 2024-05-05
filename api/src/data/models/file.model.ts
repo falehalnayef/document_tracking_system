@@ -22,11 +22,6 @@ export default function defineFileModel(sequelize: Sequelize) {
               type: DataTypes.STRING,
               allowNull: false
           },
-          is_public: {
-              type: DataTypes.BOOLEAN,
-              defaultValue: false,
-              allowNull: false
-          },
           checked: {
               type: DataTypes.BOOLEAN,
               defaultValue: false,

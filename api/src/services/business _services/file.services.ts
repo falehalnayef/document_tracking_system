@@ -25,17 +25,19 @@ class FileServices implements IFileService {
     }
     async index(groupId: number, userId: number): Promise<IFile[]> {
         this.validator.validateRequiredFields({ groupId, userId });
+        
+        const isOwner = await this.groupServices.isOwner(userId, groupId);
+        const check = await this.groupServices.checkUserInGroup(groupId, userId);
 
-        const check = this.groupServices.checkUserInGroup(groupId, userId);
-        if (!check) {
+        if (!check && !isOwner) {
             throw new StatusError(403, "Not allowed");
         }
 
-        const fileIDsData: IFile[] = await this.fileRepository.getFileGroupEntity(groupId, ["fileId"]) as IFile[];
+        const fileIDsData: IFile[] = await this.fileRepository.getFileGroupEntity(groupId, ["file_id"]) as IFile[];
 
-        const fileId: number[] = fileIDsData.map(v => v.file_id);
+        const file_id: number[] = fileIDsData.map(v => v.file_id);
 
-        const fileData = await this.fileRepository.getFilesByAttribute({fileId});
+        const fileData = await this.fileRepository.getFilesByAttribute({file_id});
 
 
         const files: IFile[] = [];
@@ -55,18 +57,21 @@ class FileServices implements IFileService {
     async searchForFile(fileName: string, groupId: number, userId: number): Promise<object[]>{
         this.validator.validateRequiredFields({ fileName, groupId, userId });
 
-        const check = this.groupServices.checkUserInGroup(groupId, userId);
-        if (!check) {
+        
+
+        const isOwner = await this.groupServices.isOwner(userId, groupId);
+        const check = await this.groupServices.checkUserInGroup(groupId, userId);
+
+        if (!check && !isOwner) {
             throw new StatusError(403, "Not allowed");
         }
 
 
+        const fileIDsData: IFile[] = await this.fileRepository.getFileGroupEntity(groupId, ["file_id"]) as IFile[];
 
-        const fileIDsData: IFile[] = await this.fileRepository.getFileGroupEntity(groupId, ["fileId"]) as IFile[];
+        const file_id: number[] = fileIDsData.map(v => v.file_id);
 
-        const fileId: number[] = fileIDsData.map(v => v.file_id);
-
-        const fileData = await this.fileRepository.getFilesByLike({file_name:fileName}, {fileId});
+        const fileData = await this.fileRepository.getFilesByLike({file_name:fileName}, {file_id});
 
         const files: IFile[] = [];
         for (const file of fileData) {
@@ -80,24 +85,29 @@ class FileServices implements IFileService {
 
         this.validator.validateRequiredFields({ fileId, groupId, ownerId });
 
+        
+        const isOwner = await this.groupServices.isOwner(ownerId, groupId);
+
+       if (!isOwner) {
+
+        throw new StatusError(403, "Not allowed");
+       }
+    
         const check = await this.checkFileInGroup(groupId, fileId);
         if (!check) {
             throw new StatusError(400, "File is not in the group.");
         }
-        const group = await this.groupServices.getGroup(groupId);
-        if (group.owner_id !== ownerId) {
-            throw new StatusError(403, "Not allowed.");
-        }
+      
         const file = await this.getFile(fileId);
 
-       await this.fileOperations.deleteFile(file.path);
+       const del = this.fileOperations.deleteFile(file.path);
         
         const removedFile = await this.fileRepository.remove(fileId);
         if (removedFile !== 1) {
             throw new StatusError(500, "File is not deleted.");
         }
 
-
+        await del;
 
         return removedFile;  
       }
@@ -116,13 +126,13 @@ class FileServices implements IFileService {
     
 
 
-    async createFile(ownerId: number, isPublic: boolean, fileData: FileData, groupId: number): Promise<IFile> {
-        this.validator.validateRequiredFields({ fileData, ownerId, isPublic });
+    async createFile(ownerId: number, fileData: FileData, groupId: number): Promise<IFile> {
+        this.validator.validateRequiredFields({ fileData, ownerId });
+
+        const isOwner = await this.groupServices.isOwner(ownerId, groupId);
 
 
-       const group = await this.groupServices.getGroup(groupId);
-
-       if (group.owner_id != ownerId) {
+       if (!isOwner) {
 
         throw new StatusError(403, "Not allowed");
        }
@@ -131,7 +141,7 @@ class FileServices implements IFileService {
        const filePath = await this.fileOperations.save(fileData.data!, fileData.fileName);
         let file;
         await db.sequelize.transaction(async (t: Transaction) => {
-         file = await this.fileRepository.create(fileData.fileName, ownerId, isPublic, filePath, new Date(), t);
+         file = await this.fileRepository.create(fileData.fileName, ownerId, filePath, new Date(), t);
 
         await this.fileRepository.createFileGroupEntity(groupId, file.file_id, t);
 

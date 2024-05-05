@@ -17,6 +17,19 @@ class GroupServices implements IGroupService {
 
     }
 
+    async isOwner(ownerId: number, groupId: number): Promise<boolean> {
+
+        const group = await this.getGroup(groupId);
+    
+        if (group.owner_id !== ownerId) {
+                return false;
+
+        }
+    
+        
+        return true;
+    }
+
     async createGroup(groupName: string, ownerId: number, isPublic: boolean): Promise<IGroup> {
         this.validator.validateRequiredFields({ groupName, ownerId });
 
@@ -122,14 +135,18 @@ class GroupServices implements IGroupService {
         if (ownerId && userId === ownerId) {
             throw new StatusError(400, "Are you kidding?.");
         }
+
+        const userAlreadyInGroup = await this.checkUserInGroup(groupId, userId);
+
+        if (userAlreadyInGroup) {
+            throw new StatusError(400, "User already in group.");
+        }
+
         if (!ownerId && !group.is_public) {
             throw new StatusError(400, "The group is private.");
         }
         
-        const userAlreadyInGroup = await this.checkUserInGroup(groupId, userId);
-        if (userAlreadyInGroup) {
-            throw new StatusError(400, "User already in group.");
-        }
+       
     
         await this.groupRepository.createUserGroupEntity(groupId, userId);
     
@@ -151,8 +168,9 @@ class GroupServices implements IGroupService {
             throw new StatusError(400, "Are you kidding?.");
         }
 
-        const userInGroup = await this.checkUserInGroup(groupId, userId);
-        if (!userInGroup) {
+        const userAlreadyInGroup = await this.checkUserInGroup(groupId, userId);
+
+        if (!userAlreadyInGroup) {
             throw new StatusError(400, "User is not in the group.");
         }
 

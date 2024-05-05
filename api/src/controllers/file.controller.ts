@@ -18,13 +18,13 @@ class FileController {
         let file;
         try {
 
-            const {isPublic, groupId} = req.body;
+            const {groupId} = req.body;
 
             const ownerId = req.userId!;
             const fileData = req.file;
 
 
-       file = await this.fileServices.createFile(ownerId, isPublic, fileData, groupId);
+       file = await this.fileServices.createFile(ownerId, fileData, groupId);
 
 
 
@@ -49,7 +49,7 @@ class FileController {
     async index(req: AuthenticatedRequest, res: Response, next: NextFunction){
         try {
 
-            const groupId = req.params.group_id as unknown as number;
+            const groupId = Number(req.params.groupId);
 
             const userId = req.userId!;
 
@@ -74,9 +74,9 @@ class FileController {
         try {
             
             
-            const groupId = req.params.group_id as unknown as number;
+            const groupId = Number(req.params.groupId);
 
-            const fileId = req.params.file_id as unknown as number;
+            const fileId = Number(req.params.fileId);
 
     
             const ownerId = req.userId!;
@@ -100,9 +100,9 @@ class FileController {
         try {
             
             
-            const groupId = req.params.group_id as unknown as number;
+            const groupId = Number(req.params.groupId);
 
-            const fileName = req.params.file_name;
+            const fileName = req.params.fileName;
 
             const userId = req.userId!;
     

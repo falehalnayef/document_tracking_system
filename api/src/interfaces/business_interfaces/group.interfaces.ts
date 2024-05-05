@@ -31,11 +31,11 @@ interface IGroup extends IGroupAttributes{
       getGroupsByAttribute(attribute:{[key: string]: any}): Promise<object[]>;
       getGroup(group_id: number): Promise<IGroup>;    
       remove(group_id: number): Promise<number>;
-      checkUserGroupEntity(group_id: number, user_id: number): Promise<object>
-      createUserGroupEntity(group_id: number, user_id: number): Promise<object>
-      removeUserGroupEntity(group_id: number, user_id: number): Promise<number>   
-      getUserGroupEntity(user_id: number, attributes: string[]): Promise<object>
-      getGroupsByLike(likeAttribute: { [key: string]: any }, filters: { [key: string]: any }): Promise<object[]>     
+      checkUserGroupEntity(group_id: number, user_id: number): Promise<object>;
+      createUserGroupEntity(group_id: number, user_id: number): Promise<object>;
+      removeUserGroupEntity(group_id: number, user_id: number): Promise<number>;   
+      getUserGroupEntity(user_id: number, attributes: string[]): Promise<object>;
+      getGroupsByLike(likeAttribute: { [key: string]: any }, filters: { [key: string]: any }): Promise<object[]>;     
 
     
     }
@@ -47,10 +47,11 @@ interface IGroup extends IGroupAttributes{
         indexAsPublic(): Promise<IGroup[]>;
         getGroup(groupId: number): Promise<IGroup>;    
         deleteGroup(groupId: number, userId: number): Promise<number>;    
-        checkUserInGroup(groupId: number, userId: number): Promise<boolean>
-        addUserToGroup(groupId: number, userId: number, ownerId?: number): Promise<boolean>
-        deleteUserFromGroup(groupId: number, userId: number, ownerId?: number): Promise<number>
-        searchForGroup(groupName: string): Promise<IGroup[]>
+        checkUserInGroup(groupId: number, userId: number): Promise<boolean>;
+        addUserToGroup(groupId: number, userId: number, ownerId?: number): Promise<boolean>;
+        deleteUserFromGroup(groupId: number, userId: number, ownerId?: number): Promise<number>;
+        searchForGroup(groupName: string): Promise<IGroup[]>;
+        isOwner(ownerId: number, groupId: number): Promise<boolean>;
 
 
     }
