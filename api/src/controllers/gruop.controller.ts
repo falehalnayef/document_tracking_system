@@ -226,6 +226,26 @@ async getGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
     
 }
 
+
+async getUsers(req: AuthenticatedRequest, res: Response, next: NextFunction){
+
+    try {
+        
+    const groupId = Number(req.params.groupId);
+    const userId = req.userId!;
+
+
+     const users = await this.groupServices.getGroupUsers(groupId, userId);
+
+    res.status(200).send(successfulResponse("Users", users));
+            
+} catch (error: any) {
+
+            
+    next(error);}
+    
+}
+
 }
 
 

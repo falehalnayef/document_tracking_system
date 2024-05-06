@@ -1,6 +1,7 @@
 import Group from "../../dto/group.js";
+import User from "../../dto/user.js";
 import { IGroup, IGroupRepository, IGroupService } from "../../interfaces/business_interfaces/group.interfaces.js";
-import { IUserService } from "../../interfaces/business_interfaces/user.interfaces.js";
+import { IUser, IUserService } from "../../interfaces/business_interfaces/user.interfaces.js";
 import IValidator from "../../interfaces/utility_interfaces/validator.interface.js";
 import StatusError from "../../utils/error.js";
 
@@ -88,6 +89,37 @@ class GroupServices implements IGroupService {
         return new Group(group);
     }
 
+    async getGroupUsers(groupId: number, userId: number): Promise<IUser[]> {
+        this.validator.validateRequiredFields({ groupId });
+
+        const isOwner = await this.isOwner(userId, groupId);
+        const check = await this.checkUserInGroup(groupId, userId);
+
+        if (!check && !isOwner) {
+            throw new StatusError(403, "Not allowed");
+        }
+
+
+        const usersIDsData: User[] = await this.groupRepository.getGroupUserEntity(groupId, ["user_id"]) as User[];
+     
+
+        const group = await this.getGroup(groupId);
+        const user = this.userServices.getUser(group.owner_id, ["user_name"]);
+        
+        const user_id: number[] = usersIDsData.map(v => v.user_id);
+        const userData = await this.userServices.userRepository.getUsersByAttribute({user_id},["user_name"]);
+
+        const users: User[] = [];
+        const owner = await user;
+        owner.user_name = "OWNER " + owner.user_name;
+        users.push(owner);
+
+        for (const user of userData) {
+            users.push(new User(user as IUser));
+        }
+
+        return users;   
+    }
 
     async searchForGroup(groupName: string): Promise<IGroup[]> {
         this.validator.validateRequiredFields({ groupName });

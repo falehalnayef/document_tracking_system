@@ -1,3 +1,5 @@
+import { IUser } from "./user.interfaces";
+
 interface IGroupAttributes{
     group_id: number;
     group_name: string;
@@ -35,6 +37,7 @@ interface IGroup extends IGroupAttributes{
       createUserGroupEntity(group_id: number, user_id: number): Promise<object>;
       removeUserGroupEntity(group_id: number, user_id: number): Promise<number>;   
       getUserGroupEntity(user_id: number, attributes: string[]): Promise<object>;
+      getGroupUserEntity(group_id: number, attributes: string[]): Promise<object>;
       getGroupsByLike(likeAttribute: { [key: string]: any }, filters: { [key: string]: any }): Promise<object[]>;     
 
     
@@ -52,6 +55,7 @@ interface IGroup extends IGroupAttributes{
         deleteUserFromGroup(groupId: number, userId: number, ownerId?: number): Promise<number>;
         searchForGroup(groupName: string): Promise<IGroup[]>;
         isOwner(ownerId: number, groupId: number): Promise<boolean>;
+        getGroupUsers(groupId: number, userId: number): Promise<IUser[]>;
 
 
     }

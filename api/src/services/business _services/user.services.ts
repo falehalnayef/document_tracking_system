@@ -6,7 +6,7 @@ import IHashService from "../../interfaces/utility_interfaces/hashService.interf
 import IAuthenticationTokenService from "../../interfaces/utility_interfaces/authenticationToken.interfaces.js";
 
 class UserServices implements IUserService {
-    private userRepository: IUserRepository;
+    public userRepository: IUserRepository;
     private validator: IValidator;
     private hashServices: IHashService;
     private authTokenServices: IAuthenticationTokenService;

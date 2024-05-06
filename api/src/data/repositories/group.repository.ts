@@ -104,6 +104,12 @@ async getGroupsByLike(likeAttribute: { [key: string]: any }, filters: { [key: st
         return userGroupEntity;  
       }
 
+      async getGroupUserEntity(group_id: number, attributes: string[]): Promise<object>{
+        const groupUserEntity = await UserGroupModel.findAll({where:{group_id}, attributes});
+
+        return groupUserEntity;  
+      }
+
 
 
 }

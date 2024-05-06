@@ -25,6 +25,7 @@ class GroupRouter {
         this.router.get("/public", this.groupController.getPublicGroups.bind(this.groupController));  
         this.router.get("/search/:groupName", this.groupController.searchForGroup.bind(this.groupController));
         this.router.post("/users", this.groupController.addUserToGroup.bind(this.groupController));
+        this.router.get("/:groupId/users", this.groupController.getUsers.bind(this.groupController));
         this.router.delete("/:groupId", this.groupController.deleteGroup.bind(this.groupController));
         this.router.get("/:groupId", this.groupController.getGroup.bind(this.groupController));
         this.router.delete("/:groupId/users/:userId", this.groupController.deleteUserFromGroup.bind(this.groupController));
