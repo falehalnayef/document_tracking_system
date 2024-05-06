@@ -61,6 +61,31 @@ class UserServices implements IUserService {
         }
         return new User(user);
     }
+
+   async getAllUsers(): Promise<IUser[]>{
+
+    const users = await this.userRepository.getUsersByAttribute({}, ["user_name"]);
+    const usersArray: User[] = [];
+
+    for (const user of users) {
+        usersArray.push(new User(user as IUser));
+    }
+    
+    return usersArray;
+    
+   }
+
+
+   async showUser(userId: number): Promise<IUser>{
+
+    const user = await this.getUser(userId, ["user_name", "email"]);
+    
+    return user;
+
+   }
+
 }
+
+
 
 export default UserServices;

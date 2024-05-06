@@ -56,6 +56,51 @@ class UserController {
         
 
     }
+
+
+
+    async getAllUsers(req: AuthenticatedRequest, res: Response, next: NextFunction){
+
+        try {
+
+
+        const users = await this.userServices.getAllUsers();
+
+
+        res.status(200).send(successfulResponse("Users", users));
+
+            
+        } catch (error: any) {
+            
+            next(error);       
+        
+        }
+        
+
+    }
+
+
+    async showUser(req: AuthenticatedRequest, res: Response, next: NextFunction){
+
+        try {
+
+            const userId = Number(req.params.userId);
+
+
+        const user = await this.userServices.showUser(userId);
+
+
+        res.status(200).send(successfulResponse("User", user));
+
+            
+        } catch (error: any) {
+            
+            next(error);       
+        
+        }
+        
+
+    }
 }
 
 

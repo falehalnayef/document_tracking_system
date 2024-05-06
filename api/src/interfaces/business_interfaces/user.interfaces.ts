@@ -25,7 +25,10 @@ interface IUserService {
   userRepository: IUserRepository;
   register(userName: string, email: string, password: string): Promise<IUser>;
   login(email: string, password: string): Promise<IUser>;
-  getUser(user_id: number, attributes?: string[]): Promise<IUser>;
+  getUser(userId: number, attributes?: string[]): Promise<IUser>;
+  getAllUsers(): Promise<IUser[]>;
+  showUser(userId: number): Promise<IUser>;
+
 
 
 

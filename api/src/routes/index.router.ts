@@ -35,11 +35,13 @@ class IndexRouter {
         const groupServices = new GroupServices(new GroupRepository(), userServices, validator);
         const fileServices = new FileServices(new FileRepository(), validator, groupServices);
 
-        this.userRouter = new UserRouter(new UserController(userServices)).router;
+        this.auth = new UserAuth(userServices, authTokenServices);
+
+
+        this.userRouter = new UserRouter(new UserController(userServices), this.auth).router;
         this.groupRouter = new GroupRouter(new GroupController(groupServices)).router;
         this.fileRouter = new FileRouter(new FileController(fileServices)).router;
         
-        this.auth = new UserAuth(userServices, authTokenServices);
 
 
         
