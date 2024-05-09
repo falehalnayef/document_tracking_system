@@ -118,6 +118,48 @@ class FileController {
     }
 
 
+    async checkIn(req: AuthenticatedRequest, res: Response, next: NextFunction){
+
+        try {
+            
+            
+            const groupId = Number(req.params.groupId);
+
+            const fileId = Number(req.params.fileId);
+
+            const userId = req.userId!;
+    
+            await this.fileServices.checkIn(userId, groupId, fileId);
+    
+        res.status(200).send(successfulResponse("checked in"));
+                
+    } catch (error: any) {
+        
+                
+        next(error);}
+        
+    }
+
+
+    async checkOut(req: AuthenticatedRequest, res: Response, next: NextFunction){
+
+        try {
+            
+            
+            const fileId = Number(req.params.fileId);
+
+            const userId = req.userId!;
+    
+            await this.fileServices.checkOut(userId, fileId);
+    
+        res.status(200).send(successfulResponse("checked out"));
+                
+    } catch (error: any) {
+        
+                
+        next(error);}
+        
+    }
 
 }
 

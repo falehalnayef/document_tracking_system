@@ -155,7 +155,7 @@ class FileServices implements IFileService {
     }
 
 
-    async bookFile(userId: number, groupId: number, fileId: number): Promise<object>{
+    async checkIn(userId: number, groupId: number, fileId: number): Promise<object>{
 
 
         this.validator.validateRequiredFields({ fileId, groupId, userId });
@@ -191,6 +191,29 @@ class FileServices implements IFileService {
         });
 
         return booked!;
+
+    }
+
+
+    async checkOut(userId: number, fileId: number): Promise<IBooking>{
+
+
+        this.validator.validateRequiredFields({ fileId, userId });
+
+
+        const bookedFileEntity = await this.fileRepository.getActiveBooking(userId, fileId);
+
+        if(!bookedFileEntity){
+            throw new StatusError(400, "You did not check this file");
+        }
+
+
+        await db.sequelize.transaction(async (t: Transaction) => {
+            await this.fileRepository.updateBooking(bookedFileEntity.booking_id, {check_out_date: new Date()}, t);
+            await this.fileRepository.update(fileId, {checked:false}, t)
+        });
+
+        return bookedFileEntity!;
 
     }
 }

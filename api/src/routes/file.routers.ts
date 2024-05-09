@@ -22,6 +22,9 @@ class FileRouter {
         this.router.get("/search/:groupId/:fileName", this.fileController.searchForFiles.bind(this.fileController));
         this.router.get("/:groupId", this.fileController.index.bind(this.fileController));
         this.router.delete("/:groupId/:fileId", this.fileController.deleteFile.bind(this.fileController));
+        this.router.post("/:groupId/:fileId/checkIn", this.fileController.checkIn.bind(this.fileController));
+        this.router.post("/:groupId/:fileId/checkOut", this.fileController.checkOut.bind(this.fileController));
+
 
     }
 }

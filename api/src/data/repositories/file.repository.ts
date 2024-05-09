@@ -3,6 +3,7 @@ import { IFile, IFileRepository } from "../../interfaces/business_interfaces/fil
 
 
 import db from "../database/db.js";
+import { IBooking } from "../../interfaces/business_interfaces/booking.interfaces.js";
 
 const File = db.FileModel;
 const FileGroupModel = db.FileGroupModel;
@@ -10,6 +11,29 @@ const BookingModel = db.BookingModel;
 
 
 class FileRepository implements IFileRepository{
+
+
+
+    
+   async updateBooking(booking_id: number, data: object, transaction?: Transaction): Promise<void> {
+
+    await BookingModel.update(
+        data,
+        {
+          where: {
+            booking_id,
+          },
+        },
+        {transaction}
+      );
+}
+    
+    async getActiveBooking(user_id: number, file_id: number): Promise<IBooking> {
+
+        const bookedFileEntity = await BookingModel.findOne({where:{user_id, file_id, check_out_date: null}});
+
+        return bookedFileEntity;
+    }
 
 
    async update(file_id: number, data: object, transaction?: Transaction): Promise<void> {

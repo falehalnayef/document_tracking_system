@@ -1,5 +1,6 @@
 import { Transaction } from "sequelize";
 import FileUtility from "../../services/utility_services/file_utility.service";
+import { IBooking } from "./booking.interfaces";
 
 interface IFileAttributes{
     file_id: number;
@@ -31,7 +32,12 @@ interface IFileAttributes{
       checkFileGroupEntity(group_id: number, file_id: number): Promise<object>;
       getFilesByLike(likeAttribute: { [key: string]: any }, filters: { [key: string]: any }): Promise<object[]>;    
       createBooking(file_id: number, user_id: number, check_in_date: Date, exp_date: Date, transaction?: Transaction): Promise<object>;    
-      update(file_id: number, data: object, transaction?: Transaction): Promise<void>    }
+      update(file_id: number, data: object, transaction?: Transaction): Promise<void>;
+      getActiveBooking(user_id: number, file_id: number): Promise<IBooking>;
+      updateBooking(booking_id: number, data: object, transaction?: Transaction): Promise<void>;
+
+    
+    }
     
     interface IFileService {   
         fileOperations: FileUtility;
@@ -41,7 +47,8 @@ interface IFileAttributes{
         deleteFile(fileId: number, groupId: number, ownerId: number): Promise<number>;    
         checkFileInGroup(groupId: number, fileId: number): Promise<boolean>;
         searchForFile(fileName: string, groupId: number, userId: number): Promise<object[]>;
-        bookFile(userId: number, groupId: number, fileId: number): Promise<object>
+        checkIn(userId: number, groupId: number, fileId: number): Promise<object>;
+        checkOut(userId: number, fileId: number): Promise<IBooking>;
     }
 
 
