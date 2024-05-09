@@ -30,10 +30,8 @@ interface IFileAttributes{
       getFileGroupEntity(group_id: number, attributes: string[]): Promise<object>;
       checkFileGroupEntity(group_id: number, file_id: number): Promise<object>;
       getFilesByLike(likeAttribute: { [key: string]: any }, filters: { [key: string]: any }): Promise<object[]>;    
-
-
-    
-    }
+      createBooking(file_id: number, user_id: number, check_in_date: Date, exp_date: Date, transaction?: Transaction): Promise<object>;    
+      update(file_id: number, data: object, transaction?: Transaction): Promise<void>    }
     
     interface IFileService {   
         fileOperations: FileUtility;
@@ -43,7 +41,7 @@ interface IFileAttributes{
         deleteFile(fileId: number, groupId: number, ownerId: number): Promise<number>;    
         checkFileInGroup(groupId: number, fileId: number): Promise<boolean>;
         searchForFile(fileName: string, groupId: number, userId: number): Promise<object[]>;
-
+        bookFile(userId: number, groupId: number, fileId: number): Promise<object>
     }
 
 

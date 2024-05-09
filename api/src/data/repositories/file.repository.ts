@@ -6,9 +6,31 @@ import db from "../database/db.js";
 
 const File = db.FileModel;
 const FileGroupModel = db.FileGroupModel;
+const BookingModel = db.BookingModel;
 
 
 class FileRepository implements IFileRepository{
+
+
+   async update(file_id: number, data: object, transaction?: Transaction): Promise<void> {
+
+        await File.update(
+            data,
+            {
+              where: {
+                file_id,
+              },
+            },
+            {transaction}
+          );
+    }
+
+
+    async createBooking(file_id: number, user_id: number, check_in_date: Date, exp_date: Date, transaction?: Transaction): Promise<object> {
+        const bookedFile = await BookingModel.create({file_id, user_id, check_in_date, exp_date, check_out_date:null}, {transaction});
+
+        return bookedFile;
+    }
 
    async getFileGroupEntity(group_id: number, attributes: string[]): Promise<object> {
         const userGroupEntity = await FileGroupModel.findAll({where:{group_id}, attributes});

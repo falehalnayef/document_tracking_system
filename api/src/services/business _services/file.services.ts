@@ -10,16 +10,19 @@ import File from "../../dto/file";
 import StatusError from "../../utils/error.js";
 import db from "../../data/database/db.js";
 import { Transaction } from "sequelize";
+import { IBooking } from "../../interfaces/business_interfaces/booking.interfaces.js";
 class FileServices implements IFileService {
     private fileRepository: IFileRepository;
     private validator: IValidator;
     private groupServices: IGroupService;
     public fileOperations: FileUtility;
-    constructor(fileRepository: IFileRepository, validator: IValidator, groupServices: IGroupService) {
+    expirationTime: number;
+    constructor(fileRepository: IFileRepository, validator: IValidator, groupServices: IGroupService, expirationTime: number =  5 * 60 * 1000) {
         this.fileRepository = fileRepository;
         this.validator = validator;
         this.groupServices = groupServices;
         this.fileOperations = new FileUtility();
+        this.expirationTime = expirationTime;
 
 
     }
@@ -151,9 +154,45 @@ class FileServices implements IFileService {
         return file!;
     }
 
-  
 
-   
+    async bookFile(userId: number, groupId: number, fileId: number): Promise<object>{
+
+
+        this.validator.validateRequiredFields({ fileId, groupId, userId });
+
+        const checkFile = this.checkFileInGroup(groupId, fileId);
+
+        const isOwner = this.groupServices.isOwner(userId, groupId);
+        const check = this.groupServices.checkUserInGroup(groupId, userId);
+
+        const file = this.getFile(fileId);
+
+        if (!(await check) && !(await isOwner)) {
+            throw new StatusError(403, "Not allowed");
+        }
+
+        if (!(await checkFile)) {
+            throw new StatusError(400, "File is not in the group.");
+        }
+
+    
+        if ((await file).checked) {
+
+            throw new StatusError(400, "File is checked.");
+
+        }
+
+        const expiredAt = new Date(new Date().getTime() + this.expirationTime);
+
+        let booked;
+        await db.sequelize.transaction(async (t: Transaction) => {
+            booked = await this.fileRepository.createBooking(fileId, userId, new Date(), expiredAt, t);
+            await this.fileRepository.update(fileId, {checked:true}, t)
+        });
+
+        return booked!;
+
+    }
 }
 
 
