@@ -161,6 +161,29 @@ class FileController {
         
     }
 
+
+    async getBookingHistory(req: AuthenticatedRequest, res: Response, next: NextFunction){
+
+        try {
+            
+            
+            const fileId = Number(req.params.fileId);
+            const groupId = Number(req.params.groupId);
+
+
+            const userId = req.userId!;
+    
+          const bookingHistory = await this.fileServices.getBookingHistory(userId, groupId, fileId);
+    
+        res.status(200).send(successfulResponse("Booking History", bookingHistory));
+                
+    } catch (error: any) {
+        
+                
+        next(error);}
+        
+    }
+
 }
 
 

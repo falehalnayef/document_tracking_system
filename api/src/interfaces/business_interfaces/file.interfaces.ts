@@ -35,6 +35,8 @@ interface IFileAttributes{
       update(file_id: number, data: object, transaction?: Transaction): Promise<void>;
       getActiveBooking(user_id: number, file_id: number): Promise<IBooking>;
       updateBooking(booking_id: number, data: object, transaction?: Transaction): Promise<void>;
+      getBookings(file_id: number): Promise<IBooking[]>;
+
 
     
     }
@@ -49,6 +51,8 @@ interface IFileAttributes{
         searchForFile(fileName: string, groupId: number, userId: number): Promise<object[]>;
         checkIn(userId: number, groupId: number, fileIds: string): Promise<object>;
         checkOut(userId: number, fileId: number): Promise<IBooking>;
+        getBookingHistory(userId: number, groupId:number, fileId: number): Promise<IBooking[]>;
+
     }
 
 

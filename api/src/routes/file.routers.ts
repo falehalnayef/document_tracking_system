@@ -24,7 +24,7 @@ class FileRouter {
         this.router.delete("/:groupId/:fileId", this.fileController.deleteFile.bind(this.fileController));
         this.router.post("/:groupId/checkIn", this.fileController.checkIn.bind(this.fileController));
         this.router.post("/:groupId/:fileId/checkOut", this.fileController.checkOut.bind(this.fileController));
-
+        this.router.get("/:groupId/:fileId/bookings", this.fileController.getBookingHistory.bind(this.fileController));
 
     }
 }

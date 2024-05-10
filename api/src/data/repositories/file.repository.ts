@@ -14,6 +14,16 @@ class FileRepository implements IFileRepository{
 
 
 
+   async getBookings(file_id: number): Promise<IBooking[]> {
+
+        const bookedFileEntity = await BookingModel.findAll({where:{file_id}});
+
+        return bookedFileEntity;
+
+    }
+
+
+
     
    async updateBooking(booking_id: number, data: object, transaction?: Transaction): Promise<void> {
 

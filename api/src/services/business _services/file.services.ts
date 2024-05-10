@@ -11,6 +11,7 @@ import StatusError from "../../utils/error.js";
 import db from "../../data/database/db.js";
 import { Transaction } from "sequelize";
 import { IBooking } from "../../interfaces/business_interfaces/booking.interfaces.js";
+import Booking from "../../dto/booking.js";
 class FileServices implements IFileService {
     private fileRepository: IFileRepository;
     private validator: IValidator;
@@ -25,6 +26,24 @@ class FileServices implements IFileService {
         this.expirationTime = expirationTime;
 
 
+    }
+    async getBookingHistory(userId: number, groupId:number, fileId: number): Promise<IBooking[]> {
+
+        const isOwner = await this.groupServices.isOwner(userId, groupId);
+        const check = await this.groupServices.checkUserInGroup(groupId, userId);
+
+        if (!check && !isOwner) {
+            throw new StatusError(403, "Not allowed");
+        }
+
+        const bookingsData = await this.fileRepository.getBookings(fileId);
+
+        const bookings: IBooking[] = [];
+        for (const book of bookingsData) {
+            bookings.push(new Booking(book as IBooking));
+        }
+
+        return bookings;
     }
     async index(groupId: number, userId: number): Promise<IFile[]> {
         this.validator.validateRequiredFields({ groupId, userId });

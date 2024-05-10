@@ -9,6 +9,7 @@ interface IBookingAttributes{
 
 
     interface IBooking extends IBookingAttributes{
+      display(): object;
 
     
     }
