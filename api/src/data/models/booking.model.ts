@@ -28,7 +28,7 @@ export default function defineBookingModel(sequelize: Sequelize) {
           },
           check_out_date: {
               type: DataTypes.DATE,
-              allowNull: false
+              allowNull: true
           },
           exp_date: {
               type: DataTypes.DATE,

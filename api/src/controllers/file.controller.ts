@@ -125,11 +125,11 @@ class FileController {
             
             const groupId = Number(req.params.groupId);
 
-            const fileId = Number(req.params.fileId);
+            const fileIds = String(req.query.fileIds);
 
             const userId = req.userId!;
     
-            await this.fileServices.checkIn(userId, groupId, fileId);
+            await this.fileServices.checkIn(userId, groupId, fileIds);
     
         res.status(200).send(successfulResponse("checked in"));
                 

@@ -23,7 +23,7 @@ interface IFileAttributes{
     interface IFileRepository {
 
       create(file_name: string, owner_id: number, path: string, date: Date, transaction?:Transaction): Promise<IFile>;
-      getFilesByAttribute(attribute:{[key: string]: any}): Promise<object[]>;
+      getFilesByAttribute(attribute:{[key: string]: any}): Promise<IFile[]>;
       getFile(file_id: number): Promise<IFile>;    
       remove(file_id: number): Promise<number>;
       createFileGroupEntity(group_id: number, file_id: number, transaction?: Transaction): Promise<object>;
@@ -47,7 +47,7 @@ interface IFileAttributes{
         deleteFile(fileId: number, groupId: number, ownerId: number): Promise<number>;    
         checkFileInGroup(groupId: number, fileId: number): Promise<boolean>;
         searchForFile(fileName: string, groupId: number, userId: number): Promise<object[]>;
-        checkIn(userId: number, groupId: number, fileId: number): Promise<object>;
+        checkIn(userId: number, groupId: number, fileIds: string): Promise<object>;
         checkOut(userId: number, fileId: number): Promise<IBooking>;
     }
 

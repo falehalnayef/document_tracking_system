@@ -20,6 +20,7 @@ class UserServices implements IUserService {
 
     async login(email: string, password: string): Promise<IUser> {
 
+
         this.validator.validateRequiredFields({email, password})
 
         const user = await this.userRepository.findUserByEmail(email);

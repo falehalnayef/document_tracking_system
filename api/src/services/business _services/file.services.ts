@@ -17,7 +17,7 @@ class FileServices implements IFileService {
     private groupServices: IGroupService;
     public fileOperations: FileUtility;
     expirationTime: number;
-    constructor(fileRepository: IFileRepository, validator: IValidator, groupServices: IGroupService, expirationTime: number =  5 * 60 * 1000) {
+    constructor(fileRepository: IFileRepository, validator: IValidator, groupServices: IGroupService, expirationTime: number = 3 * 24 * 60 * 60 * 1000) {
         this.fileRepository = fileRepository;
         this.validator = validator;
         this.groupServices = groupServices;
@@ -155,58 +155,57 @@ class FileServices implements IFileService {
     }
 
 
-    async checkIn(userId: number, groupId: number, fileId: number): Promise<object>{
+    async checkIn(userId: number, groupId: number, Ids: string): Promise<object> {
+        this.validator.validateRequiredFields({ Ids, groupId, userId });
+    
+        const fileIds = Ids.split(",");
+        const files = this.fileRepository.getFilesByAttribute({ file_id: fileIds});
 
-
-        this.validator.validateRequiredFields({ fileId, groupId, userId });
-
-        const checkFile = this.checkFileInGroup(groupId, fileId);
-
-        const isOwner = this.groupServices.isOwner(userId, groupId);
-        const check = this.groupServices.checkUserInGroup(groupId, userId);
-
-        const file = this.getFile(fileId);
-
-        if (!(await check) && !(await isOwner)) {
+        const isOwner = await this.groupServices.isOwner(userId, groupId);
+        const isCheckedIn = await this.groupServices.checkUserInGroup(groupId, userId);
+    
+        if (!isOwner && !isCheckedIn) {
             throw new StatusError(403, "Not allowed");
         }
-
-        if (!(await checkFile)) {
-            throw new StatusError(400, "File is not in the group.");
-        }
+    
+        const expiredAt = new Date(Date.now() + this.expirationTime);
+        let bookedFiles: object[] = [];
+    
+        await db.sequelize.transaction(async (t: Transaction) => {
+            for (let file of await files) {
+    
+                const check = await this.fileRepository.checkFileGroupEntity(groupId, file.file_id);
+                if (!check) {
+                    throw new StatusError(404, `File with ID ${file.file_id} not found in the group ${groupId}`);
+                }
+    
+                if (file.checked) {
+                    throw new StatusError(400, `File ${file.file_id} is already checked.`);
+                }
+    
+                const booking = await this.fileRepository.createBooking(file.file_id, userId, new Date(), expiredAt, t);
+                await this.fileRepository.update(file.file_id, { checked: true }, t);
+                bookedFiles.push(booking);
+            }
+        });
+    
+        
 
     
-        if ((await file).checked) {
-
-            throw new StatusError(400, "File is checked.");
-
-        }
-
-        const expiredAt = new Date(new Date().getTime() + this.expirationTime);
-
-        let booked;
-        await db.sequelize.transaction(async (t: Transaction) => {
-            booked = await this.fileRepository.createBooking(fileId, userId, new Date(), expiredAt, t);
-            await this.fileRepository.update(fileId, {checked:true}, t)
-        });
-
-        return booked!;
-
+        return bookedFiles;
     }
+    
 
 
     async checkOut(userId: number, fileId: number): Promise<IBooking>{
 
-
         this.validator.validateRequiredFields({ fileId, userId });
-
 
         const bookedFileEntity = await this.fileRepository.getActiveBooking(userId, fileId);
 
         if(!bookedFileEntity){
             throw new StatusError(400, "You did not check this file");
         }
-
 
         await db.sequelize.transaction(async (t: Transaction) => {
             await this.fileRepository.updateBooking(bookedFileEntity.booking_id, {check_out_date: new Date()}, t);

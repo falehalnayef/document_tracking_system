@@ -1,18 +1,16 @@
-import express, { Application, NextFunction, Response } from 'express';
+import express, { Application } from 'express';
 import indexRouter from './routes/index.router.js';
 
 import db from './data/database/db.js';
-import AuthenticatedRequest from './interfaces/utility_interfaces/request.interface.js';
-import { failedResponse } from './utils/responseMessage.js';
-
+import morgan from "morgan";
 import errorHandlerMiddlware from './middlewares/handlers/error.handler.handler.js';
 const app: Application= express();
 
 
-app.use(express.json()); // So express can handle Requests that include JSON in the body.
+app.use(morgan("dev"));
+app.use(express.json());// So express can handle Requests that include JSON in the body.
 //app.use(express.urlencoded());
 app.use("/api", indexRouter);
-
 app.use(errorHandlerMiddlware)
 
 process.on("uncaughtException", (error) => {

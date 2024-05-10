@@ -64,7 +64,7 @@ class FileRepository implements IFileRepository{
   
    
 
-    async getFilesByAttribute(attributes: {[key: string]: any}): Promise<object[]> {
+    async getFilesByAttribute(attributes: {[key: string]: any}): Promise<IFile[]> {
 
         const whereClause: { [key: string]: any } = {};
     
