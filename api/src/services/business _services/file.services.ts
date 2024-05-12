@@ -1,9 +1,8 @@
 import { IFile, IFileRepository, IFileService } from "../../interfaces/business_interfaces/file.interfaces.js";
 import { FileData } from "../../interfaces/utility_interfaces/request.interface.js";
 import IValidator from "../../interfaces/utility_interfaces/validator.interface.js";
-import path, { dirname } from "path";
-
-import FileUtility from "../utility_services/file_utility.service.js"
+import { Mutex } from 'async-mutex';
+import FileUtility from "../utility_services/file_utility.service.js";
 import {IGroupService } from "../../interfaces/business_interfaces/group.interfaces.js";
 
 import File from "../../dto/file";
@@ -17,6 +16,8 @@ class FileServices implements IFileService {
     private validator: IValidator;
     private groupServices: IGroupService;
     public fileOperations: FileUtility;
+    private mutex: Mutex;
+
     expirationTime: number;
     constructor(fileRepository: IFileRepository, validator: IValidator, groupServices: IGroupService, expirationTime: number = 3 * 24 * 60 * 60 * 1000) {
         this.fileRepository = fileRepository;
@@ -24,7 +25,7 @@ class FileServices implements IFileService {
         this.groupServices = groupServices;
         this.fileOperations = new FileUtility();
         this.expirationTime = expirationTime;
-
+        this.mutex = new Mutex();
 
     }
     async getBookingHistory(userId: number, groupId:number, fileId: number): Promise<IBooking[]> {
@@ -190,6 +191,8 @@ class FileServices implements IFileService {
         const expiredAt = new Date(Date.now() + this.expirationTime);
         let bookedFiles: object[] = [];
     
+        await this.mutex.acquire();
+
         await db.sequelize.transaction(async (t: Transaction) => {
             for (let file of await files) {
     
@@ -207,9 +210,8 @@ class FileServices implements IFileService {
                 bookedFiles.push(booking);
             }
         });
-    
-        
-
+            
+             this.mutex.release();
     
         return bookedFiles;
     }
