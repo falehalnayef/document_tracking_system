@@ -36,6 +36,8 @@ interface IFileAttributes{
       getActiveBooking(user_id: number, file_id: number): Promise<IBooking>;
       updateBooking(booking_id: number, data: object, transaction?: Transaction): Promise<void>;
       getBookings(file_id: number): Promise<IBooking[]>;
+      getAllExpiredBookings(): Promise<IBooking[]>;
+
 
 
     
