@@ -179,39 +179,46 @@ class FileServices implements IFileService {
         this.validator.validateRequiredFields({ Ids, groupId, userId });
     
         const fileIds = Ids.split(",");
-        const files = this.fileRepository.getFilesByAttribute({ file_id: fileIds});
+        const isOwner = this.groupServices.isOwner(userId, groupId);
+        const isCheckedIn = this.groupServices.checkUserInGroup(groupId, userId);
 
-        const isOwner = await this.groupServices.isOwner(userId, groupId);
-        const isCheckedIn = await this.groupServices.checkUserInGroup(groupId, userId);
-    
-        if (!isOwner && !isCheckedIn) {
+        if (!(await isOwner) && !(await isCheckedIn)) {
             throw new StatusError(403, "Not allowed");
         }
-    
-        const expiredAt = new Date(Date.now() + this.expirationTime);
-        let bookedFiles: object[] = [];
-    
+
         await this.mutex.acquire();
 
-        await db.sequelize.transaction(async (t: Transaction) => {
-            for (let file of await files) {
+        const files = this.fileRepository.getFilesByAttribute({ file_id: fileIds});
+
+        const expiredAt = new Date(Date.now() + this.expirationTime);
+        let bookedFiles: object[] = [];
+
+        try{
+            await db.sequelize.transaction(async (t: Transaction) => {
+                for (let file of await files) {
     
-                const check = await this.fileRepository.checkFileGroupEntity(groupId, file.file_id);
-                if (!check) {
-                    throw new StatusError(404, `File with ID ${file.file_id} not found in the group ${groupId}`);
+                    const check = await this.fileRepository.checkFileGroupEntity(groupId, file.file_id);
+                    if (!check) {
+                        throw new StatusError(404, `File with ID ${file.file_id} not found in the group ${groupId}`);
+                    }
+                    if (file.checked) {
+                        throw new StatusError(400, `File ${file.file_id} is already checked.`);
+                    }
+        
+                    const booking = await this.fileRepository.createBooking(file.file_id, userId, new Date(), expiredAt, t);
+                    await this.fileRepository.update(file.file_id, { checked: true }, t);
+                    bookedFiles.push(booking);
+    
                 }
-    
-                if (file.checked) {
-                    throw new StatusError(400, `File ${file.file_id} is already checked.`);
-                }
-    
-                const booking = await this.fileRepository.createBooking(file.file_id, userId, new Date(), expiredAt, t);
-                await this.fileRepository.update(file.file_id, { checked: true }, t);
-                bookedFiles.push(booking);
-            }
-        });
+            });
             
-             this.mutex.release();
+        }finally{
+            this.mutex.release();
+
+        }
+
+      
+
     
         return bookedFiles;
     }
