@@ -243,7 +243,36 @@ class FileServices implements IFileService {
         return bookedFileEntity!;
 
     }
+
+
+    async updateFile(userId: number, fileId: number, fileData: FileData): Promise<IFile> {
+
+        this.validator.validateRequiredFields({ userId, fileId, fileData });
+
+        const bookedFileEntity = await this.fileRepository.getActiveBooking(userId, fileId);
+
+        if(!bookedFileEntity){
+            throw new StatusError(400, "You did not check this file");
+        }
+    
+        const file = this.getFile(fileId);
+
+       const filePath = await this.fileOperations.save(fileData.data!, fileData.fileName);
+
+        await db.sequelize.transaction(async (t: Transaction) => {
+        await this.fileRepository.createArchive(fileId, userId, (await file).path, t);
+        await this.fileRepository.update(fileId, {path: filePath}, t);
+
+       });
+        
+        
+        return file!;
+    }
+
 }
+
+
+
 
 
 

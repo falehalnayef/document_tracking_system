@@ -2,7 +2,7 @@ import { ValidationError } from "sequelize";
 import {NextFunction, Response} from "express";
 import {successfulResponse, failedResponse} from "../utils/responseMessage.js";
 import { IFileService } from "../interfaces/business_interfaces/file.interfaces.js";
-import AuthenticatedRequest from "../interfaces/utility_interfaces/request.interface.js";
+import AuthenticatedRequest, { FileData } from "../interfaces/utility_interfaces/request.interface.js";
 
 class FileController {
 
@@ -21,7 +21,7 @@ class FileController {
             const {groupId} = req.body;
 
             const ownerId = req.userId!;
-            const fileData = req.file;
+            const fileData: FileData = req.file!;
 
 
        file = await this.fileServices.createFile(ownerId, fileData, groupId);
@@ -180,7 +180,35 @@ class FileController {
     } catch (error: any) {
         
                 
-        next(error);}
+        next(error);
+    }
+        
+    }
+
+
+    
+    async updateFile(req: AuthenticatedRequest, res: Response, next: NextFunction){
+
+        try {
+            
+            
+            const fileId = Number(req.params.fileId);
+            const groupId = Number(req.params.groupId);
+
+
+            const userId = req.userId!;
+
+            const file: FileData = req.file!;
+    
+          await this.fileServices.updateFile(userId, fileId, file);
+    
+        res.status(200).send(successfulResponse("File has been updated."));
+                
+    } catch (error: any) {
+        
+                
+        next(error);
+    }
         
     }
 

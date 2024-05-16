@@ -10,6 +10,7 @@ import { IBooking } from "../../interfaces/business_interfaces/booking.interface
 const File = db.FileModel;
 const FileGroupModel = db.FileGroupModel;
 const BookingModel = db.BookingModel;
+const ArchiveModel = db.ArchiveModel;
 
 class FileRepository implements IFileRepository {
   async getAllExpiredBookings(): Promise<IBooking[]> {
@@ -194,6 +195,20 @@ class FileRepository implements IFileRepository {
 
     const files = await File.findAll({ where: whereClause });
     return files;
+  }
+
+  async createArchive(
+    file_id: number,
+    user_id: number,
+    path: string,
+    transaction?: Transaction
+  ): Promise<void> {
+    const archivedFile = await ArchiveModel.create(
+      { file_id, user_id, path, date: new Date() },
+      { transaction }
+    );
+
+    return archivedFile;
   }
 }
 
