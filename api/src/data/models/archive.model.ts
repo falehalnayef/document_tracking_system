@@ -40,8 +40,8 @@ export default function defineArchiveModell(sequelize: Sequelize) {
     }
 
     public static associate(models: any): void {
-        ArchiveModel.belongsTo(models.UserModel, { foreignKey: 'user_id', as: 'user' });
-        ArchiveModel.belongsTo(models.FileModel, { foreignKey: 'file_id', as: 'file' });
+        ArchiveModel.belongsTo(models.UserModel, { foreignKey: 'user_id', as: 'user', onDelete: "cascade" });
+        ArchiveModel.belongsTo(models.FileModel, { foreignKey: 'file_id', as: 'file', onDelete: "cascade" });
 
       }
   }

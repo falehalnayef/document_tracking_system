@@ -26,6 +26,7 @@ class FileRouter {
         this.router.post("/:groupId/:fileId/checkOut", this.fileController.checkOut.bind(this.fileController));
         this.router.get("/:groupId/:fileId/bookings", this.fileController.getBookingHistory.bind(this.fileController));
         this.router.post("/:groupId/:fileId/update", this.multiPartMiddleWare.handleFileUpload, this.fileController.updateFile.bind(this.fileController));
+        this.router.get("/:groupId/:fileId/archived", this.fileController.getArchivedFiles.bind(this.fileController));
 
     }
 }

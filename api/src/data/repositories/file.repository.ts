@@ -6,6 +6,7 @@ import {
 
 import db from "../database/db.js";
 import { IBooking } from "../../interfaces/business_interfaces/booking.interfaces.js";
+import { IArchive } from "../../interfaces/business_interfaces/archive.interfaces.js";
 
 const File = db.FileModel;
 const FileGroupModel = db.FileGroupModel;
@@ -13,6 +14,15 @@ const BookingModel = db.BookingModel;
 const ArchiveModel = db.ArchiveModel;
 
 class FileRepository implements IFileRepository {
+
+
+  
+
+
+  async getArchivedFilesByFileId(file_id: number): Promise<IArchive[]> {
+
+    return await ArchiveModel.findAll({where:{file_id}});
+  }
   async getAllExpiredBookings(): Promise<IBooking[]> {
     const bookedFileEntities = await BookingModel.findAll({
       where: {
@@ -130,12 +140,20 @@ class FileRepository implements IFileRepository {
 
   async remove(file_id: number, transaction?: Transaction): Promise<number> {
     const file = await File.destroy({ where: { file_id } }, { transaction });
+    await this.removeArchived(file_id, transaction);
+    return file;
+  }
+
+
+  async removeArchived(file_id: number, transaction?: Transaction): Promise<number> {
+
+    const file = await ArchiveModel.destroy({ where: { file_id } }, { transaction });
 
     return file;
   }
 
-  async getFile(file_id: number): Promise<IFile> {
-    const file = await File.findByPk(file_id);
+  async getFile(file_id: number, include:any = null): Promise<IFile> {
+    const file = await File.findByPk(file_id, {include});
 
     return file;
   }

@@ -4,7 +4,6 @@ import IValidator from "../../interfaces/utility_interfaces/validator.interface.
 import { Mutex } from 'async-mutex';
 import FileUtility from "../utility_services/file_utility.service.js";
 import {IGroupService } from "../../interfaces/business_interfaces/group.interfaces.js";
-
 import File from "../../dto/file";
 import StatusError from "../../utils/error.js";
 import db from "../../data/database/db.js";
@@ -122,10 +121,20 @@ class FileServices implements IFileService {
         }
       
         const file = await this.getFile(fileId);
+const archived = await this.fileRepository.getArchivedFilesByFileId(fileId);
+
+     const paths: string[] = archived.map(v => v.path);
 
        const del = this.fileOperations.deleteFile(file.path);
         
-        const removedFile = await this.fileRepository.remove(fileId);
+       for(const path of paths){
+        await this.fileOperations.deleteFile(path);
+       }
+        let removedFile;
+       await db.sequelize.transaction(async (t: Transaction) => {
+         removedFile = await this.fileRepository.remove(fileId, t);
+
+    });
         if (removedFile !== 1) {
             throw new StatusError(500, "File is not deleted.");
         }
@@ -267,6 +276,30 @@ class FileServices implements IFileService {
         
         
         return file!;
+    }
+
+
+    async getArchivedFiles(userId: number, groupId: number, fileId: number): Promise<any> {
+
+        const file = this.getFile(fileId);
+
+        this.validator.validateRequiredFields({ fileId });
+
+        const isOwner = this.groupServices.isOwner(userId, groupId);
+        const isCheckedIn = this.groupServices.checkUserInGroup(groupId, userId);
+
+        const check = await this.checkFileInGroup(groupId, fileId);
+        if (!check) {
+            throw new StatusError(400, "File is not in the group.");
+        }
+        
+        if (!(await isOwner) && !(await isCheckedIn)) {
+            throw new StatusError(403, "Not allowed");
+        }
+       const archivedFiles = await this.fileRepository.getArchivedFilesByFileId(fileId);
+        
+        
+        return {last: await file, archived: archivedFiles};
     }
 
 }

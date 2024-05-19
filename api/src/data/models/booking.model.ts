@@ -44,8 +44,8 @@ export default function defineBookingModel(sequelize: Sequelize) {
     }
 
     public static associate(models: any): void {
-        BookingModel.belongsTo(models.UserModel, { foreignKey: 'user_id', as: 'user' });
-        BookingModel.belongsTo(models.FileModel, { foreignKey: 'file_id', as: 'file' });
+        BookingModel.belongsTo(models.UserModel, { foreignKey: 'user_id', as: 'user', onDelete: "cascade" });
+        BookingModel.belongsTo(models.FileModel, { foreignKey: 'file_id', as: 'file', onDelete: "cascade"});
 
       }
   }

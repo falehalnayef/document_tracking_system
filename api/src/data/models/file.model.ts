@@ -46,10 +46,10 @@ export default function defineFileModel(sequelize: Sequelize) {
 
 
     public static associate(models: any): void {
-        FileModel.hasMany(models.BookingModel, { foreignKey: 'file_id', as: 'bookings' });
-        FileModel.hasMany(models.ArchiveModel, { foreignKey: 'file_id', as: 'archives' });
-        FileModel.hasOne(models.FileGroupModel, { foreignKey: 'file_id', as: 'file_groups' });
-        FileModel.belongsTo(models.UserModel, { foreignKey: 'owner_id', as: 'owner' });
+        FileModel.hasMany(models.BookingModel, { foreignKey: 'file_id', as: 'bookings', onDelete: "cascade" });
+        FileModel.hasMany(models.ArchiveModel, { foreignKey: 'file_id', as: 'archives', onDelete: "cascade" });
+        FileModel.hasOne(models.FileGroupModel, { foreignKey: 'file_id', as: 'file_groups', onDelete: "cascade" });
+        FileModel.belongsTo(models.UserModel, { foreignKey: 'owner_id', as: 'owner'});
 
 
 

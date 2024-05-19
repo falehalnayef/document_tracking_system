@@ -193,7 +193,6 @@ class FileController {
             
             
             const fileId = Number(req.params.fileId);
-            const groupId = Number(req.params.groupId);
 
 
             const userId = req.userId!;
@@ -203,6 +202,32 @@ class FileController {
           await this.fileServices.updateFile(userId, fileId, file);
     
         res.status(200).send(successfulResponse("File has been updated."));
+                
+    } catch (error: any) {
+        
+                
+        next(error);
+    }
+        
+    }
+
+
+     async getArchivedFiles(req: AuthenticatedRequest, res: Response, next: NextFunction){
+
+        try {
+            
+            
+            const fileId = Number(req.params.fileId);
+            const groupId = Number(req.params.groupId);
+
+
+
+            const userId = req.userId!;
+
+    
+       const files = await this.fileServices.getArchivedFiles(userId, groupId, fileId);
+    
+        res.status(200).send(successfulResponse("Files.", files));
                 
     } catch (error: any) {
         
