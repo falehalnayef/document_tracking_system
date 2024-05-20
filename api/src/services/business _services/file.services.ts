@@ -107,25 +107,25 @@ class FileServices implements IFileService {
 
         this.validator.validateRequiredFields({ fileId, groupId, ownerId });
 
-        
-        const isOwner = await this.groupServices.isOwner(ownerId, groupId);
-
-       if (!isOwner) {
-
-        throw new StatusError(403, "Not allowed");
-       }
-    
         const check = await this.checkFileInGroup(groupId, fileId);
         if (!check) {
             throw new StatusError(400, "File is not in the group.");
         }
-      
+        
         const file = await this.getFile(fileId);
-const archived = await this.fileRepository.getArchivedFilesByFileId(fileId);
+        const isOwner = await this.groupServices.isOwner(ownerId, groupId);
 
-     const paths: string[] = archived.map(v => v.path);
+        
+       if ((!isOwner) && (file.owner_id != ownerId)) {
+        throw new StatusError(403, "Not allowed");
+       }
+    
+    
+        const archived = await this.fileRepository.getArchivedFilesByFileId(fileId);
 
-       const del = this.fileOperations.deleteFile(file.path);
+        const paths: string[] = archived.map(v => v.path);
+
+        const del = this.fileOperations.deleteFile(file.path);
         
        for(const path of paths){
         await this.fileOperations.deleteFile(path);
@@ -162,9 +162,9 @@ const archived = await this.fileRepository.getArchivedFilesByFileId(fileId);
         this.validator.validateRequiredFields({ fileData, ownerId });
 
         const isOwner = await this.groupServices.isOwner(ownerId, groupId);
+        const check = await this.groupServices.checkUserInGroup(groupId, ownerId);
 
-
-       if (!isOwner) {
+        if (!check && !isOwner) {
 
         throw new StatusError(403, "Not allowed");
        }
