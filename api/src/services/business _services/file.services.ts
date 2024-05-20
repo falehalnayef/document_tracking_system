@@ -13,12 +13,12 @@ import Booking from "../../dto/booking.js";
 class FileServices implements IFileService {
     public fileRepository: IFileRepository;
     private validator: IValidator;
-    private groupServices: IGroupService;
+    private groupServices: IGroupService | null;
     public fileOperations: FileUtility;
     private mutex: Mutex;
 
     expirationTime: number;
-    constructor(fileRepository: IFileRepository, validator: IValidator, groupServices: IGroupService, expirationTime: number = 3 * 24 * 60 * 60 * 1000) {
+    constructor(fileRepository: IFileRepository, validator: IValidator, groupServices: IGroupService | null, expirationTime: number = 3 * 24 * 60 * 60 * 1000) {
         this.fileRepository = fileRepository;
         this.validator = validator;
         this.groupServices = groupServices;
@@ -29,8 +29,8 @@ class FileServices implements IFileService {
     }
     async getBookingHistory(userId: number, groupId:number, fileId: number): Promise<IBooking[]> {
 
-        const isOwner = await this.groupServices.isOwner(userId, groupId);
-        const check = await this.groupServices.checkUserInGroup(groupId, userId);
+        const isOwner = await this.groupServices!.isOwner(userId, groupId);
+        const check = await this.groupServices!.checkUserInGroup(groupId, userId);
 
         if (!check && !isOwner) {
             throw new StatusError(403, "Not allowed");
@@ -48,8 +48,8 @@ class FileServices implements IFileService {
     async index(groupId: number, userId: number): Promise<IFile[]> {
         this.validator.validateRequiredFields({ groupId, userId });
         
-        const isOwner = await this.groupServices.isOwner(userId, groupId);
-        const check = await this.groupServices.checkUserInGroup(groupId, userId);
+        const isOwner = await this.groupServices!.isOwner(userId, groupId);
+        const check = await this.groupServices!.checkUserInGroup(groupId, userId);
 
         if (!check && !isOwner) {
             throw new StatusError(403, "Not allowed");
@@ -81,8 +81,8 @@ class FileServices implements IFileService {
 
         
 
-        const isOwner = await this.groupServices.isOwner(userId, groupId);
-        const check = await this.groupServices.checkUserInGroup(groupId, userId);
+        const isOwner = await this.groupServices!.isOwner(userId, groupId);
+        const check = await this.groupServices!.checkUserInGroup(groupId, userId);
 
         if (!check && !isOwner) {
             throw new StatusError(403, "Not allowed");
@@ -113,7 +113,7 @@ class FileServices implements IFileService {
         }
         
         const file = await this.getFile(fileId);
-        const isOwner = await this.groupServices.isOwner(ownerId, groupId);
+        const isOwner = await this.groupServices!.isOwner(ownerId, groupId);
 
         
        if ((!isOwner) && (file.owner_id != ownerId)) {
@@ -161,8 +161,8 @@ class FileServices implements IFileService {
     async createFile(ownerId: number, fileData: FileData, groupId: number): Promise<IFile> {
         this.validator.validateRequiredFields({ fileData, ownerId });
 
-        const isOwner = await this.groupServices.isOwner(ownerId, groupId);
-        const check = await this.groupServices.checkUserInGroup(groupId, ownerId);
+        const isOwner = await this.groupServices!.isOwner(ownerId, groupId);
+        const check = await this.groupServices!.checkUserInGroup(groupId, ownerId);
 
         if (!check && !isOwner) {
 
@@ -188,8 +188,8 @@ class FileServices implements IFileService {
         this.validator.validateRequiredFields({ Ids, groupId, userId });
     
         const fileIds = Ids.split(",");
-        const isOwner = this.groupServices.isOwner(userId, groupId);
-        const isCheckedIn = this.groupServices.checkUserInGroup(groupId, userId);
+        const isOwner = this.groupServices!.isOwner(userId, groupId);
+        const isCheckedIn = this.groupServices!.checkUserInGroup(groupId, userId);
 
         if (!(await isOwner) && !(await isCheckedIn)) {
             throw new StatusError(403, "Not allowed");
@@ -285,8 +285,8 @@ class FileServices implements IFileService {
 
         this.validator.validateRequiredFields({ fileId });
 
-        const isOwner = this.groupServices.isOwner(userId, groupId);
-        const isCheckedIn = this.groupServices.checkUserInGroup(groupId, userId);
+        const isOwner = this.groupServices!.isOwner(userId, groupId);
+        const isCheckedIn = this.groupServices!.checkUserInGroup(groupId, userId);
 
         const check = await this.checkFileInGroup(groupId, fileId);
         if (!check) {

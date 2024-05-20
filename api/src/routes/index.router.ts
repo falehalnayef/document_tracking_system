@@ -32,7 +32,8 @@ class IndexRouter {
         const authTokenServices = new JWTServices();
 
         const userServices = new UserServices(new UserRepository(), validator, new HashServices(), authTokenServices);
-        const groupServices = new GroupServices(new GroupRepository(), userServices, validator);
+        const fileSer = new FileServices(new FileRepository(), validator, null);
+        const groupServices = new GroupServices(new GroupRepository(), userServices, fileSer,  validator);
         const fileServices = new FileServices(new FileRepository(), validator, groupServices);
 
         this.auth = new UserAuth(userServices, authTokenServices);
