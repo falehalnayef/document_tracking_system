@@ -11,7 +11,7 @@ import { Transaction } from "sequelize";
 import { IBooking } from "../../interfaces/business_interfaces/booking.interfaces.js";
 import Booking from "../../dto/booking.js";
 class FileServices implements IFileService {
-    private fileRepository: IFileRepository;
+    public fileRepository: IFileRepository;
     private validator: IValidator;
     private groupServices: IGroupService;
     public fileOperations: FileUtility;

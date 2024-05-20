@@ -153,7 +153,7 @@ async addUserToGroup(req: AuthenticatedRequest, res: Response, next: NextFunctio
 }
 
 
-async deleteUserFromGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
+async removeUserFromGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     try {
         
@@ -162,7 +162,7 @@ async deleteUserFromGroup(req: AuthenticatedRequest, res: Response, next: NextFu
 
     const ownerId = req.userId!;
 
-     await this.groupServices.deleteUserFromGroup(groupId, userId, ownerId);
+     await this.groupServices.removeUserFromGroup(groupId, userId, ownerId);
 
     res.status(200).send(successfulResponse("User has been deleted from the group."));
             
@@ -199,7 +199,7 @@ async leaveGroup(req: AuthenticatedRequest, res: Response, next: NextFunction){
 
     const userId = req.userId!;
 
-     await this.groupServices.deleteUserFromGroup(groupId, userId);
+     await this.groupServices.removeUserFromGroup(groupId, userId);
 
     res.status(200).send(successfulResponse("Left the group."));
             

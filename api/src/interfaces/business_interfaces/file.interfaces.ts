@@ -39,6 +39,7 @@ interface IFileAttributes{
       getActiveBooking(user_id: number, file_id: number): Promise<IBooking>;
       updateBooking(booking_id: number, data: object, transaction?: Transaction): Promise<void>;
       getBookings(file_id: number): Promise<IBooking[]>;
+      getBookingsByUserId(user_id: number): Promise<IBooking[]>;
       getAllExpiredBookings(): Promise<IBooking[]>;
       createArchive(file_id: number, user_id: number, path: string, transaction?: Transaction): Promise<void>;
       getArchivedFilesByFileId(file_id: number): Promise<IArchive[]>;
@@ -48,6 +49,7 @@ interface IFileAttributes{
     
     interface IFileService {   
         fileOperations: FileUtility;
+        fileRepository: IFileRepository;
         createFile(ownerId: number, fileDate: FileData, groupId: number): Promise<IFile>;
         index(groupId: number, userId: number): Promise<IFile[]>;
         getFile(fileId: number): Promise<IFile>;    

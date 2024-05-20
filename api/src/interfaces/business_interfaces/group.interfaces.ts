@@ -52,7 +52,7 @@ interface IGroup extends IGroupAttributes{
         deleteGroup(groupId: number, userId: number): Promise<number>;    
         checkUserInGroup(groupId: number, userId: number): Promise<boolean>;
         addUserToGroup(groupId: number, userId: number, ownerId?: number): Promise<boolean>;
-        deleteUserFromGroup(groupId: number, userId: number, ownerId?: number): Promise<number>;
+        removeUserFromGroup(groupId: number, userId: number, ownerId?: number): Promise<number>;
         searchForGroup(groupName: string): Promise<IGroup[]>;
         isOwner(ownerId: number, groupId: number): Promise<boolean>;
         getGroupUsers(groupId: number, userId: number): Promise<IUser[]>;

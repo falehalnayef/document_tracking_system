@@ -28,7 +28,7 @@ class GroupRouter {
         this.router.get("/:groupId/users", this.groupController.getUsers.bind(this.groupController));
         this.router.delete("/:groupId", this.groupController.deleteGroup.bind(this.groupController));
         this.router.get("/:groupId", this.groupController.getGroup.bind(this.groupController));
-        this.router.delete("/:groupId/users/:userId", this.groupController.deleteUserFromGroup.bind(this.groupController));
+        this.router.delete("/:groupId/users/:userId", this.groupController.removeUserFromGroup.bind(this.groupController));
         this.router.delete("/:groupId/membership", this.groupController.leaveGroup.bind(this.groupController));
 
         

@@ -1,18 +1,23 @@
 import Group from "../../dto/group.js";
 import User from "../../dto/user.js";
+import { IFileRepository } from "../../interfaces/business_interfaces/file.interfaces.js";
 import { IGroup, IGroupRepository, IGroupService } from "../../interfaces/business_interfaces/group.interfaces.js";
 import { IUser, IUserService } from "../../interfaces/business_interfaces/user.interfaces.js";
 import IValidator from "../../interfaces/utility_interfaces/validator.interface.js";
 import StatusError from "../../utils/error.js";
+import FileServices from "./file.services.js";
 
 class GroupServices implements IGroupService {
     private groupRepository: IGroupRepository;
     private validator: IValidator;
     private userServices: IUserService;
+    private fileService: FileServices;
 
-    constructor(groupRepository: IGroupRepository, userServices: IUserService, validator: IValidator) {
+    
+    constructor(groupRepository: IGroupRepository, userServices: IUserService, fileService: FileServices, validator: IValidator) {
         this.groupRepository = groupRepository;
         this.userServices = userServices;
+        this.fileService = fileService;
         this.validator = validator;
 
 
@@ -186,7 +191,7 @@ class GroupServices implements IGroupService {
     }
     
 
-    async deleteUserFromGroup(groupId: number, userId: number, ownerId?: number): Promise<number> {
+    async removeUserFromGroup(groupId: number, userId: number, ownerId?: number): Promise<number> {
         this.validator.validateRequiredFields({ groupId, userId });
 
         const group = await this.getGroup(groupId);
@@ -205,6 +210,11 @@ class GroupServices implements IGroupService {
         if (!userAlreadyInGroup) {
             throw new StatusError(400, "User is not in the group.");
         }
+       const bookings = await this.fileService.fileRepository.getBookingsByUserId(userId);
+       for(const booking of bookings){
+
+        await this.fileService.checkOut(userId, booking.file_id);
+       }
 
         return await this.groupRepository.removeUserGroupEntity(groupId, userId);
     }
