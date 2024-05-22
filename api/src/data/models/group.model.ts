@@ -31,7 +31,13 @@ export default function defineGroupModel(sequelize: Sequelize) {
       {
           sequelize,
           tableName: "groups",
-          timestamps: false 
+          timestamps: false ,
+          indexes:[
+            {
+              unique: false,
+              fields:['group_name']
+            }
+           ]
       }
       );
     }

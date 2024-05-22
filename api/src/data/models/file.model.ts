@@ -39,7 +39,13 @@ export default function defineFileModel(sequelize: Sequelize) {
       {
           sequelize,
           tableName: "files",
-          timestamps: false
+          timestamps: false,
+          indexes:[
+            {
+              unique: false,
+              fields:['file_name']
+            }
+           ]
       }
   );
     }
