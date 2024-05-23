@@ -16,6 +16,8 @@ import FileController from "../controllers/file.controller.js";
 import FileServices from "../services/business _services/file.services.js";
 import FileRepository from "../data/repositories/file.repository.js";
 import errorHandler from "../middlewares/handlers/error.handler.handler.js"
+import BookingRepository from "../data/repositories/booking.repository.js";
+import ArchiveRepository from "../data/repositories/archive.repository.js";
 
 
 class IndexRouter {
@@ -30,11 +32,12 @@ class IndexRouter {
 
         const validator = new Validator();
         const authTokenServices = new JWTServices();
-
+        const bookingRepository = new BookingRepository();
+        const archiveRepository = new ArchiveRepository();
         const userServices = new UserServices(new UserRepository(), validator, new HashServices(), authTokenServices);
-        const fileSer = new FileServices(new FileRepository(), validator, null);
+        const fileSer = new FileServices(new FileRepository(), bookingRepository, archiveRepository, validator, null);
         const groupServices = new GroupServices(new GroupRepository(), userServices, fileSer,  validator);
-        const fileServices = new FileServices(new FileRepository(), validator, groupServices);
+        const fileServices = new FileServices(new FileRepository(), bookingRepository, archiveRepository,validator, groupServices);
 
         this.auth = new UserAuth(userServices, authTokenServices);
 

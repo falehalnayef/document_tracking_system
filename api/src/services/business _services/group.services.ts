@@ -210,7 +210,7 @@ class GroupServices implements IGroupService {
         if (!userAlreadyInGroup) {
             throw new StatusError(400, "User is not in the group.");
         }
-       const bookings = await this.fileService.fileRepository.getBookingsByUserId(userId);
+       const bookings = await this.fileService.bookingRepository.getBookingsByUserId(userId);
        for(const booking of bookings){
 
         await this.fileService.checkOut(userId, booking.file_id);

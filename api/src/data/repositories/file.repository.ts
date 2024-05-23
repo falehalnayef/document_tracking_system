@@ -23,16 +23,7 @@ class FileRepository implements IFileRepository {
 
     return await ArchiveModel.findAll({where:{file_id}});
   }
-  async getAllExpiredBookings(): Promise<IBooking[]> {
-    const bookedFileEntities = await BookingModel.findAll({
-      where: {
-        check_out_date: null,
-        exp_date: { [Op.lt]: new Date() },
-      },
-    });
-
-    return bookedFileEntities;
-  }
+  
 
   async getBookings(file_id: number): Promise<IBooking[]> {
     const bookedFileEntity = await BookingModel.findAll({ where: { file_id } });

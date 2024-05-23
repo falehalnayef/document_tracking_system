@@ -8,18 +8,23 @@ import File from "../../dto/file";
 import StatusError from "../../utils/error.js";
 import db from "../../data/database/db.js";
 import { Transaction } from "sequelize";
-import { IBooking } from "../../interfaces/business_interfaces/booking.interfaces.js";
+import { IBooking, IBookingRepository } from "../../interfaces/business_interfaces/booking.interfaces.js";
 import Booking from "../../dto/booking.js";
+import { IArchiveRepository } from "../../interfaces/business_interfaces/archive.interfaces.js";
 class FileServices implements IFileService {
     public fileRepository: IFileRepository;
+    public bookingRepository: IBookingRepository;
+    public archiveRepository: IArchiveRepository;
     private validator: IValidator;
     private groupServices: IGroupService | null;
     public fileOperations: FileUtility;
     private mutex: Mutex;
 
     expirationTime: number;
-    constructor(fileRepository: IFileRepository, validator: IValidator, groupServices: IGroupService | null, expirationTime: number = 3 * 24 * 60 * 60 * 1000) {
+    constructor(fileRepository: IFileRepository, bookingRepository: IBookingRepository, archiveRepository: IArchiveRepository, validator: IValidator, groupServices: IGroupService | null, expirationTime: number = 3 * 24 * 60 * 60 * 1000) {
         this.fileRepository = fileRepository;
+        this.bookingRepository = bookingRepository;
+        this.archiveRepository = archiveRepository;
         this.validator = validator;
         this.groupServices = groupServices;
         this.fileOperations = new FileUtility();
@@ -36,7 +41,7 @@ class FileServices implements IFileService {
             throw new StatusError(403, "Not allowed");
         }
 
-        const bookingsData = await this.fileRepository.getBookings(fileId);
+        const bookingsData = await this.bookingRepository.getBookings(fileId);
 
         const bookings: IBooking[] = [];
         for (const book of bookingsData) {
@@ -121,7 +126,7 @@ class FileServices implements IFileService {
        }
     
     
-        const archived = await this.fileRepository.getArchivedFilesByFileId(fileId);
+        const archived = await this.archiveRepository.getArchivedFilesByFileId(fileId);
 
         const paths: string[] = archived.map(v => v.path);
 
@@ -214,7 +219,7 @@ class FileServices implements IFileService {
                         throw new StatusError(400, `File ${file.file_id} is already checked.`);
                     }
         
-                    const booking = await this.fileRepository.createBooking(file.file_id, userId, new Date(), expiredAt, t);
+                    const booking = await this.bookingRepository.createBooking(file.file_id, userId, new Date(), expiredAt, t);
                     await this.fileRepository.update(file.file_id, { checked: true }, t);
                     bookedFiles.push(booking);
     
@@ -238,14 +243,14 @@ class FileServices implements IFileService {
 
         this.validator.validateRequiredFields({ fileId, userId });
 
-        const bookedFileEntity = await this.fileRepository.getActiveBooking(userId, fileId);
+        const bookedFileEntity = await this.bookingRepository.getActiveBooking(userId, fileId);
 
         if(!bookedFileEntity){
             throw new StatusError(400, "You did not check this file");
         }
 
         await db.sequelize.transaction(async (t: Transaction) => {
-            await this.fileRepository.updateBooking(bookedFileEntity.booking_id, {check_out_date: new Date()}, t);
+            await this.bookingRepository.updateBooking(bookedFileEntity.booking_id, {check_out_date: new Date()}, t);
             await this.fileRepository.update(fileId, {checked:false}, t)
         });
 
@@ -258,7 +263,7 @@ class FileServices implements IFileService {
 
         this.validator.validateRequiredFields({ userId, fileId, fileData });
 
-        const bookedFileEntity = await this.fileRepository.getActiveBooking(userId, fileId);
+        const bookedFileEntity = await this.bookingRepository.getActiveBooking(userId, fileId);
 
         if(!bookedFileEntity){
             throw new StatusError(400, "You did not check this file");
@@ -269,7 +274,7 @@ class FileServices implements IFileService {
        const filePath = await this.fileOperations.save(fileData.data!, fileData.fileName);
 
         await db.sequelize.transaction(async (t: Transaction) => {
-        await this.fileRepository.createArchive(fileId, userId, (await file).path, t);
+        await this.archiveRepository.createArchive(fileId, userId, (await file).path, t);
         await this.fileRepository.update(fileId, {path: filePath}, t);
 
        });
@@ -296,7 +301,7 @@ class FileServices implements IFileService {
         if (!(await isOwner) && !(await isCheckedIn)) {
             throw new StatusError(403, "Not allowed");
         }
-       const archivedFiles = await this.fileRepository.getArchivedFilesByFileId(fileId);
+       const archivedFiles = await this.archiveRepository.getArchivedFilesByFileId(fileId);
         
         
         return {last: await file, archived: archivedFiles};

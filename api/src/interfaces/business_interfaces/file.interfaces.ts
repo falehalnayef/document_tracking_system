@@ -2,7 +2,6 @@ import { Transaction } from "sequelize";
 import FileUtility from "../../services/utility_services/file_utility.service";
 import { IBooking } from "./booking.interfaces";
 import { FileData } from "../utility_interfaces/request.interface";
-import { IArchive } from "./archive.interfaces";
 
 interface IFileAttributes{
     file_id: number;
@@ -28,21 +27,13 @@ interface IFileAttributes{
       getFilesByAttribute(attribute:{[key: string]: any}): Promise<IFile[]>;
       getFile(file_id: number, include?:any): Promise<IFile>;    
       remove(file_id: number, transaction?:Transaction): Promise<number>;
-      removeArchived(file_id: number, transaction?:Transaction): Promise<number>;
       createFileGroupEntity(group_id: number, file_id: number, transaction?: Transaction): Promise<object>;
       removeFileGroupEntity(group_id: number, file_id: number): Promise<object>;
       getFileGroupEntity(group_id: number, attributes: string[]): Promise<object>;
       checkFileGroupEntity(group_id: number, file_id: number): Promise<object>;
       getFilesByLike(likeAttribute: { [key: string]: any }, filters: { [key: string]: any }): Promise<object[]>;    
-      createBooking(file_id: number, user_id: number, check_in_date: Date, exp_date: Date, transaction?: Transaction): Promise<object>;    
       update(file_id: number, data: object, transaction?: Transaction): Promise<void>;
-      getActiveBooking(user_id: number, file_id: number): Promise<IBooking>;
-      updateBooking(booking_id: number, data: object, transaction?: Transaction): Promise<void>;
-      getBookings(file_id: number): Promise<IBooking[]>;
-      getBookingsByUserId(user_id: number): Promise<IBooking[]>;
-      getAllExpiredBookings(): Promise<IBooking[]>;
-      createArchive(file_id: number, user_id: number, path: string, transaction?: Transaction): Promise<void>;
-      getArchivedFilesByFileId(file_id: number): Promise<IArchive[]>;
+   
 
     
     }

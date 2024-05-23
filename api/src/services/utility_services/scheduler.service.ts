@@ -1,13 +1,19 @@
 import schedule from "node-schedule";
 import FileRepository from "../../data/repositories/file.repository";
+import BookingRepository from "../../data/repositories/booking.repository";
+
 import db from "../../data/database/db";
 import { Transaction } from "sequelize";
 
 class Scheduler {
   fileRepository: FileRepository;
+  bookingRepository: BookingRepository;
+
 
   constructor() {
     this.fileRepository = new FileRepository();
+    this.bookingRepository = new BookingRepository();
+
   }
 
   async run() {
@@ -24,7 +30,7 @@ class Scheduler {
 
   async checkOutJop() {
     try {
-      const bookings = await this.fileRepository.getAllExpiredBookings();
+      const bookings = await this.bookingRepository.getAllExpiredBookings();
 
       for (const booking of bookings){
 
