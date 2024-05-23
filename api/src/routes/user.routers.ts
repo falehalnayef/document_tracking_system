@@ -16,7 +16,7 @@ class UserRouter {
 
     private initializeRoutes(): void {
         this.router.get("/", this.auth.checkUser, this.userController.getAllUsers.bind(this.userController));
-        this.router.post("/registration", this.userController.createUser.bind(this.userController));
+        this.router.post("/", this.userController.createUser.bind(this.userController));
         this.router.post("/login", this.userController.login.bind(this.userController));
         this.router.get("/:userId", this.auth.checkUser, this.userController.showUser.bind(this.userController));
 
