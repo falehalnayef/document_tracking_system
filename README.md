@@ -9,36 +9,33 @@ Features
 
 Installation
 
-    Clone the repository:
-
-    bash
+    Clone the Repository:
 
 git clone https://github.com/your/repository.git
 
-Install dependencies:
-
-bash
+Install Dependencies:
 
 cd dts
 npm install
 
-Set up environment variables:
+Set Up Environment Variables:
 
-Create a .env file in the root directory and configure environment variables as needed. Example:
+    Create a .env file in the root directory.
+    Configure environment variables as needed. Example:
 
-makefile
+    makefile
 
-    PORT=3000
-    DB_HOST=localhost
-    DB_USER=myuser
-    DB_PASSWORD=mypassword
-    DB_NAME=mydatabase
+        PORT=3000
+        DB_HOST=localhost
+        DB_USER=myuser
+        DB_PASSWORD=mypassword
+        DB_NAME=mydatabase
 
 Usage
 
-    Start the application:
+    Start the Application:
 
-    bash
+    sql
 
     npm start
 
@@ -69,3 +66,7 @@ Development Dependencies
     nodemon
     sequelize-cli
     Various TypeScript type definitions (@types/...)
+
+License
+
+This project is licensed under the ISC License.
