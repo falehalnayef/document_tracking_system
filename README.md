@@ -18,8 +18,6 @@ This project is currently in its Minimum Viable Product (MVP) stage, focusing on
 
 git clone https://github.com/falehalnayef/document_tracking_system.git
 
-markdown
-
 
 2. **Install Dependencies**:
 
@@ -27,15 +25,12 @@ cd dts
 
 npm install
 
-markdown
-
 
 3. **Set Up Environment Variables**:
 
 - Create a `.env` file in the root directory.
 - Configure environment variables as needed. Example:
-
-  ```
+```
 PORT=3000
 DB_NAME=dts
 DB_USER=postgres
@@ -44,7 +39,7 @@ DB_DRIVER=postgres
 DB_HOST=127.0.0.1
 DB_PORT=5432
 JWT_SECRET_KEY=8ea895edcfaeb31b46607022b2e294989bb57c442c3ceb4d62084e6b721f685b34640b306a611f29acbdd62afdb698ad69634f54820b671d9282b1da7c5dfc05
-  ```
+```
 
 ## Usage
 
@@ -54,7 +49,6 @@ npm run tsc
 
 npm run serve
 
-markdown
 
 - The application will be running at `http://localhost:3000` by default.
 
