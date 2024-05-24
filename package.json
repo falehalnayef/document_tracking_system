@@ -7,7 +7,7 @@
   "scripts": {
     "tsc": "tsc -w",
     "start": "concurrently \"tsc -w\" \"nodemon api/dist/server.js\"",
-    "serve": "node --watch api/dist/server.js"
+    "serve": "node api/dist/server.js"
   },
   "keywords": [],
   "author": "",

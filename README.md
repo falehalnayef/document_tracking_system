@@ -16,7 +16,7 @@ This project is currently in its Minimum Viable Product (MVP) stage, focusing on
 
 1. **Clone the Repository**:
 
-git clone https://github.com/your/repository.git
+git clone https://github.com/falehalnayef/document_tracking_system.git
 
 markdown
 
@@ -24,6 +24,7 @@ markdown
 2. **Install Dependencies**:
 
 cd dts
+
 npm install
 
 markdown
@@ -35,23 +36,25 @@ markdown
 - Configure environment variables as needed. Example:
 
   ```
-  PORT=3000
-  DB_HOST=localhost
-  DB_USER=myuser
-  DB_PASSWORD=mypassword
-  DB_NAME=mydatabase
+PORT=3000
+DB_NAME=dts
+DB_USER=postgres
+DB_PASSWORD=1234
+DB_DRIVER=postgres
+DB_HOST=127.0.0.1
+DB_PORT=5432
+JWT_SECRET_KEY=8ea895edcfaeb31b46607022b2e294989bb57c442c3ceb4d62084e6b721f685b34640b306a611f29acbdd62afdb698ad69634f54820b671d9282b1da7c5dfc05
   ```
 
 ## Usage
 
 - **Start the Application**:
 
-npm i
+npm run tsc
 
-npm start
+npm run serve
 
 markdown
-
 
 - The application will be running at `http://localhost:3000` by default.
 
