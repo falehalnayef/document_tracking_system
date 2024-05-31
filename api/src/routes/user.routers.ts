@@ -1,6 +1,6 @@
 import { Router } from "express";
 import UserController from "../controllers/user.controller.js";
-import UserAuth from "../middlewares/auth_mddleware/user.auth.js";
+import UserAuth from "../middlewares/auth_middleware/user.auth.js";
 
 class UserRouter {
     public router: Router;

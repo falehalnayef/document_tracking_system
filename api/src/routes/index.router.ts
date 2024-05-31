@@ -1,7 +1,7 @@
 import { Router } from "express";
 import UserRouter from "./user.routers.js";
 import GroupRouter from "./group.routers.js";
-import UserAuth from "../middlewares/auth_mddleware/user.auth.js";
+import UserAuth from "../middlewares/auth_middleware/user.auth.js";
 import UserController from "../controllers/user.controller.js";
 import UserServices from "../services/business _services/user.services.js";
 import UserRepository from "../data/repositories/user.repository.js";

@@ -5,9 +5,16 @@ import db from "./data/database/db.js";
 import morgan from "morgan";
 import cors from "cors";
 import errorHandlerMiddlware from "./middlewares/handlers/error.handler.handler.js";
+import swaggerUI from "swagger-ui-express";
+import fs from "fs";
+import YAML from "yaml";
+import path from "path";
+
 const app: Application = express();
 const scheduler = new Scheduler();
 
+const file = fs.readFileSync(path.join(__dirname.replace("\\api\\dist", ""), "\\swagger.yaml"), "utf8");
+const swaggerDocument = YAML.parse(file)
 const corsOptions = {
   origin: "*",
   credentials: true,
@@ -15,10 +22,12 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(morgan("dev"));
-app.use(express.json()); // So express can handle Requests that include JSON in the body.
-//app.use(express.urlencoded());
+app.use(express.json()); 
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
 app.use("/api", indexRouter);
 app.use(errorHandlerMiddlware);
+
 
 process.on("uncaughtException", (error) => {
   console.error(error);

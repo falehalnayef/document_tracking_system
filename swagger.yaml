@@ -1,0 +1,610 @@
+openapi: "3.0.1"
+info:
+    title: API DOCS
+    description: This is the DTS api documentation.
+    version: "1.0"
+    
+servers:
+  - url: "http://localhost:3000"
+    description: local
+
+# users
+paths:
+  /api/users:
+    get:
+      summary: Returns users.
+      parameters:
+        - in: header
+          name: auth
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error
+
+  /api/users/{userId}:
+      get:
+        summary: Returns user.
+        parameters:
+        - in: header
+          name: auth
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+        responses:
+          200:
+            description: Success
+          400:
+            description: Bad Request
+          500:
+            description: Internal Server Error
+
+  /api/users/login:
+        post:
+          summary: Logs in a user.
+          requestBody:
+            description: log in Request
+            required: true
+            content:
+               application/json:
+                schema:
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+          responses:
+            200:
+              description: Success
+            400:
+              description: Bad Request
+            500:
+              description: Internal Server Error
+
+  /api/users/:
+        post:
+          summary: Registers new user to the system.
+          requestBody:
+            description: Registration Request
+            required: true
+            content:
+               application/json:
+                schema:
+                  properties:
+                    userName:
+                      type: string
+                    email:
+                      type: string
+                    password:
+                      type: string
+          responses:
+            200:
+              description: Success
+            201:
+              description: Success
+            400:
+              description: Bad Request
+            500:
+              description: Internal Server Error              
+#groups
+
+  /api/groups/:
+        post:
+          summary: Creates new group in the system.
+          parameters:
+          - in: header
+            name: auth
+            schema:
+              type: string
+            required: true
+          requestBody:
+            description: new group Request
+            required: true
+            content:
+               application/json:
+                schema:
+                  properties:
+                    group_name:
+                      type: string
+                    is_public:
+                      type: boolean
+          responses:
+            200:
+              description: Success
+            201:
+              description: Success
+            400:
+              description: Bad Request
+            500:
+              description: Internal Server Error   
+
+  /api/groups/ownership:
+          get:
+            summary: Returns groups that the user has created them.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error  
+
+  /api/groups/membership:
+          get:
+            summary: Returns groups that the user is member of.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error   
+
+  /api/groups/public:
+          get:
+            summary: Returns the public groups.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error   
+
+  /api/groups/search/{groupName}:
+          get:
+            summary: Search for public groups by name.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            - in: path
+              name: groupName
+              schema:
+                type: string
+              required: true
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error   
+
+  /api/groups/{groupId}/users:
+          get:
+            summary: Returns users whom members of the group.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            - in: path
+              name: groupId
+              schema:
+                type: integer
+              required: true
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error   
+
+  /api/groups/{groupId}:
+          delete:
+            summary: Delete a group from the system.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            - in: path
+              name: groupId
+              schema:
+                type: integer
+              required: true
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error   
+
+  /api/groups/users:
+          post:
+            summary: Add user to a group.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            requestBody:
+              description: Adding user Request
+              required: true
+              content:
+                application/json:
+                  schema:
+                    properties:
+                      groupId:
+                        type: integer
+                      userId:
+                        type: integer
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error   
+
+  /api/groups/{groupId}/users/{userId}:
+          delete:
+            summary: Remove user from a group.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            - in: path
+              name: groupId
+              schema:
+                type: integer
+              required: true
+            - in: path
+              name: userId
+              schema:
+                type: integer
+              required: true              
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error   
+
+
+  /api/groups/membership/:
+          post:
+            summary: User joins a public group.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            requestBody:
+              description: Adding user Request
+              required: true
+              content:
+                application/json:
+                  schema:
+                    properties:
+                      groupId:
+                        type: integer
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error   
+
+  /api/groups/{groupId}/membership:
+          delete:
+            summary: User leaves a group.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            - in: path
+              name: groupId
+              schema:
+                type: integer
+              required: true           
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error   
+
+# files
+
+
+  /api/files:
+          post:
+            summary: upload a new file to a group.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            requestBody:
+              description: file Request
+              required: true
+              content:
+                multipart/form-data:
+                  schema:
+                    type: object
+                    properties:
+                      groupId:
+                        type: integer
+                      file:
+                        type: string
+                        format: binary
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error   
+
+  /api/files/{groupId}/{fileId}:
+          delete:
+            summary: Delete file.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            - in: path
+              name: groupId
+              schema:
+                type: integer
+              required: true
+            - in: path
+              name: fileId
+              schema:
+                type: integer
+              required: true              
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error   
+
+  /api/files/{groupId}:
+          get:
+            summary: Returns files from a group.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            - in: path
+              name: groupId
+              schema:
+                type: integer
+              required: true
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error   
+
+  /api/files/search/{groupId}/{fileName}:
+          get:
+            summary: Search for files in a group by name.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            - in: path
+              name: groupId
+              schema:
+                type: integer
+              required: true
+            - in: path
+              name: fileName
+              schema:
+                type: string
+              required: true              
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error   
+
+  /api/files/{groupId}/checkIn:
+          post:
+            summary: check in a file.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            - in: query
+              name: fileIds
+              schema:
+                type: string
+              required: true              
+            - in: path
+              name: groupId
+              schema:
+                type: integer
+              required: true                      
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              403:
+               description: Forbidden
+              500:
+                description: Internal Server Error   
+
+  /api/files/{groupId}/{fileId}/checkOut:
+          post:
+            summary: check out a file.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            - in: path
+              name: groupId
+              schema:
+                type: integer
+              required: true
+            - in: path
+              name: fileId
+              schema:
+                type: integer
+              required: true              
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error                   
+
+  /api/files/{groupId}/{fileId}/bookings:
+          get:
+            summary: Returns booking history of a file.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            - in: path
+              name: groupId
+              schema:
+                type: integer
+              required: true
+            - in: path
+              name: fileId
+              schema:
+                type: integer
+              required: true              
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error                   
+
+
+
+  /api/files/{groupId}/{fileId}/archived:
+          get:
+            summary: Returns archived files.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            - in: path
+              name: groupId
+              schema:
+                type: integer
+              required: true
+            - in: path
+              name: fileId
+              schema:
+                type: integer
+              required: true              
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error       
+
+  /api/files/{groupId}/{fileId}/update:
+          post:
+            summary: update file.
+            parameters:
+            - in: header
+              name: auth
+              schema:
+                type: string
+              required: true
+            - in: path
+              name: groupId
+              schema:
+                type: integer
+              required: true
+            - in: path
+              name: fileId
+              schema:
+                type: integer
+              required: true    
+            requestBody:
+              description: file Request
+              required: true
+              content:
+                multipart/form-data:
+                  schema:
+                    type: object
+                    properties:
+                      file:
+                        type: string
+                        format: binary
+                              
+            responses:
+              200:
+                description: Success
+              400:
+                description: Bad Request
+              500:
+                description: Internal Server Error                       

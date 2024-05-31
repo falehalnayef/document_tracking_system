@@ -52,6 +52,9 @@ npm run serve
 
 - The application will be running at `http://localhost:3000` by default.
 
+- Swagger docs for the application are found at `http://localhost:3000/api-docs/` by default.
+
+
 ## Scripts
 
 - `npm run tsc`: Run TypeScript compiler in watch mode.
@@ -77,6 +80,10 @@ npm run serve
 - nodemon
 - sequelize-cli
 - Various TypeScript type definitions (`@types/...`)
+
+## Documentation
+- Swagger
+
 
 ## License
 
