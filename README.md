@@ -1,6 +1,6 @@
 # Document Tracking System (DTS)
 
-The Document Tracking System (DTS) is a backend application designed to manage files, groups, and users within an organization. It provides functionalities for creating, updating, searching, and deleting files, as well as managing groups and user accounts.
+The Document Tracking System (DTS) is a BACKEND application designed to manage files, groups, and users within an organization. It provides functionalities for creating, updating, searching, and deleting files, as well as managing groups and user accounts.
 
 ## MVP Status
 
