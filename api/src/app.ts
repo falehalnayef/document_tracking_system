@@ -8,12 +8,12 @@ import errorHandlerMiddlware from "./middlewares/handlers/error.handler.handler.
 import swaggerUI from "swagger-ui-express";
 import fs from "fs";
 import YAML from "yaml";
-import path from "path";
 
 const app: Application = express();
 const scheduler = new Scheduler();
 
-const file = fs.readFileSync(path.join(__dirname.replace("\\api\\dist", ""), "\\swagger.yaml"), "utf8");
+const file = fs.readFileSync("swagger.yaml", "utf8");
+
 const swaggerDocument = YAML.parse(file)
 const corsOptions = {
   origin: "*",
