@@ -1,11 +1,13 @@
+import { Transaction } from "sequelize";
 import Group from "../../dto/group.js";
 import User from "../../dto/user.js";
-import { IFileRepository } from "../../interfaces/business_interfaces/file.interfaces.js";
+import { IFile, IFileRepository } from "../../interfaces/business_interfaces/file.interfaces.js";
 import { IGroup, IGroupRepository, IGroupService } from "../../interfaces/business_interfaces/group.interfaces.js";
 import { IUser, IUserService } from "../../interfaces/business_interfaces/user.interfaces.js";
 import IValidator from "../../interfaces/utility_interfaces/validator.interface.js";
 import StatusError from "../../utils/error.js";
 import FileServices from "./file.services.js";
+import db from "../../data/database/db.js";
 
 class GroupServices implements IGroupService {
     private groupRepository: IGroupRepository;
@@ -138,6 +140,36 @@ class GroupServices implements IGroupService {
 
         return groups;   
     }
+    async deleteFile(fileId: number): Promise<number> {
+
+       
+        
+        const file = await this.fileService.getFile(fileId);
+
+    
+    
+        const archived = await this.fileService.archiveRepository.getArchivedFilesByFileId(fileId);
+
+        const paths: string[] = archived.map(v => v.path);
+
+        const del = this.fileService.fileOperations.deleteFile(file.path);
+        
+       for(const path of paths){
+        await this.fileService.fileOperations.deleteFile(path);
+       }
+        let removedFile;
+       await db.sequelize.transaction(async (t: Transaction) => {
+         removedFile = await this.fileService.fileRepository.remove(fileId, t);
+
+    });
+        if (removedFile !== 1) {
+            throw new StatusError(500, "File is not deleted.");
+        }
+
+        await del;
+
+        return removedFile;  
+      }
     async deleteGroup(groupId: number, userId: number): Promise<number> {
         this.validator.validateRequiredFields({ groupId, userId });
 
@@ -146,6 +178,15 @@ class GroupServices implements IGroupService {
             throw new StatusError(403, "Not allowed.");
         }
 
+
+        const fileIDsData: IFile[] = await this.fileService.fileRepository.getFileGroupEntity(groupId, ["file_id"]) as IFile[];
+
+        const file_id: number[] = fileIDsData.map(v => v.file_id);      
+
+        for(const fileId of file_id){
+            await this.deleteFile(fileId);
+        }
+        
         const removedGroup = await this.groupRepository.remove(groupId);
         if (removedGroup !== 1) {
             throw new StatusError(404, "Group is not found.");
@@ -213,6 +254,7 @@ class GroupServices implements IGroupService {
        const bookings = await this.fileService.bookingRepository.getBookingsByUserId(userId);
        for(const booking of bookings){
 
+        if(booking.check_out_date != null) continue;
         await this.fileService.checkOut(userId, booking.file_id);
        }
 

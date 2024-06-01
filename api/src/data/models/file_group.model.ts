@@ -33,8 +33,8 @@ export default function defineFileGroupModel(sequelize: Sequelize) {
 
 
     public static associate(models: any): void {
-      FileGroupModel.belongsTo(models.FileModel, { foreignKey: 'file_id', as: 'file' });
-      FileGroupModel.belongsTo(models.GroupModel, { foreignKey: 'group_id', as: 'group' });
+      FileGroupModel.belongsTo(models.FileModel, { foreignKey: 'file_id', as: 'file', onDelete: "cascade" });
+      FileGroupModel.belongsTo(models.GroupModel, { foreignKey: 'group_id', as: 'group', onDelete: "cascade" });
 
     }
   }

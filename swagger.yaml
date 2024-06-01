@@ -8,8 +8,58 @@ servers:
   - url: "http://localhost:3000"
     description: local
 
-# users
+
 paths:
+
+# users
+
+  /api/users/:
+        post:
+          summary: Registers new user to the system.
+          requestBody:
+            description: Registration Request
+            required: true
+            content:
+               application/json:
+                schema:
+                  properties:
+                    userName:
+                      type: string
+                    email:
+                      type: string
+                    password:
+                      type: string
+          responses:
+            200:
+              description: Success
+            201:
+              description: Success
+            400:
+              description: Bad Request
+            500:
+              description: Internal Server Error 
+  /api/users/login:
+        post:
+          summary: Logs in a user.
+          requestBody:
+            description: log in Request
+            required: true
+            content:
+               application/json:
+                schema:
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+          responses:
+            200:
+              description: Success
+            400:
+              description: Bad Request
+            500:
+              description: Internal Server Error
+
   /api/users:
     get:
       summary: Returns users.
@@ -49,53 +99,6 @@ paths:
           500:
             description: Internal Server Error
 
-  /api/users/login:
-        post:
-          summary: Logs in a user.
-          requestBody:
-            description: log in Request
-            required: true
-            content:
-               application/json:
-                schema:
-                  properties:
-                    email:
-                      type: string
-                    password:
-                      type: string
-          responses:
-            200:
-              description: Success
-            400:
-              description: Bad Request
-            500:
-              description: Internal Server Error
-
-  /api/users/:
-        post:
-          summary: Registers new user to the system.
-          requestBody:
-            description: Registration Request
-            required: true
-            content:
-               application/json:
-                schema:
-                  properties:
-                    userName:
-                      type: string
-                    email:
-                      type: string
-                    password:
-                      type: string
-          responses:
-            200:
-              description: Success
-            201:
-              description: Success
-            400:
-              description: Bad Request
-            500:
-              description: Internal Server Error              
 #groups
 
   /api/groups/:
@@ -114,9 +117,9 @@ paths:
                application/json:
                 schema:
                   properties:
-                    group_name:
+                    groupName:
                       type: string
-                    is_public:
+                    isPublic:
                       type: boolean
           responses:
             200:
@@ -461,7 +464,8 @@ paths:
   /api/files/{groupId}/checkIn:
           post:
             summary: check in a file.
-            parameters:
+            description: to check multiple files at once split the IDs with a comma like this 1,2,3 .
+            parameters:             
             - in: header
               name: auth
               schema:
