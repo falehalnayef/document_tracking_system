@@ -15,9 +15,8 @@ const scheduler = new Scheduler();
 
 const file = fs.readFileSync("swagger.yaml", "utf8");
 
-
-const filesPath = path.join(__dirname.split("api")[0],"/uploads");
-const swaggerDocument = YAML.parse(file)
+const filesPath = path.join(__dirname.split("api")[0], "/uploads");
+const swaggerDocument = YAML.parse(file);
 const corsOptions = {
   origin: "*",
   credentials: true,
@@ -26,12 +25,11 @@ const corsOptions = {
 app.use(express.static(filesPath));
 app.use(cors(corsOptions));
 app.use(morgan("dev"));
-app.use(express.json()); 
+app.use(express.json());
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use("/api", indexRouter);
 app.use(errorHandlerMiddlware);
-
 
 process.on("uncaughtException", (error) => {
   console.error(error);

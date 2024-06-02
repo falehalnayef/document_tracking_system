@@ -1,78 +1,80 @@
 import busboy from "busboy";
-import AuthenticatedRequest, { FileData } from "../../interfaces/utility_interfaces/request.interface.js";
+import AuthenticatedRequest, {
+  FileData,
+} from "../../interfaces/utility_interfaces/request.interface.js";
 import { Response, NextFunction } from "express";
 import StatusError from "../../utils/error.js";
-import { failedResponse } from "../../utils/responseMessage.js";
-
-
 
 class MultipartMiddleware {
+  static allowedMimeTypes = ["application/pdf", "application/msword"];
+  static allowedSizeInBytes = 10 * 1024 * 1024;
 
- static allowedMimeTypes = ["application/pdf", "video/mp4"];
- static allowedSizeInBytes = 10 * 1024 * 1024; 
+  handleFileUpload(
+    req: AuthenticatedRequest,
+    _res: Response,
+    next: NextFunction
+  ) {
+    const bb = busboy({ headers: req.headers });
 
+    let fileData: FileData;
 
-   handleFileUpload(req: AuthenticatedRequest, _res: Response, next: NextFunction) {
-        const bb = busboy({ headers: req.headers });
+    bb.on("field", (fieldname, value) => {
+      req.body[fieldname] = value;
+    });
 
-        let fileData: FileData;
+    bb.on("file", (fieldName: string, file: any, info: any) => {
+      fileData = {
+        fieldName,
+        fileName: info.filename,
+        encoding: info.encoding,
+        mimetype: info.mimeType,
+      };
 
-        bb.on('field', (fieldname, value) => {
-          req.body[fieldname] = value;
-      })
+      const chunks: Buffer[] = [];
+      file
+        .on("data", (chunk: Buffer) => {
+          chunks.push(chunk);
+        })
+        .on("end", () => {
+          const buffer = Buffer.concat(chunks);
 
-        bb.on("file", (fieldName: string, file: any, info: any) => {
-          fileData = {
-            fieldName,
-            fileName: info.filename,
-            encoding: info.encoding,
-            mimetype: info.mimeType,
-          };
+          fileData.data = buffer;
+          if (
+            fileData &&
+            !MultipartMiddleware.allowedMimeTypes.includes(fileData.mimetype)
+          ) {
+            next(
+              new StatusError(
+                400,
+                "File type not allowed, the allowed types are pdf, ms word"
+              )
+            );
 
-          
-          const chunks: Buffer[] = [];
-          file
-            .on("data", (chunk: Buffer) => {
-              chunks.push(chunk);
-            })
-            .on("end", () => {
-              const buffer = Buffer.concat(chunks);
-          
-              fileData.data = buffer;
-              if (fileData && !MultipartMiddleware.allowedMimeTypes.includes(fileData.mimetype)) {
-
-                next(new StatusError(400, "File type not allowed"));
-              
-                return;
-              }
-    
-              const fileSize = fileData ? fileData.data?.length : 0;
-              if (fileSize && fileSize > MultipartMiddleware.allowedSizeInBytes) {
-                next(new StatusError(400, "File size exceeds limit"));
-
-                return;
-              }
-            });
-        });
-    
-        bb.on("finish", () => {
-          if (fileData) {
-            req.file = fileData;
+            return;
           }
-          next();
-        });
-    
-        bb.on("error", (error: any) => {
-          next(new StatusError(500, error.message));
-          return;
 
+          const fileSize = fileData ? fileData.data?.length : 0;
+          if (fileSize && fileSize > MultipartMiddleware.allowedSizeInBytes) {
+            next(new StatusError(400, "File size exceeds limit"));
+
+            return;
+          }
         });
-        req.pipe(bb);
-    
-   
+    });
+
+    bb.on("finish", () => {
+      if (fileData) {
+        req.file = fileData;
+      }
+      next();
+    });
+
+    bb.on("error", (error: any) => {
+      next(new StatusError(500, error.message));
+      return;
+    });
+    req.pipe(bb);
   }
 }
-
-
 
 export default MultipartMiddleware;

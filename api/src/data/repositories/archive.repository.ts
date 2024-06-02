@@ -1,27 +1,29 @@
-import { Op, Transaction } from "sequelize";
-
+import { Transaction } from "sequelize";
 
 import db from "../database/db.js";
-import { IArchive, IArchiveRepository } from "../../interfaces/business_interfaces/archive.interfaces.js";
+import {
+  IArchive,
+  IArchiveRepository,
+} from "../../interfaces/business_interfaces/archive.interfaces.js";
 
 const ArchiveModel = db.ArchiveModel;
 
 class ArchiveRepository implements IArchiveRepository {
-
-
   async getArchivedFilesByFileId(file_id: number): Promise<IArchive[]> {
-
-    return await ArchiveModel.findAll({where:{file_id}});
+    return await ArchiveModel.findAll({ where: { file_id } });
   }
 
-
-  async removeArchived(file_id: number, transaction?: Transaction): Promise<number> {
-
-    const file = await ArchiveModel.destroy({ where: { file_id } }, { transaction });
+  async removeArchived(
+    file_id: number,
+    transaction?: Transaction
+  ): Promise<number> {
+    const file = await ArchiveModel.destroy(
+      { where: { file_id } },
+      { transaction }
+    );
 
     return file;
   }
-
 
   async createArchive(
     file_id: number,

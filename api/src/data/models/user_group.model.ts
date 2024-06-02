@@ -1,42 +1,43 @@
-import { Sequelize, DataTypes, Model } from 'sequelize';
-import { IUserGroupAttributes } from '../../interfaces/business_interfaces/group.interfaces.js';
-
+import { Sequelize, DataTypes, Model } from "sequelize";
+import { IUserGroupAttributes } from "../../interfaces/business_interfaces/group.interfaces.js";
 
 export default function defineUserGroupModel(sequelize: Sequelize) {
   class UserGroupModel extends Model<IUserGroupAttributes> {
-
-
     static initModel(sequelize: Sequelize) {
       this.init(
         {
           ug_id: {
-              type: DataTypes.INTEGER,
-              autoIncrement: true,
-              primaryKey: true
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
           },
           group_id: {
-              type: DataTypes.INTEGER,
-              allowNull: false
+            type: DataTypes.INTEGER,
+            allowNull: false,
           },
           user_id: {
-              type: DataTypes.INTEGER,
-              allowNull: false
-          }
-      },
-      {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+          },
+        },
+        {
           sequelize,
           tableName: "user_groups",
-          timestamps: false
-      }
+          timestamps: false,
+        }
       );
     }
 
     public static associate(models: any): void {
-      UserGroupModel.belongsTo(models.UserModel, { foreignKey: 'user_id', as: 'user' });
-      UserGroupModel.belongsTo(models.GroupModel, { foreignKey: 'group_id', as: 'group' });
-
+      UserGroupModel.belongsTo(models.UserModel, {
+        foreignKey: "user_id",
+        as: "user",
+      });
+      UserGroupModel.belongsTo(models.GroupModel, {
+        foreignKey: "group_id",
+        as: "group",
+      });
     }
-   
   }
 
   UserGroupModel.initModel(sequelize);

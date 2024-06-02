@@ -1,13 +1,14 @@
 import { Op, Transaction } from "sequelize";
 import db from "../database/db.js";
-import { IBooking, IBookingRepository } from "../../interfaces/business_interfaces/booking.interfaces.js";
+import {
+  IBooking,
+  IBookingRepository,
+} from "../../interfaces/business_interfaces/booking.interfaces.js";
 
 const BookingModel = db.BookingModel;
 
 class BookingRepository implements IBookingRepository {
-
-
- async getAllExpiredBookings(): Promise<IBooking[]> {
+  async getAllExpiredBookings(): Promise<IBooking[]> {
     const bookedFileEntities = await BookingModel.findAll({
       where: {
         check_out_date: null,
@@ -17,7 +18,6 @@ class BookingRepository implements IBookingRepository {
 
     return bookedFileEntities;
   }
-
 
   async getBookings(file_id: number): Promise<IBooking[]> {
     const bookedFileEntity = await BookingModel.findAll({ where: { file_id } });
@@ -30,7 +30,6 @@ class BookingRepository implements IBookingRepository {
 
     return bookedFileEntity;
   }
-  
 
   async updateBooking(
     booking_id: number,
@@ -56,7 +55,6 @@ class BookingRepository implements IBookingRepository {
     return bookedFileEntity;
   }
 
-
   async createBooking(
     file_id: number,
     user_id: number,
@@ -71,7 +69,6 @@ class BookingRepository implements IBookingRepository {
 
     return bookedFile;
   }
-
 }
 
 export default BookingRepository;

@@ -14,16 +14,9 @@ const BookingModel = db.BookingModel;
 const ArchiveModel = db.ArchiveModel;
 
 class FileRepository implements IFileRepository {
-
-
-  
-
-
   async getArchivedFilesByFileId(file_id: number): Promise<IArchive[]> {
-
-    return await ArchiveModel.findAll({where:{file_id}});
+    return await ArchiveModel.findAll({ where: { file_id } });
   }
-  
 
   async getBookings(file_id: number): Promise<IBooking[]> {
     const bookedFileEntity = await BookingModel.findAll({ where: { file_id } });
@@ -36,7 +29,6 @@ class FileRepository implements IFileRepository {
 
     return bookedFileEntity;
   }
-  
 
   async updateBooking(
     booking_id: number,
@@ -142,16 +134,20 @@ class FileRepository implements IFileRepository {
     return file;
   }
 
-
-  async removeArchived(file_id: number, transaction?: Transaction): Promise<number> {
-
-    const file = await ArchiveModel.destroy({ where: { file_id } }, { transaction });
+  async removeArchived(
+    file_id: number,
+    transaction?: Transaction
+  ): Promise<number> {
+    const file = await ArchiveModel.destroy(
+      { where: { file_id } },
+      { transaction }
+    );
 
     return file;
   }
 
-  async getFile(file_id: number, include:any = null): Promise<IFile> {
-    const file = await File.findByPk(file_id, {include});
+  async getFile(file_id: number, include: any = null): Promise<IFile> {
+    const file = await File.findByPk(file_id, { include });
 
     return file;
   }
