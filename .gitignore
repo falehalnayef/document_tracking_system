@@ -1,7 +1,4 @@
 /node_modules
 /api/dist
-/uploads
-/test.js
-/upload.service.js
-/upload.ts
+/storage
 /.env

@@ -17,11 +17,13 @@ class FileUtility {
   }
 
   async save(buffer: Buffer, fileName: string) {
-    const filePath = this.getPath(fileName);
+    const filePath = await this.getPath(fileName);
 
-    await fs.writeFile(await filePath, buffer);
+    await fs.writeFile(filePath, buffer);
 
-    return filePath;
+    const index = filePath.indexOf("files_data/");
+
+    return filePath.substring(index);
   }
 
   getRandomFileName() {
@@ -40,11 +42,9 @@ class FileUtility {
   async getPath(fileName: string) {
     const newFileName = this.getRandomFileName() + fileName;
 
-    const filePath = path.join(
-      __dirname.split("api")[0],
-      "uploads/",
-      newFileName
-    );
+    const filePath = path
+      .join(__dirname.split("api")[0], "storage/files_data/", newFileName)
+      .replace(/\\/g, "/");
 
     const directoryPath = path.dirname(filePath);
 

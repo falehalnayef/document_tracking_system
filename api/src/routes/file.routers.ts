@@ -1,11 +1,13 @@
-import { Router } from "express";
+import express, { Router } from "express";
 import FileController from "../controllers/file.controller.js";
 import MultipartMiddleware from "../middlewares/handlers/multipart.handler.js";
+import path from "path";
 
 class FileRouter {
   public router: Router;
   private fileController: FileController;
   private multiPartMiddleWare: MultipartMiddleware;
+  private filesPath = path.join(__dirname.split("api")[0], "/storage");
 
   constructor(FileController: FileController) {
     this.router = Router();
@@ -15,6 +17,7 @@ class FileRouter {
   }
 
   private initializeRoutes(): void {
+    this.router.use("/storage", express.static(this.filesPath));
     this.router.post(
       "/",
       this.multiPartMiddleWare.handleFileUpload,

@@ -8,6 +8,16 @@ servers:
   - url: "http://localhost:3000"
     description: local
 
+x-tagGroups:
+  - name: Users
+    tags:
+      - Users
+  - name: Groups
+    tags:
+      - Groups
+  - name: Files
+    tags:
+      - Files
 
 paths:
 
@@ -16,6 +26,8 @@ paths:
   /api/users/:
         post:
           summary: Registers new user to the system.
+          tags:
+            - Users
           requestBody:
             description: Registration Request
             required: true
@@ -41,6 +53,8 @@ paths:
   /api/users/login:
         post:
           summary: Logs in a user.
+          tags:
+            - Users
           requestBody:
             description: log in Request
             required: true
@@ -63,6 +77,8 @@ paths:
   /api/users:
     get:
       summary: Returns users.
+      tags:
+        - Users
       parameters:
         - in: header
           name: auth
@@ -80,6 +96,8 @@ paths:
   /api/users/{userId}:
       get:
         summary: Returns user.
+        tags:
+          - Users
         parameters:
         - in: header
           name: auth
@@ -99,11 +117,13 @@ paths:
           500:
             description: Internal Server Error
 
-#groups
+  #groups
 
   /api/groups/:
         post:
           summary: Creates new group in the system.
+          tags:
+            - Groups
           parameters:
           - in: header
             name: auth
@@ -352,9 +372,8 @@ paths:
               500:
                 description: Internal Server Error   
 
+
 # files
-
-
   /api/files:
           post:
             summary: upload a new file to a group.
@@ -434,6 +453,37 @@ paths:
               500:
                 description: Internal Server Error   
 
+  /api/files/storage/{filePath}:
+            get:
+              summary: Open file.
+              description: Enter the file path starting from files_data.
+              parameters:
+              - in: header
+                name: auth
+                schema:
+                  type: string
+                required: true
+              - in: path
+                name: filePath
+                schema:
+                  type: string
+                required: true         
+              responses:
+                200:
+                  description: Success
+                  content:
+                    application/pdf:
+                      schema:
+                        type: string
+                        format: binary
+                    application/msword:
+                      schema:
+                        type: string
+                        format: binary                     
+                400:
+                  description: Bad Request
+                500:
+                  description: Internal Server Error
   /api/files/search/{groupId}/{fileName}:
           get:
             summary: Search for files in a group by name.
