@@ -154,6 +154,8 @@ paths:
   /api/groups/ownership:
           get:
             summary: Returns groups that the user has created them.
+            tags:
+              - Groups
             parameters:
             - in: header
               name: auth
@@ -171,6 +173,8 @@ paths:
   /api/groups/membership:
           get:
             summary: Returns groups that the user is member of.
+            tags:
+              - Groups
             parameters:
             - in: header
               name: auth
@@ -188,6 +192,8 @@ paths:
   /api/groups/public:
           get:
             summary: Returns the public groups.
+            tags:
+              - Groups
             parameters:
             - in: header
               name: auth
@@ -205,6 +211,8 @@ paths:
   /api/groups/search/{groupName}:
           get:
             summary: Search for public groups by name.
+            tags:
+              - Groups
             parameters:
             - in: header
               name: auth
@@ -227,6 +235,8 @@ paths:
   /api/groups/{groupId}/users:
           get:
             summary: Returns users whom members of the group.
+            tags:
+              - Groups
             parameters:
             - in: header
               name: auth
@@ -249,6 +259,8 @@ paths:
   /api/groups/{groupId}:
           delete:
             summary: Delete a group from the system.
+            tags:
+              - Groups
             parameters:
             - in: header
               name: auth
@@ -271,6 +283,8 @@ paths:
   /api/groups/users:
           post:
             summary: Add user to a group.
+            tags:
+              - Groups
             parameters:
             - in: header
               name: auth
@@ -299,6 +313,8 @@ paths:
   /api/groups/{groupId}/users/{userId}:
           delete:
             summary: Remove user from a group.
+            tags:
+              - Groups
             parameters:
             - in: header
               name: auth
@@ -327,6 +343,8 @@ paths:
   /api/groups/membership/:
           post:
             summary: User joins a public group.
+            tags:
+              - Groups
             parameters:
             - in: header
               name: auth
@@ -353,6 +371,8 @@ paths:
   /api/groups/{groupId}/membership:
           delete:
             summary: User leaves a group.
+            tags:
+              - Groups
             parameters:
             - in: header
               name: auth
@@ -377,6 +397,8 @@ paths:
   /api/files:
           post:
             summary: upload a new file to a group.
+            tags:
+              - Files
             parameters:
             - in: header
               name: auth
@@ -407,6 +429,8 @@ paths:
   /api/files/{groupId}/{fileId}:
           delete:
             summary: Delete file.
+            tags:
+              - Files
             parameters:
             - in: header
               name: auth
@@ -434,6 +458,8 @@ paths:
   /api/files/{groupId}:
           get:
             summary: Returns files from a group.
+            tags:
+              - Files
             parameters:
             - in: header
               name: auth
@@ -457,6 +483,8 @@ paths:
             get:
               summary: Open file.
               description: Enter the file path starting from files_data.
+              tags:
+                - Files
               parameters:
               - in: header
                 name: auth
@@ -487,6 +515,8 @@ paths:
   /api/files/search/{groupId}/{fileName}:
           get:
             summary: Search for files in a group by name.
+            tags:
+              - Files
             parameters:
             - in: header
               name: auth
@@ -515,6 +545,8 @@ paths:
           post:
             summary: check in a file.
             description: to check multiple files at once split the IDs with a comma like this 1,2,3 .
+            tags:
+              - Files
             parameters:             
             - in: header
               name: auth
@@ -544,6 +576,8 @@ paths:
   /api/files/{groupId}/{fileId}/checkOut:
           post:
             summary: check out a file.
+            tags:
+              - Files
             parameters:
             - in: header
               name: auth
@@ -571,6 +605,8 @@ paths:
   /api/files/{groupId}/{fileId}/bookings:
           get:
             summary: Returns booking history of a file.
+            tags:
+              - Files
             parameters:
             - in: header
               name: auth
@@ -595,11 +631,11 @@ paths:
               500:
                 description: Internal Server Error                   
 
-
-
   /api/files/{groupId}/{fileId}/archived:
           get:
             summary: Returns archived files.
+            tags:
+              - Files
             parameters:
             - in: header
               name: auth
@@ -627,6 +663,8 @@ paths:
   /api/files/{groupId}/{fileId}/update:
           post:
             summary: update file.
+            tags:
+              - Files
             parameters:
             - in: header
               name: auth
