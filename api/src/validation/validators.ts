@@ -18,13 +18,13 @@ class Validator implements IValidator {
     return regex.test(email);
   }
 
-  public isValidPassword(password: string): boolean {
-    if (!password) {
-      throw new StatusError(400, "Enter Password.");
+    public isValidPassword(password: string): boolean {
+      if (!password) {
+        throw new StatusError(400, "Enter Password.");
+      }
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+      return regex.test(password);
     }
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-    return regex.test(password);
-  }
 
   public registerValidator(
     user_name: string,

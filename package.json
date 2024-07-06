@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "tsc": "tsc -w",
+    "tsc": "tsc",
     "start": "concurrently \"tsc -w\" \"nodemon api/dist/server.js\"",
     "serve": "node api/dist/server.js"
   },

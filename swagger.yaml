@@ -37,10 +37,18 @@ paths:
                   properties:
                     userName:
                       type: string
+                      description: ontain only letters (both uppercase and lowercase), digits, underscores, or hyphens.
+                      example: Valid_UserNAme1
                     email:
                       type: string
-                    password:
+                      example: myEmail@example.com
+                    password: 
                       type: string
+                      description: Contain at least one lowercase letter.
+                                   Contain at least one uppercase letter.
+                                   Contain at least one digit.
+                                   Be at least 8 characters long.
+                      example: Password123
           responses:
             200:
               description: Success
