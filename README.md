@@ -83,8 +83,3 @@ npm run serve
 
 ## Documentation
 - Swagger
-
-
-## License
-
-This project is licensed under the ISC License.
